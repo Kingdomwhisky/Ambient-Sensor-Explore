@@ -1,0 +1,92 @@
+C51 COMPILER V8.12   RL6432_SERIES_OSDSETTRANSPARENCY                                      05/25/2022 15:41:37 PAGE 1   
+
+
+C51 COMPILER V8.12, COMPILATION OF MODULE RL6432_SERIES_OSDSETTRANSPARENCY
+OBJECT MODULE PLACED IN .\Output\RL6432_Series_OsdSetTransparency.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Code\RL6432_Series_OSD\Function\RL6432_Series_OsdSetTransparency.c LARGE OP
+                    -TIMIZE(9,SPEED) INCDIR(..\..\..\Common;..\Header;.\Header;..\..\ScalerFunction\Lib\Header;..\..\ScalerFunction\Header;..
+                    -\..\ScalerCommonFunction\Lib\Header;..\..\ScalerCommonFunction\Header;..\..\RL6432_Series_Common\Lib\Header;..\..\RL6432
+                    -_Series_Common\Header) DEFINE(_TRANSLATOR_SUPPORT=_OFF,_SCALER_TYPE=_RL6432_SERIES) DEBUG OBJECTEXTEND PRINT(.\Output\RL
+                    -6432_Series_OsdSetTransparency.lst) OBJECT(.\Output\RL6432_Series_OsdSetTransparency.obj)
+
+line level    source
+
+   1          /********************************************************************************/
+   2          /*   The  Software  is  proprietary,  confidential,  and  valuable to Realtek   */
+   3          /*   Semiconductor  Corporation  ("Realtek").  All  rights, including but not   */
+   4          /*   limited  to  copyrights,  patents,  trademarks, trade secrets, mask work   */
+   5          /*   rights, and other similar rights and interests, are reserved to Realtek.   */
+   6          /*   Without  prior  written  consent  from  Realtek,  copying, reproduction,   */
+   7          /*   modification,  distribution,  or  otherwise  is strictly prohibited. The   */
+   8          /*   Software  shall  be  kept  strictly  in  confidence,  and  shall  not be   */
+   9          /*   disclosed to or otherwise accessed by any third party.                     */
+  10          /*   c<2003> - <2012>                                                           */
+  11          /*   The Software is provided "AS IS" without any warranty of any kind,         */
+  12          /*   express, implied, statutory or otherwise.                                  */
+  13          /********************************************************************************/
+  14          //----------------------------------------------------------------------------------------------------
+  15          // ID Code      : RL6432_Series_OsdSetTransparency.c
+  16          // Update Note  :
+  17          //----------------------------------------------------------------------------------------------------
+  18          #include "RL6432_Series_OSDLibInternalInclude.h"
+  19          
+  20          //****************************************************************************
+  21          // DEFINITIONS / MACROS
+  22          //****************************************************************************
+  23          
+  24          
+  25          //****************************************************************************
+  26          // STRUCT / TYPE / ENUM DEFINITTIONS
+  27          //****************************************************************************
+  28          
+  29          
+  30          //****************************************************************************
+  31          // CODE TABLES
+  32          //****************************************************************************
+  33          
+  34          
+  35          //****************************************************************************
+  36          // VARIABLE DECLARATIONS
+  37          //****************************************************************************
+  38          
+  39          
+  40          //****************************************************************************
+  41          // FUNCTION DECLARATIONS
+  42          //****************************************************************************
+  43          void ScalerOsdSetTransparency(BYTE ucTransparency);
+  44          
+  45          
+  46          //****************************************************************************
+  47          // FUNCTION DEFINITIONS
+  48          //****************************************************************************
+  49          //--------------------------------------------------
+  50          // Description  : Set OSD Transparency
+  51          // Input Value  : ucTransparency -> 0 ~ 255
+C51 COMPILER V8.12   RL6432_SERIES_OSDSETTRANSPARENCY                                      05/25/2022 15:41:37 PAGE 2   
+
+  52          // Output Value :
+  53          //--------------------------------------------------
+  54          void ScalerOsdSetTransparency(BYTE ucTransparency)
+  55          {
+  56   1          // alpha_blending_level[7:5]
+  57   1          ScalerSetBit(P0_6C_OVERLAY_CTRL, ~(_BIT4 | _BIT3 | _BIT2), ((ucTransparency & 0xE0) >> 3));
+  58   1      
+  59   1          // alpha_blending_level[4:0]
+  60   1          ScalerSetBit(P0_8F_OVERLAY_CTRL1, ~(_BIT7 | _BIT6 | _BIT5 | _BIT4 | _BIT3), ((ucTransparency & 0x1F) <
+             -< 3));
+  61   1      }
+  62          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     35    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

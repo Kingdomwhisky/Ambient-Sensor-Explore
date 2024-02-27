@@ -1,0 +1,112 @@
+C51 COMPILER V8.12   SCALERCOMMONFLASHREAD                                                 05/25/2022 15:40:54 PAGE 1   
+
+
+C51 COMPILER V8.12, COMPILATION OF MODULE SCALERCOMMONFLASHREAD
+OBJECT MODULE PLACED IN .\Output\ScalerCommonFlashRead.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE ..\..\ScalerCommonFunction\Lib\Code\ScalerCommonNVRam\ScalerCommonFlashRead
+                    -.c LARGE OPTIMIZE(9,SPEED) INCDIR(..\..\..\Common;..\Header;.\Header;..\..\ScalerFunction\Lib\Header;..\..\ScalerFunctio
+                    -n\Header;..\..\ScalerCommonFunction\Lib\Header;..\..\ScalerCommonFunction\Header;..\..\RL6432_Series_Common\Lib\Header;.
+                    -.\..\RL6432_Series_Common\Header) DEFINE(_TRANSLATOR_SUPPORT=_OFF,_SCALER_TYPE=_RL6432_SERIES) DEBUG OBJECTEXTEND PRINT(
+                    -.\Output\ScalerCommonFlashRead.lst) OBJECT(.\Output\ScalerCommonFlashRead.obj)
+
+line level    source
+
+   1          /********************************************************************************/
+   2          /*   The  Software  is  proprietary,  confidential,  and  valuable to Realtek   */
+   3          /*   Semiconductor  Corporation  ("Realtek").  All  rights, including but not   */
+   4          /*   limited  to  copyrights,  patents,  trademarks, trade secrets, mask work   */
+   5          /*   rights, and other similar rights and interests, are reserved to Realtek.   */
+   6          /*   Without  prior  written  consent  from  Realtek,  copying, reproduction,   */
+   7          /*   modification,  distribution,  or  otherwise  is strictly prohibited. The   */
+   8          /*   Software  shall  be  kept  strictly  in  confidence,  and  shall  not be   */
+   9          /*   disclosed to or otherwise accessed by any third party.                     */
+  10          /*   c<2003> - <2012>                                                           */
+  11          /*   The Software is provided "AS IS" without any warranty of any kind,         */
+  12          /*   express, implied, statutory or otherwise.                                  */
+  13          /********************************************************************************/
+  14          
+  15          //----------------------------------------------------------------------------------------------------
+  16          // ID Code      : ScalerCommonFlashRead.c No.0000
+  17          // Update Note  :
+  18          //----------------------------------------------------------------------------------------------------
+  19          
+  20          #define __SCLAER_COMMON_FLASH_READ__
+  21          
+  22          #include "ScalerCommonNVRamLibInternalInclude.h"
+  23          
+  24          //****************************************************************************
+  25          // DEFINITIONS / MACROS
+  26          //****************************************************************************
+  27          
+  28          //****************************************************************************
+  29          // STRUCT / TYPE / ENUM DEFINITTIONS
+  30          //****************************************************************************
+  31          
+  32          //****************************************************************************
+  33          // CODE TABLES
+  34          //****************************************************************************
+  35          
+  36          //****************************************************************************
+  37          // VARIABLE DECLARATIONS
+  38          //****************************************************************************
+  39          
+  40          //****************************************************************************
+  41          // FUNCTION DECLARATIONS
+  42          //****************************************************************************
+  43          bit ScalerFlashRead(BYTE ucBank, WORD usAddr, WORD usLength, BYTE *pucData);
+  44          
+  45          //****************************************************************************
+  46          // FUNCTION DEFINITIONS
+  47          //****************************************************************************
+  48          //--------------------------------------------------
+  49          // Description  : Load data from flash
+  50          // Input Value  : ucBank: bank index
+  51          //                usAddr: address in ucBank
+C51 COMPILER V8.12   SCALERCOMMONFLASHREAD                                                 05/25/2022 15:40:54 PAGE 2   
+
+  52          //                ucLength: the data length to load
+  53          //                pucData: data buffer to save the load data
+  54          // Output Value : _TRUE for load success and _FALSE for load fail
+  55          //--------------------------------------------------
+  56          bit ScalerFlashRead(BYTE ucBank, WORD usAddr, WORD usLength, BYTE *pucData)
+  57          {
+  58   1          WORD usIndex = 0;
+  59   1      
+  60   1          // The access bank is smaller than than the start bank
+  61   1          if(ucBank < MCU_FFFD_XDATA_BANK_START)
+  62   1          {
+  63   2              return _FALSE;
+  64   2          }
+  65   1      
+  66   1          // Enable flash access and address auto increase
+  67   1          MCU_FF7C_ACCESS_FLASH_DATA_CTRL |= (_BIT1 | _BIT0);
+  68   1      
+  69   1          MCU_FF78_ACCESS_FLASH_ADDR_0 = ucBank;
+  70   1          MCU_FF79_ACCESS_FLASH_ADDR_1 = (BYTE)(usAddr >> 8);
+  71   1          MCU_FF7A_ACCESS_FLASH_ADDR_2 = (BYTE)(usAddr);
+  72   1      
+  73   1          for(usIndex = 0; usIndex < usLength; usIndex++)
+  74   1          {
+  75   2              pucData[usIndex] = MCU_FF7B_ACCESS_FLASH_DATA_PORT;
+  76   2          }
+  77   1      
+  78   1          // Disable flash access
+  79   1          MCU_FF7C_ACCESS_FLASH_DATA_CTRL &= ~_BIT0;
+  80   1      
+  81   1          return _TRUE;
+  82   1      }
+  83          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    114    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----       8
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

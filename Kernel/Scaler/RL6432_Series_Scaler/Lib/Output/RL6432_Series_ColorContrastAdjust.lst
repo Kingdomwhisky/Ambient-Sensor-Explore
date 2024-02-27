@@ -1,0 +1,119 @@
+C51 COMPILER V8.12   RL6432_SERIES_COLORCONTRASTADJUST                                     05/25/2022 15:41:24 PAGE 1   
+
+
+C51 COMPILER V8.12, COMPILATION OF MODULE RL6432_SERIES_COLORCONTRASTADJUST
+OBJECT MODULE PLACED IN .\Output\RL6432_Series_ColorContrastAdjust.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Code\RL6432_Series_Color\RL6432_Series_ColorContrastAdjust.c LARGE OPTIMIZE
+                    -(9,SPEED) INCDIR(..\..\..\Common;..\Header;.\Header;..\..\ScalerFunction\Lib\Header;..\..\ScalerFunction\Header;..\..\Sc
+                    -alerCommonFunction\Lib\Header;..\..\ScalerCommonFunction\Header;..\..\RL6432_Series_Common\Lib\Header;..\..\RL6432_Serie
+                    -s_Common\Header) DEFINE(_TRANSLATOR_SUPPORT=_OFF,_SCALER_TYPE=_RL6432_SERIES) DEBUG OBJECTEXTEND PRINT(.\Output\RL6432_S
+                    -eries_ColorContrastAdjust.lst) OBJECT(.\Output\RL6432_Series_ColorContrastAdjust.obj)
+
+line level    source
+
+   1          /********************************************************************************/
+   2          /*   The  Software  is  proprietary,  confidential,  and  valuable to Realtek   */
+   3          /*   Semiconductor  Corporation  ("Realtek").  All  rights, including but not   */
+   4          /*   limited  to  copyrights,  patents,  trademarks, trade secrets, mask work   */
+   5          /*   rights, and other similar rights and interests, are reserved to Realtek.   */
+   6          /*   Without  prior  written  consent  from  Realtek,  copying, reproduction,   */
+   7          /*   modification,  distribution,  or  otherwise  is strictly prohibited. The   */
+   8          /*   Software  shall  be  kept  strictly  in  confidence,  and  shall  not be   */
+   9          /*   disclosed to or otherwise accessed by any third party.                     */
+  10          /*   c<2003> - <2012>                                                           */
+  11          /*   The Software is provided "AS IS" without any warranty of any kind,         */
+  12          /*   express, implied, statutory or otherwise.                                  */
+  13          /********************************************************************************/
+  14          
+  15          //----------------------------------------------------------------------------------------------------
+  16          // ID Code      : RL6432_Series_ColorContrastAdjust.c
+  17          // Update Note  :
+  18          //----------------------------------------------------------------------------------------------------
+  19          #include "RL6432_Series_ColorLibInternalInclude.h"
+  20          
+  21          //****************************************************************************
+  22          // DEFINITIONS / MACROS
+  23          //****************************************************************************
+  24          
+  25          
+  26          //****************************************************************************
+  27          // STRUCT / TYPE / ENUM DEFINITTIONS
+  28          //****************************************************************************
+  29          
+  30          
+  31          //****************************************************************************
+  32          // CODE TABLES
+  33          //****************************************************************************
+  34          
+  35          
+  36          //****************************************************************************
+  37          // VARIABLE DECLARATIONS
+  38          //****************************************************************************
+  39          
+  40          
+  41          //****************************************************************************
+  42          // FUNCTION DECLARATIONS
+  43          //****************************************************************************
+  44          void ScalerColorContrastAdjust(EnumBriConCoefType enumBriConCoefType, WORD *pusData);
+  45          
+  46          
+  47          //****************************************************************************
+  48          // FUNCTION DEFINITIONS
+  49          //****************************************************************************
+  50          //--------------------------------------------------
+  51          // Description  : Adjust Contrast
+C51 COMPILER V8.12   RL6432_SERIES_COLORCONTRASTADJUST                                     05/25/2022 15:41:24 PAGE 2   
+
+  52          // Input Value  : EnumBriConCoefType, Coefficient
+  53          //                12 bit input, old 8 bit contrast input value must left shift 4 bit
+  54          //                0 (00h) ~ 1(800h) ~  2(FFFh)
+  55          // Output Value : void
+  56          //--------------------------------------------------
+  57          void ScalerColorContrastAdjust(EnumBriConCoefType enumBriConCoefType, WORD *pusData)
+  58          {
+  59   1          switch(enumBriConCoefType)
+  60   1          {
+  61   2              case _CONTRAST_COEF_A:
+  62   2                  ScalerSetDataPortByte(P0_64_CTS_BRI_PORT_ADD, _P0_65_PT_03_CTS_RED_COE_SETA_H, (pusData[0] & 0
+             -x0FF0) >> 4);
+  63   2                  ScalerSetDataPortByte(P0_64_CTS_BRI_PORT_ADD, _P0_65_PT_04_CTS_GRN_COE_SETA_H, (pusData[1] & 0
+             -x0FF0) >> 4);
+  64   2                  ScalerSetDataPortByte(P0_64_CTS_BRI_PORT_ADD, _P0_65_PT_05_CTS_BLU_COE_SETA_H, (pusData[2] & 0
+             -x0FF0) >> 4);
+  65   2                  ScalerSetDataPortByte(P0_64_CTS_BRI_PORT_ADD, _P0_65_PT_21_CTS_COE_SETA_RG_L, ((pusData[0] & 0
+             -x000F) << 4) | ((pusData[1] & 0x000F)));
+  66   2                  ScalerSetDataPortByte(P0_64_CTS_BRI_PORT_ADD, _P0_65_PT_22_CTS_COE_SETA_B_L, (pusData[2] & 0x0
+             -00F) << 4);
+  67   2                  break;
+  68   2      
+  69   2              case _CONTRAST_COEF_B:
+  70   2                  ScalerSetDataPortByte(P0_64_CTS_BRI_PORT_ADD, _P0_65_PT_09_CTS_RED_COE_SETB_H, (pusData[0] & 0
+             -x0FF0) >> 4);
+  71   2                  ScalerSetDataPortByte(P0_64_CTS_BRI_PORT_ADD, _P0_65_PT_0A_CTS_GRN_COE_SETB_H, (pusData[1] & 0
+             -x0FF0) >> 4);
+  72   2                  ScalerSetDataPortByte(P0_64_CTS_BRI_PORT_ADD, _P0_65_PT_0B_CTS_BLU_COE_SETB_H, (pusData[2] & 0
+             -x0FF0) >> 4);
+  73   2                  ScalerSetDataPortByte(P0_64_CTS_BRI_PORT_ADD, _P0_65_PT_24_CTS_COE_SETB_RG_L, ((pusData[0] & 0
+             -x000F) << 4) | ((pusData[1] & 0x000F)));
+  74   2                  ScalerSetDataPortByte(P0_64_CTS_BRI_PORT_ADD, _P0_65_PT_25_CTS_COE_SETB_B_L, (pusData[2] & 0x0
+             -00F) << 4);
+  75   2                  break;
+  76   2      
+  77   2              default:
+  78   2                  break;
+  79   2          }
+  80   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    307    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----       3
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

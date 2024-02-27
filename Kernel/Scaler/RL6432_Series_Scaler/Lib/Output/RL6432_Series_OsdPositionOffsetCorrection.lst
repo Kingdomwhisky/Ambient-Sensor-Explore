@@ -1,0 +1,189 @@
+C51 COMPILER V8.12   RL6432_SERIES_OSDPOSITIONOFFSETCORRECTION                             05/25/2022 15:41:36 PAGE 1   
+
+
+C51 COMPILER V8.12, COMPILATION OF MODULE RL6432_SERIES_OSDPOSITIONOFFSETCORRECTION
+OBJECT MODULE PLACED IN .\Output\RL6432_Series_OsdPositionOffsetCorrection.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Code\RL6432_Series_OSD\Function\RL6432_Series_OsdPositionOffsetCorrection.c
+                    - LARGE OPTIMIZE(9,SPEED) INCDIR(..\..\..\Common;..\Header;.\Header;..\..\ScalerFunction\Lib\Header;..\..\ScalerFunction\
+                    -Header;..\..\ScalerCommonFunction\Lib\Header;..\..\ScalerCommonFunction\Header;..\..\RL6432_Series_Common\Lib\Header;..\
+                    -..\RL6432_Series_Common\Header) DEFINE(_TRANSLATOR_SUPPORT=_OFF,_SCALER_TYPE=_RL6432_SERIES) DEBUG OBJECTEXTEND PRINT(.\
+                    -Output\RL6432_Series_OsdPositionOffsetCorrection.lst) OBJECT(.\Output\RL6432_Series_OsdPositionOffsetCorrection.obj)
+
+line level    source
+
+   1          /********************************************************************************/
+   2          /*   The  Software  is  proprietary,  confidential,  and  valuable to Realtek   */
+   3          /*   Semiconductor  Corporation  ("Realtek").  All  rights, including but not   */
+   4          /*   limited  to  copyrights,  patents,  trademarks, trade secrets, mask work   */
+   5          /*   rights, and other similar rights and interests, are reserved to Realtek.   */
+   6          /*   Without  prior  written  consent  from  Realtek,  copying, reproduction,   */
+   7          /*   modification,  distribution,  or  otherwise  is strictly prohibited. The   */
+   8          /*   Software  shall  be  kept  strictly  in  confidence,  and  shall  not be   */
+   9          /*   disclosed to or otherwise accessed by any third party.                     */
+  10          /*   c<2003> - <2012>                                                           */
+  11          /*   The Software is provided "AS IS" without any warranty of any kind,         */
+  12          /*   express, implied, statutory or otherwise.                                  */
+  13          /********************************************************************************/
+  14          
+  15          //----------------------------------------------------------------------------------------------------
+  16          // ID Code      : RL6432_Series_OsdPositionOffsetCorrection.c
+  17          // Update Note  :
+  18          //----------------------------------------------------------------------------------------------------
+  19          #include "RL6432_Series_OSDLibInternalInclude.h"
+  20          
+  21          //****************************************************************************
+  22          // DEFINITIONS / MACROS
+  23          //****************************************************************************
+  24          
+  25          //****************************************************************************
+  26          // STRUCT / TYPE / ENUM DEFINITTIONS
+  27          //****************************************************************************
+  28          
+  29          
+  30          //****************************************************************************
+  31          // CODE TABLES
+  32          //****************************************************************************
+  33          
+  34          
+  35          //****************************************************************************
+  36          // VARIABLE DECLARATIONS
+  37          //****************************************************************************
+  38          BYTE g_ucOSDPositionVOffsetCorrectCompensation;
+  39          
+  40          
+  41          //****************************************************************************
+  42          // FUNCTION DECLARATIONS
+  43          //****************************************************************************
+  44          void ScalerOsdPositionOffsetCorrection(void);
+  45          WORD ScalerOsdPositionOffsetCalculation(void);
+  46          
+  47          
+  48          //****************************************************************************
+  49          // FUNCTION DEFINITIONS
+  50          //****************************************************************************
+  51          //--------------------------------------------------
+C51 COMPILER V8.12   RL6432_SERIES_OSDPOSITIONOFFSETCORRECTION                             05/25/2022 15:41:36 PAGE 2   
+
+  52          // Description  : Correct Osd position after DVstart change
+  53          // Input Value  : None
+  54          // Output Value : None
+  55          //--------------------------------------------------
+  56          void ScalerOsdPositionOffsetCorrection(void)
+  57          {
+  58   1          WORD usHVOffset = ScalerOsdPositionOffsetCalculation();
+  59   1          ScalerOsdPositionOffset(_OSD_POSITION_OFFSET_GLOBAL, X_POS(HIBYTE(usHVOffset)), Y_POS(LOBYTE(usHVOffse
+             -t)));
+  60   1      }
+  61          
+  62          //--------------------------------------------------
+  63          // Description  : Calculate OSD offset
+  64          // Input Value  : None
+  65          // Output Value : HVoffset
+  66          //--------------------------------------------------
+  67          WORD ScalerOsdPositionOffsetCalculation(void)
+  68          {
+  69   1          BYTE ucOsdVOffset = 0;
+  70   1          BYTE ucOsdHOffset = 0;
+  71   1          WORD usBGHStart = 0;
+  72   1          WORD usBGVStart = 0;
+  73   1      
+  74   1          ScalerGetDataPortByte(P0_2A_DISPLAY_FORMAT_ADDR_PORT, _P0_2B_PT_03_DISPLAY_HOR_BG_STA_H, 2, &pData[0],
+             - _AUTOINC);
+  75   1          usBGHStart = ((pData[0] & 0x1F) << 8) | (pData[1]);
+  76   1          ScalerGetDataPortByte(P0_2A_DISPLAY_FORMAT_ADDR_PORT, _P0_2B_PT_0E_DISPLAY_VER_BG_STA_H, 2, &pData[0],
+             - _AUTOINC);
+  77   1          usBGVStart = ((pData[0] & 0x1F) << 8) | (pData[1]);
+  78   1      
+  79   1          g_ucOSDPositionVOffsetCorrectCompensation = 0;
+  80   1      
+  81   1          if((ScalerOsdGetDoubleFunctionH() == _TRUE) && (ScalerOsdGetDoubleFunctionV() == _TRUE))
+  82   1          {
+  83   2              // double size
+  84   2              // v offset
+  85   2              if(usBGVStart >= 4)
+  86   2              {
+  87   3                  ucOsdVOffset = (usBGVStart - 4) / 2;
+  88   3              }
+  89   2              else
+  90   2              {
+  91   3                  ucOsdVOffset = 0;
+  92   3                  g_ucOSDPositionVOffsetCorrectCompensation = (4 - usBGVStart) / 2;
+  93   3              }
+  94   2      
+  95   2              // v delay fine tune
+  96   2              ScalerSetBit(P3A_1E_FRAME_CTRL_1E, ~(_BIT3), 0);
+  97   2      
+  98   2              // h offset
+  99   2              ucOsdHOffset = (usBGHStart + 16) / 2;
+ 100   2              // h delay fine tune
+ 101   2              ScalerSetBit(P3A_1E_FRAME_CTRL_1E, ~(_BIT7), 0);
+ 102   2          }
+ 103   1          else
+ 104   1          {
+ 105   2              // normal size
+ 106   2              // v offset
+ 107   2              if(usBGVStart >= 2)
+ 108   2              {
+ 109   3                  ucOsdVOffset = usBGVStart - 2;
+ 110   3              }
+C51 COMPILER V8.12   RL6432_SERIES_OSDPOSITIONOFFSETCORRECTION                             05/25/2022 15:41:36 PAGE 3   
+
+ 111   2              else
+ 112   2              {
+ 113   3                  ucOsdVOffset = 0;
+ 114   3                  g_ucOSDPositionVOffsetCorrectCompensation = 2 - usBGVStart;
+ 115   3              }
+ 116   2      
+ 117   2              // v double delay fine tune
+ 118   2              ScalerSetBit(P3A_1E_FRAME_CTRL_1E, ~(_BIT3), 0);
+ 119   2      
+ 120   2              // h offset
+ 121   2              ucOsdHOffset = usBGHStart + 32;
+ 122   2              // h delay fine tune
+ 123   2              ScalerSetBit(P3A_1E_FRAME_CTRL_1E, ~(_BIT7), 0);
+ 124   2          }
+ 125   1      
+ 126   1          // OSD rotation fine tune osd h offset
+ 127   1          pData[0] = ScalerGetByte(P3A_41_FRAME_CTRL_41);
+ 128   1          if((pData[0] & _BIT0) == _BIT0) // OSD Auto Rotation Enable
+ 129   1          {
+ 130   2              switch(pData[0] & (_BIT5 | _BIT4))   // OSD Auto Rotation Direction
+ 131   2              {
+ 132   3                  case 0x00:  // ucTemp = _OSD_ROTATE_DEGREE_270;    // CCW
+ 133   3                  case _BIT4: // ucTemp = _OSD_ROTATE_DEGREE_90;     // CW
+ 134   3                      ucOsdHOffset -= 1;
+ 135   3                      break;
+ 136   3      
+ 137   3                  default:
+ 138   3                      break;
+ 139   3              }
+ 140   2          }
+ 141   1      
+ 142   1          if(ucOsdHOffset < 6)
+ 143   1          {
+ 144   2              ucOsdHOffset = 6;  // limitation RL6369 & RL6432
+ 145   2          }
+ 146   1      
+ 147   1          return ((ucOsdHOffset & 0xFF) << 8 | (ucOsdVOffset & 0xFF));
+ 148   1      }
+ 149          
+ 150          /*
+ 151          //--------------------------------------------------
+ 152          // example
+ 153          //--------------------------------------------------
+ 154              ScalerOsdPositionOffsetCorrection();
+ 155          */
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    317    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =      1       6
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

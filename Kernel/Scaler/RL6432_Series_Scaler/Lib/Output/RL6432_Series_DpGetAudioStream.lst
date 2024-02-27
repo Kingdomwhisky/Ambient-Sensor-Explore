@@ -1,0 +1,110 @@
+C51 COMPILER V8.12   RL6432_SERIES_DPGETAUDIOSTREAM                                        05/25/2022 15:41:35 PAGE 1   
+
+
+C51 COMPILER V8.12, COMPILATION OF MODULE RL6432_SERIES_DPGETAUDIOSTREAM
+OBJECT MODULE PLACED IN .\Output\RL6432_Series_DpGetAudioStream.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Code\RL6432_Series_DP\RL6432_Series_DpGetAudioStream.c LARGE OPTIMIZE(9,SPE
+                    -ED) INCDIR(..\..\..\Common;..\Header;.\Header;..\..\ScalerFunction\Lib\Header;..\..\ScalerFunction\Header;..\..\ScalerCo
+                    -mmonFunction\Lib\Header;..\..\ScalerCommonFunction\Header;..\..\RL6432_Series_Common\Lib\Header;..\..\RL6432_Series_Comm
+                    -on\Header) DEFINE(_TRANSLATOR_SUPPORT=_OFF,_SCALER_TYPE=_RL6432_SERIES) DEBUG OBJECTEXTEND PRINT(.\Output\RL6432_Series_
+                    -DpGetAudioStream.lst) OBJECT(.\Output\RL6432_Series_DpGetAudioStream.obj)
+
+line level    source
+
+   1          /********************************************************************************/
+   2          /*   The  Software  is  proprietary,  confidential,  and  valuable to Realtek   */
+   3          /*   Semiconductor  Corporation  ("Realtek").  All  rights, including but not   */
+   4          /*   limited  to  copyrights,  patents,  trademarks, trade secrets, mask work   */
+   5          /*   rights, and other similar rights and interests, are reserved to Realtek.   */
+   6          /*   Without  prior  written  consent  from  Realtek,  copying, reproduction,   */
+   7          /*   modification,  distribution,  or  otherwise  is strictly prohibited. The   */
+   8          /*   Software  shall  be  kept  strictly  in  confidence,  and  shall  not be   */
+   9          /*   disclosed to or otherwise accessed by any third party.                     */
+  10          /*   c<2003> - <2012>                                                           */
+  11          /*   The Software is provided "AS IS" without any warranty of any kind,         */
+  12          /*   express, implied, statutory or otherwise.                                  */
+  13          /********************************************************************************/
+  14          
+  15          //----------------------------------------------------------------------------------------------------
+  16          // ID Code      : RL6432_Series_DpGetAudioStream.c
+  17          // Update Note  :
+  18          //----------------------------------------------------------------------------------------------------
+  19          #include "RL6432_Series_DPLibInternalInclude.h"
+  20          
+  21          //****************************************************************************
+  22          // DEFINITIONS / MACROS
+  23          //****************************************************************************
+  24          
+  25          
+  26          //****************************************************************************
+  27          // STRUCT / TYPE / ENUM DEFINITTIONS
+  28          //****************************************************************************
+  29          
+  30          
+  31          //****************************************************************************
+  32          // CODE TABLES
+  33          //****************************************************************************
+  34          
+  35          
+  36          //****************************************************************************
+  37          // VARIABLE DECLARATIONS
+  38          //****************************************************************************
+  39          
+  40          
+  41          //****************************************************************************
+  42          // FUNCTION DECLARATIONS
+  43          //****************************************************************************
+  44          bit ScalerDpGetAudioStream(BYTE ucInputPort);
+  45          
+  46          //****************************************************************************
+  47          // FUNCTION DEFINITIONS
+  48          //****************************************************************************
+  49          //--------------------------------------------------
+  50          // Description  : DP Sec Data Reset
+  51          // Input Value  : ucInputPort
+C51 COMPILER V8.12   RL6432_SERIES_DPGETAUDIOSTREAM                                        05/25/2022 15:41:35 PAGE 2   
+
+  52          // Output Value : None
+  53          //--------------------------------------------------
+  54          bit ScalerDpGetAudioStream(BYTE ucInputPort)
+  55          {
+  56   1          switch(ucInputPort)
+  57   1          {
+  58   2              case _D0_INPUT_PORT:
+  59   2      
+  60   2                  if(GET_DP_RX0_LINK_TRAINING_STATUS() == _DP_NORMAL_LINK_TRAINING_PASS)
+  61   2                  {
+  62   3                      return (ScalerGetBit(PB6_01_DP_VBID, _BIT4) == 0x00);
+  63   3                  }
+  64   2      
+  65   2                  break;
+  66   2      
+  67   2              case _D1_INPUT_PORT:
+  68   2      
+  69   2                  if(GET_DP_RX1_LINK_TRAINING_STATUS() == _DP_NORMAL_LINK_TRAINING_PASS)
+  70   2                  {
+  71   3                      return (ScalerGetBit(PB9_01_DP_VBID, _BIT4) == 0x00);
+  72   3                  }
+  73   2      
+  74   2                  break;
+  75   2      
+  76   2              default:
+  77   2                  break;
+  78   2          }
+  79   1      
+  80   1          return _FALSE;
+  81   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     49    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

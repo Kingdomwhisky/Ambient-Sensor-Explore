@@ -1,0 +1,115 @@
+C51 COMPILER V8.12   RL6432_SERIES_COLORBRIGHTNESSADJUST                                   05/25/2022 15:41:23 PAGE 1   
+
+
+C51 COMPILER V8.12, COMPILATION OF MODULE RL6432_SERIES_COLORBRIGHTNESSADJUST
+OBJECT MODULE PLACED IN .\Output\RL6432_Series_ColorBrightnessAdjust.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Code\RL6432_Series_Color\RL6432_Series_ColorBrightnessAdjust.c LARGE OPTIMI
+                    -ZE(9,SPEED) INCDIR(..\..\..\Common;..\Header;.\Header;..\..\ScalerFunction\Lib\Header;..\..\ScalerFunction\Header;..\..\
+                    -ScalerCommonFunction\Lib\Header;..\..\ScalerCommonFunction\Header;..\..\RL6432_Series_Common\Lib\Header;..\..\RL6432_Ser
+                    -ies_Common\Header) DEFINE(_TRANSLATOR_SUPPORT=_OFF,_SCALER_TYPE=_RL6432_SERIES) DEBUG OBJECTEXTEND PRINT(.\Output\RL6432
+                    -_Series_ColorBrightnessAdjust.lst) OBJECT(.\Output\RL6432_Series_ColorBrightnessAdjust.obj)
+
+line level    source
+
+   1          /********************************************************************************/
+   2          /*   The  Software  is  proprietary,  confidential,  and  valuable to Realtek   */
+   3          /*   Semiconductor  Corporation  ("Realtek").  All  rights, including but not   */
+   4          /*   limited  to  copyrights,  patents,  trademarks, trade secrets, mask work   */
+   5          /*   rights, and other similar rights and interests, are reserved to Realtek.   */
+   6          /*   Without  prior  written  consent  from  Realtek,  copying, reproduction,   */
+   7          /*   modification,  distribution,  or  otherwise  is strictly prohibited. The   */
+   8          /*   Software  shall  be  kept  strictly  in  confidence,  and  shall  not be   */
+   9          /*   disclosed to or otherwise accessed by any third party.                     */
+  10          /*   c<2003> - <2012>                                                           */
+  11          /*   The Software is provided "AS IS" without any warranty of any kind,         */
+  12          /*   express, implied, statutory or otherwise.                                  */
+  13          /********************************************************************************/
+  14          
+  15          //----------------------------------------------------------------------------------------------------
+  16          // ID Code      : RL6432_Series_ColorBrightnessAdjust.c
+  17          // Update Note  :
+  18          //----------------------------------------------------------------------------------------------------
+  19          #include "RL6432_Series_ColorLibInternalInclude.h"
+  20          
+  21          //****************************************************************************
+  22          // DEFINITIONS / MACROS
+  23          //****************************************************************************
+  24          
+  25          
+  26          //****************************************************************************
+  27          // STRUCT / TYPE / ENUM DEFINITTIONS
+  28          //****************************************************************************
+  29          
+  30          
+  31          //****************************************************************************
+  32          // CODE TABLES
+  33          //****************************************************************************
+  34          
+  35          
+  36          //****************************************************************************
+  37          // VARIABLE DECLARATIONS
+  38          //****************************************************************************
+  39          
+  40          
+  41          //****************************************************************************
+  42          // FUNCTION DECLARATIONS
+  43          //****************************************************************************
+  44          void ScalerColorBrightnessAdjust(EnumBriConCoefType enumBriConCoefType, WORD *pusData);
+  45          
+  46          //****************************************************************************
+  47          // FUNCTION DEFINITIONS
+  48          //****************************************************************************
+  49          //--------------------------------------------------
+  50          // Description  : Adjust Brightness
+  51          // Input Value  : EnumBriConCoefTypem, Coefficient
+C51 COMPILER V8.12   RL6432_SERIES_COLORBRIGHTNESSADJUST                                   05/25/2022 15:41:23 PAGE 2   
+
+  52          //                10 bit input, old 8 bit brightness input value must left shift 2 bit
+  53          //                -2048(00h) ~ 0(200h) ~  +2044(3FFh)
+  54          // Output Value : void
+  55          //--------------------------------------------------
+  56          void ScalerColorBrightnessAdjust(EnumBriConCoefType enumBriConCoefType, WORD *pusData)
+  57          {
+  58   1          switch(enumBriConCoefType)
+  59   1          {
+  60   2              case _BRIGHTNESS_COEF_A:
+  61   2                  ScalerSetDataPortByte(P0_64_CTS_BRI_PORT_ADD, _P0_65_PT_00_BRI_RED_COE_SETA_H, (pusData[0] & 0
+             -x03FC) >> 2);
+  62   2                  ScalerSetDataPortByte(P0_64_CTS_BRI_PORT_ADD, _P0_65_PT_01_BRI_GRN_COE_SETA_H, (pusData[1] & 0
+             -x03FC) >> 2);
+  63   2                  ScalerSetDataPortByte(P0_64_CTS_BRI_PORT_ADD, _P0_65_PT_02_BRI_BLU_COE_SETA_H, (pusData[2] & 0
+             -x03FC) >> 2);
+  64   2                  ScalerSetDataPortByte(P0_64_CTS_BRI_PORT_ADD, _P0_65_PT_20_BRI_COE_SETA_L, ((pusData[0] & 0x00
+             -03) << 6) | ((pusData[1] & 0x0003) << 4) | ((pusData[2] & 0x0003) << 2));
+  65   2                  break;
+  66   2      
+  67   2              case _BRIGHTNESS_COEF_B:
+  68   2                  ScalerSetDataPortByte(P0_64_CTS_BRI_PORT_ADD, _P0_65_PT_06_BRI_RED_COE_SETB_H, (pusData[0] & 0
+             -x03FC) >> 2);
+  69   2                  ScalerSetDataPortByte(P0_64_CTS_BRI_PORT_ADD, _P0_65_PT_07_BRI_GRN_COE_SETB_H, (pusData[1] & 0
+             -x03FC) >> 2);
+  70   2                  ScalerSetDataPortByte(P0_64_CTS_BRI_PORT_ADD, _P0_65_PT_08_BRI_BLU_COE_SETB_H, (pusData[2] & 0
+             -x03FC) >> 2);
+  71   2                  ScalerSetDataPortByte(P0_64_CTS_BRI_PORT_ADD, _P0_65_PT_23_BRI_COE_SETB_L, ((pusData[0] & 0x00
+             -03) << 6) | ((pusData[1] & 0x0003) << 4) | ((pusData[2] & 0x0003) << 2));
+  72   2                  break;
+  73   2      
+  74   2              default:
+  75   2                  break;
+  76   2          }
+  77   1      }
+  78          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    279    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----       3
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

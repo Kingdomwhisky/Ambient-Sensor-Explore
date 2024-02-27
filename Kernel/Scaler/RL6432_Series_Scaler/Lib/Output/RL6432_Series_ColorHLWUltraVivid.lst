@@ -1,0 +1,317 @@
+C51 COMPILER V8.12   RL6432_SERIES_COLORHLWULTRAVIVID                                      05/25/2022 15:41:27 PAGE 1   
+
+
+C51 COMPILER V8.12, COMPILATION OF MODULE RL6432_SERIES_COLORHLWULTRAVIVID
+OBJECT MODULE PLACED IN .\Output\RL6432_Series_ColorHLWUltraVivid.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Code\RL6432_Series_Color\RL6432_Series_ColorHLWUltraVivid.c LARGE OPTIMIZE(
+                    -9,SPEED) INCDIR(..\..\..\Common;..\Header;.\Header;..\..\ScalerFunction\Lib\Header;..\..\ScalerFunction\Header;..\..\Sca
+                    -lerCommonFunction\Lib\Header;..\..\ScalerCommonFunction\Header;..\..\RL6432_Series_Common\Lib\Header;..\..\RL6432_Series
+                    -_Common\Header) DEFINE(_TRANSLATOR_SUPPORT=_OFF,_SCALER_TYPE=_RL6432_SERIES) DEBUG OBJECTEXTEND PRINT(.\Output\RL6432_Se
+                    -ries_ColorHLWUltraVivid.lst) OBJECT(.\Output\RL6432_Series_ColorHLWUltraVivid.obj)
+
+line level    source
+
+   1          /********************************************************************************/
+   2          /*   The  Software  is  proprietary,  confidential,  and  valuable to Realtek   */
+   3          /*   Semiconductor  Corporation  ("Realtek").  All  rights, including but not   */
+   4          /*   limited  to  copyrights,  patents,  trademarks, trade secrets, mask work   */
+   5          /*   rights, and other similar rights and interests, are reserved to Realtek.   */
+   6          /*   Without  prior  written  consent  from  Realtek,  copying, reproduction,   */
+   7          /*   modification,  distribution,  or  otherwise  is strictly prohibited. The   */
+   8          /*   Software  shall  be  kept  strictly  in  confidence,  and  shall  not be   */
+   9          /*   disclosed to or otherwise accessed by any third party.                     */
+  10          /*   c<2003> - <2012>                                                           */
+  11          /*   The Software is provided "AS IS" without any warranty of any kind,         */
+  12          /*   express, implied, statutory or otherwise.                                  */
+  13          /********************************************************************************/
+  14          
+  15          //----------------------------------------------------------------------------------------------------
+  16          // ID Code      : RL6432_Series_ColorHLWUltraVivid.c
+  17          // Update Note  :
+  18          //----------------------------------------------------------------------------------------------------
+  19          #include "RL6432_Series_ColorLibInternalInclude.h"
+  20          
+  21          //****************************************************************************
+  22          // DEFINITIONS / MACROS
+  23          //****************************************************************************
+  24          
+  25          
+  26          //****************************************************************************
+  27          // STRUCT / TYPE / ENUM DEFINITTIONS
+  28          //****************************************************************************
+  29          
+  30          
+  31          //****************************************************************************
+  32          // CODE TABLES
+  33          //****************************************************************************
+  34          
+  35          
+  36          //****************************************************************************
+  37          // VARIABLE DECLARATIONS
+  38          //****************************************************************************
+  39          
+  40          
+  41          //****************************************************************************
+  42          // FUNCTION DECLARATIONS
+  43          //****************************************************************************
+  44          void ScalerColorHLWIDLTILSRAdjust(WORD usHPos, WORD usHWidth, WORD usVPos, WORD usVHeight);
+  45          void ScalerColorHLWIDLTILSREnable(EnumFunctionOnOFF enumOn);
+  46          
+  47          //****************************************************************************
+  48          // FUNCTION DEFINITIONS
+  49          //****************************************************************************
+  50          //--------------------------------------------------
+  51          // Description  : Adjust UltraVivid highlight window region
+C51 COMPILER V8.12   RL6432_SERIES_COLORHLWULTRAVIVID                                      05/25/2022 15:41:27 PAGE 2   
+
+  52          // Input Value  : usHPos, usHWidth, usVPos, usVHeight
+  53          // Output Value : None
+  54          //--------------------------------------------------
+  55          void ScalerColorHLWIDLTILSRAdjust(WORD usHPos, WORD usHWidth, WORD usVPos, WORD usVHeight)
+  56          {
+  57   1          DWORD ulScale = 0;
+  58   1          WORD usBGHStart = 0;
+  59   1          WORD usBGVStart = 0;
+  60   1          WORD usActHStart = 0;
+  61   1          WORD usActHEnd = 0;
+  62   1          WORD usActVStart = 0;
+  63   1          WORD usActVEnd = 0;
+  64   1          bit bIdomainHLWEn = 0;
+  65   1          WORD usIHLWHStart = 0;
+  66   1          WORD usIHLWHEnd = 0;
+  67   1          WORD usIHLWVStart = 0;
+  68   1          WORD usIHLWVEnd = 0;
+  69   1      
+  70   1          if((usHWidth == 0) || (usVHeight == 0))
+  71   1          {
+  72   2              return;
+  73   2          }
+  74   1      
+  75   1      
+  76   1          // change HLW position reference to DH/V Sync!A(Tile mode: Active size bigger than Background size!)
+  77   1          // get HLW region in four Active region HLW !Areference to active
+  78   1          // by HSU Factor!Aget LSR HLW region
+  79   1          // Set LSR HLW regs
+  80   1          // by SU/D Factor!Aget IDLTI HLW region
+  81   1          // Set IDLTI HLW regs
+  82   1          // if one path is without HLW!Athan disable this path's HLW
+  83   1          //
+  84   1          // border width
+  85   1          ScalerGetDataPortByte(P0_60_HLW_ADDR_PORT, _P0_61_PT_08_HLW_BORDER_WIDTH, 1, &pData[0], _AUTOINC);
+  86   1      
+  87   1          if((bit)ScalerGetDataPortBit(P0_60_HLW_ADDR_PORT, _P0_61_PT_0C_HLW_BORDER_EN, _BIT6) == 0x00)
+  88   1          {
+  89   2              usHWidth = usHWidth + (pData[0] & 0x1F);
+  90   2          }
+  91   1      
+  92   1          if((bit)ScalerGetDataPortBit(P0_60_HLW_ADDR_PORT, _P0_61_PT_0C_HLW_BORDER_EN, _BIT4) == 0x00)
+  93   1          {
+  94   2              usVHeight = usVHeight + (pData[0] & 0x1F);
+  95   2          }
+  96   1      
+  97   1          ScalerGetDataPortByte(P0_2A_DISPLAY_FORMAT_ADDR_PORT, _P0_2B_PT_03_DISPLAY_HOR_BG_STA_H, 2, &pData[0],
+             - _AUTOINC);
+  98   1          usBGHStart = ((pData[0] & 0x1F) << 8) | (pData[1]);
+  99   1          ScalerGetDataPortByte(P0_2A_DISPLAY_FORMAT_ADDR_PORT, _P0_2B_PT_0E_DISPLAY_VER_BG_STA_H, 2, &pData[0],
+             - _AUTOINC);
+ 100   1          usBGVStart = ((pData[0] & 0x1F) << 8) | (pData[1]);
+ 101   1      
+ 102   1          usHPos = usHPos + usBGHStart;
+ 103   1          usVPos = usVPos + usBGVStart;
+ 104   1      
+ 105   1      
+ 106   1          ScalerGetDataPortByte(P0_2A_DISPLAY_FORMAT_ADDR_PORT, _P0_2B_PT_05_DISPLAY_HOR_ACT_STA_H, 2, &pData[0]
+             -, _AUTOINC);
+ 107   1          usActHStart = ((pData[0] & 0x1F) << 8) | (pData[1]);
+ 108   1          ScalerGetDataPortByte(P0_2A_DISPLAY_FORMAT_ADDR_PORT, _P0_2B_PT_07_DISPLAY_HOR_ACT_END_H, 2, &pData[0]
+             -, _AUTOINC);
+ 109   1          usActHEnd = ((pData[0] & 0x1F) << 8) | (pData[1]);
+C51 COMPILER V8.12   RL6432_SERIES_COLORHLWULTRAVIVID                                      05/25/2022 15:41:27 PAGE 3   
+
+ 110   1          ScalerGetDataPortByte(P0_2A_DISPLAY_FORMAT_ADDR_PORT, _P0_2B_PT_10_DISPLAY_VER_ACT_STA_H, 2, &pData[0]
+             -, _AUTOINC);
+ 111   1          usActVStart = ((pData[0] & 0x1F) << 8) | (pData[1]);
+ 112   1          ScalerGetDataPortByte(P0_2A_DISPLAY_FORMAT_ADDR_PORT, _P0_2B_PT_12_DISPLAY_VER_ACT_END_H, 2, &pData[0]
+             -, _AUTOINC);
+ 113   1          usActVEnd = ((pData[0] & 0x1F) << 8) | (pData[1]);
+ 114   1      
+ 115   1          if((usHPos > usActHEnd) ||
+ 116   1             (usHPos + usHWidth <= usActHStart) ||
+ 117   1             (usVPos > usActVEnd) ||
+ 118   1             (usVPos + usVHeight <= usActVStart))
+ 119   1          {
+ 120   2              bIdomainHLWEn = 0;
+ 121   2          }
+ 122   1          else
+ 123   1          {
+ 124   2              bIdomainHLWEn = 1;
+ 125   2          }
+ 126   1      
+ 127   1          if(bIdomainHLWEn == 1)
+ 128   1          {
+ 129   2              if(usHPos >= usActHStart)
+ 130   2              {
+ 131   3                  usIHLWHStart = usHPos;
+ 132   3              }
+ 133   2              else
+ 134   2              {
+ 135   3                  usIHLWHStart = usActHStart;
+ 136   3              }
+ 137   2      
+ 138   2              if(usHPos + usHWidth < usActHEnd)
+ 139   2              {
+ 140   3                  usIHLWHEnd = usHPos + usHWidth;
+ 141   3              }
+ 142   2              else
+ 143   2              {
+ 144   3                  usIHLWHEnd = usActHEnd;
+ 145   3              }
+ 146   2      
+ 147   2              if(usVPos >= usActVStart)
+ 148   2              {
+ 149   3                  usIHLWVStart = usVPos;
+ 150   3              }
+ 151   2              else
+ 152   2              {
+ 153   3                  usIHLWVStart = usActVStart;
+ 154   3              }
+ 155   2      
+ 156   2              if(usVPos + usVHeight < usActVEnd)
+ 157   2              {
+ 158   3                  usIHLWVEnd = usVPos + usVHeight;
+ 159   3              }
+ 160   2              else
+ 161   2              {
+ 162   3                  usIHLWVEnd = usActVEnd;
+ 163   3              }
+ 164   2              usIHLWHStart = usIHLWHStart - usActHStart;
+ 165   2              usIHLWHEnd = usIHLWHEnd - usActHStart;
+ 166   2              usIHLWVStart = usIHLWVStart - usActVStart;
+ 167   2              usIHLWVEnd = usIHLWVEnd - usActVStart;
+ 168   2      
+ 169   2      
+C51 COMPILER V8.12   RL6432_SERIES_COLORHLWULTRAVIVID                                      05/25/2022 15:41:27 PAGE 4   
+
+ 170   2              if(GET_H_SCALE_UP() == _TRUE)
+ 171   2              {
+ 172   3                  ScalerGetDataPortByte(P0_33_SF_ADDR_PORT, _P0_34_PT_00_HOR_SCALE_FACTOR_H, 3, &pData[0], _AUTO
+             -INC);
+ 173   3      
+ 174   3                  ulScale = (((DWORD)(pData[0] & 0x0F) << 16) | ((DWORD)pData[1] << 8) | (pData[2]));
+ 175   3      
+ 176   3                  usIHLWHStart = (((ulScale * usIHLWHStart) >> 19) + 1) >> 1;
+ 177   3                  usIHLWHEnd = (((ulScale * usIHLWHEnd) >> 19) + 1) >> 1;
+ 178   3              }
+ 179   2      
+ 180   2              // (LSR) H refers to M domain V refers to D domain
+ 181   2              pData[0] = (BYTE)((usIHLWHStart >> 8) & 0x1F);
+ 182   2              pData[1] = (BYTE)(usIHLWHStart & 0xFF);
+ 183   2              pData[2] = (BYTE)((usIHLWHEnd >> 8) & 0x1F);
+ 184   2              pData[3] = (BYTE)(usIHLWHEnd & 0xFF);
+ 185   2              pData[4] = (BYTE)((usIHLWVStart >> 8) & 0x1F);
+ 186   2              pData[5] = (BYTE)(usIHLWVStart & 0xFF);
+ 187   2              pData[6] = (BYTE)((usIHLWVEnd >> 8) & 0x1F);
+ 188   2              pData[7] = (BYTE)(usIHLWVEnd & 0xFF);
+ 189   2      
+ 190   2              ScalerWrite(P11_CC_LSR_HLW_H_START_HIGH, 8, pData, _AUTOINC);
+ 191   2      
+ 192   2              // (IDLTI) H refers to I domain V refers to I domain
+ 193   2              if(GET_V_SCALE_UP() == _TRUE)
+ 194   2              {
+ 195   3                  ScalerGetDataPortByte(P0_33_SF_ADDR_PORT, _P0_34_PT_03_VER_SCALE_FACTOR_H, 3, &pData[0], _AUTO
+             -INC);
+ 196   3      
+ 197   3                  ulScale = (((DWORD)(pData[0] & 0x0F) << 16) | ((DWORD)pData[1] << 8) | (pData[2]));
+ 198   3      
+ 199   3                  usIHLWVStart = (((ulScale * usIHLWVStart) >> 19) + 1) >> 1;
+ 200   3                  usIHLWVEnd = (((ulScale * usIHLWVEnd) >> 19) + 1) >> 1;
+ 201   3              }
+ 202   2      
+ 203   2              if(GET_V_SCALE_DOWN() == _TRUE)
+ 204   2              {
+ 205   3                  ScalerGetDataPortByte(P0_24_SD_ADDRESS_PORT_M1, _P0_25_PT_01_V_SD_FACTOR_H_M1, 3, &pData[0], _
+             -AUTOINC);
+ 206   3                  ScalerGetDataPortByte(P0_24_SD_ADDRESS_PORT_M1, 0x42, 1, &pData[3], _AUTOINC);
+ 207   3      
+ 208   3                  ulScale = (((DWORD)(pData[0] & 0x0F) << 19) | ((DWORD)pData[1] << 11) | (((DWORD)pData[2] << 3
+             -)) | ((pData[3] & 0xE0) >> 5));
+ 209   3      
+ 210   3                  usIHLWVStart = (((ulScale * usIHLWVStart) >> 19) + 1) >> 1;
+ 211   3                  usIHLWVEnd = (((ulScale * usIHLWVEnd) >> 19) + 1) >> 1;
+ 212   3              }
+ 213   2              if(GET_H_SCALE_DOWN() == _TRUE)
+ 214   2              {
+ 215   3                  ScalerGetDataPortByte(P0_24_SD_ADDRESS_PORT_M1, _P0_25_PT_05_H_SD_FACTOR_H_M1, 3, &pData[0], _
+             -AUTOINC);
+ 216   3                  ScalerGetDataPortByte(P0_24_SD_ADDRESS_PORT_M1, 0x42, 1, &pData[3], _AUTOINC);
+ 217   3      
+ 218   3                  ulScale = (((DWORD)(pData[0] & 0xFF) << 16) | ((DWORD)pData[1] << 8) | pData[2]);
+ 219   3      
+ 220   3                  usIHLWHStart = (((ulScale * usIHLWHStart) >> 19) + 1) >> 1;
+ 221   3                  usIHLWHEnd = (((ulScale * usIHLWHEnd) >> 19) + 1) >> 1;
+ 222   3              }
+ 223   2      
+ 224   2              pData[0] = (BYTE)((usIHLWHStart >> 8) & 0x1F);
+ 225   2              pData[1] = (BYTE)(usIHLWHStart & 0xFF);
+ 226   2              pData[2] = (BYTE)((usIHLWHEnd >> 8) & 0x1F);
+C51 COMPILER V8.12   RL6432_SERIES_COLORHLWULTRAVIVID                                      05/25/2022 15:41:27 PAGE 5   
+
+ 227   2              pData[3] = (BYTE)(usIHLWHEnd & 0xFF);
+ 228   2              pData[4] = (BYTE)((usIHLWVStart >> 8) & 0x1F);
+ 229   2              pData[5] = (BYTE)(usIHLWVStart & 0xFF);
+ 230   2              pData[6] = (BYTE)((usIHLWVEnd >> 8) & 0x1F);
+ 231   2              pData[7] = (BYTE)(usIHLWVEnd & 0xFF);
+ 232   2      
+ 233   2              ScalerWrite(P11_D4_I_DLTI_HLW_HOR_START_HSB_M1, 8, pData, _AUTOINC);
+ 234   2      
+ 235   2              ScalerSetBit(P11_B9_SCALER_LSR_HLW, ~_BIT7, _BIT7);
+ 236   2              ScalerSetBit(P11_DC_I_DLTI_HLW_CTRL_M1, ~_BIT1, _BIT1);
+ 237   2          }
+ 238   1          else
+ 239   1          {
+ 240   2              ScalerSetBit(P11_B9_SCALER_LSR_HLW, ~_BIT7, 0x00);
+ 241   2              ScalerSetBit(P11_DC_I_DLTI_HLW_CTRL_M1, ~_BIT1, 0x00);
+ 242   2          }
+ 243   1      }
+ 244          
+ 245          
+ 246          //--------------------------------------------------
+ 247          // Description  : Enable/Disable IDLTI, LSR,
+ 248          // Input Value  : EnumFunctionOnOFF
+ 249          // Output Value : none
+ 250          //--------------------------------------------------
+ 251          void ScalerColorHLWIDLTILSREnable(EnumFunctionOnOFF enumOn)
+ 252          {
+ 253   1          if(enumOn == _FUNCTION_ON)
+ 254   1          {
+ 255   2              // Ddomain one HLW
+ 256   2      
+ 257   2              // IDLTI
+ 258   2              ScalerSetBit(P11_DC_I_DLTI_HLW_CTRL_M1, ~_BIT1, _BIT1);
+ 259   2      
+ 260   2              // LSR
+ 261   2              ScalerSetBit(P11_B9_SCALER_LSR_HLW, ~_BIT7, _BIT7);
+ 262   2          }
+ 263   1          else // bOn == _OFF || bOn == _CLOCK_GATED
+ 264   1          {
+ 265   2              // IDLTI
+ 266   2              ScalerSetBit(P11_DC_I_DLTI_HLW_CTRL_M1, ~_BIT1, 0x00);
+ 267   2      
+ 268   2              // LSR
+ 269   2              ScalerSetBit(P11_B9_SCALER_LSR_HLW, ~_BIT7, 0x00);
+ 270   2          }
+ 271   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1383    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----      32
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----       1
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

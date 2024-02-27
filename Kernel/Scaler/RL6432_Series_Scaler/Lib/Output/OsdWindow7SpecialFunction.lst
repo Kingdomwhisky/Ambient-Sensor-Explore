@@ -1,0 +1,126 @@
+C51 COMPILER V8.12   OSDWINDOW7SPECIALFUNCTION                                             05/25/2022 15:41:21 PAGE 1   
+
+
+C51 COMPILER V8.12, COMPILATION OF MODULE OSDWINDOW7SPECIALFUNCTION
+OBJECT MODULE PLACED IN .\Output\OsdWindow7SpecialFunction.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE ..\..\ScalerFunction\Lib\Code\ScalerOSD\Windows\OsdWindow7SpecialFunction.c
+                    - LARGE OPTIMIZE(9,SPEED) INCDIR(..\..\..\Common;..\Header;.\Header;..\..\ScalerFunction\Lib\Header;..\..\ScalerFunction\
+                    -Header;..\..\ScalerCommonFunction\Lib\Header;..\..\ScalerCommonFunction\Header;..\..\RL6432_Series_Common\Lib\Header;..\
+                    -..\RL6432_Series_Common\Header) DEFINE(_TRANSLATOR_SUPPORT=_OFF,_SCALER_TYPE=_RL6432_SERIES) DEBUG OBJECTEXTEND PRINT(.\
+                    -Output\OsdWindow7SpecialFunction.lst) OBJECT(.\Output\OsdWindow7SpecialFunction.obj)
+
+line level    source
+
+   1          /********************************************************************************/
+   2          /*   The  Software  is  proprietary,  confidential,  and  valuable to Realtek   */
+   3          /*   Semiconductor  Corporation  ("Realtek").  All  rights, including but not   */
+   4          /*   limited  to  copyrights,  patents,  trademarks, trade secrets, mask work   */
+   5          /*   rights, and other similar rights and interests, are reserved to Realtek.   */
+   6          /*   Without  prior  written  consent  from  Realtek,  copying, reproduction,   */
+   7          /*   modification,  distribution,  or  otherwise  is strictly prohibited. The   */
+   8          /*   Software  shall  be  kept  strictly  in  confidence,  and  shall  not be   */
+   9          /*   disclosed to or otherwise accessed by any third party.                     */
+  10          /*   c<2003> - <2012>                                                           */
+  11          /*   The Software is provided "AS IS" without any warranty of any kind,         */
+  12          /*   express, implied, statutory or otherwise.                                  */
+  13          /********************************************************************************/
+  14          
+  15          //----------------------------------------------------------------------------------------------------
+  16          // ID Code      : OsdWindow7SpecialFunction.c
+  17          // Update Note  :
+  18          //----------------------------------------------------------------------------------------------------
+  19          #include "ScalerOSDLibInternalInclude.h"
+  20          
+  21          //****************************************************************************
+  22          // DEFINITIONS / MACROS
+  23          //****************************************************************************
+  24          
+  25          
+  26          //****************************************************************************
+  27          // STRUCT / TYPE / ENUM DEFINITTIONS
+  28          //****************************************************************************
+  29          
+  30          
+  31          //****************************************************************************
+  32          // CODE TABLES
+  33          //****************************************************************************
+  34          
+  35          
+  36          //****************************************************************************
+  37          // VARIABLE DECLARATIONS
+  38          //****************************************************************************
+  39          
+  40          
+  41          //****************************************************************************
+  42          // FUNCTION DECLARATIONS
+  43          //****************************************************************************
+  44          void ScalerOsdWindow7SpecialFunction(EnumOsdWindow7FunctionType enumOsdWindow7FunctionType);
+  45          
+  46          
+  47          //****************************************************************************
+  48          // FUNCTION DEFINITIONS
+  49          //****************************************************************************
+  50          //--------------------------------------------------
+  51          // Description  : Set window 7 Special function
+C51 COMPILER V8.12   OSDWINDOW7SPECIALFUNCTION                                             05/25/2022 15:41:21 PAGE 2   
+
+  52          // Input Value  : enumOsdWindow7FunctionType   -> _OSD_WINDOW_7_FUNCTION_DISABLE                        or
+             - _OSD_WINDOW_7_FUNCTION_NO_BLENDING_BOTH                  or
+  53          //                                                _OSD_WINDOW_7_FUNCTION_NO_BLENDING_FOREGROUND         or
+             - _OSD_WINDOW_7_FUNCTION_NO_BLENDING_BACKGROUND            or
+  54          //                                                _OSD_WINDOW_7_FUNCTION_BLENDING_BOTH                  or
+             - _OSD_WINDOW_7_FUNCTION_MASK_REGION_APPEAR                or
+  55          //                                                _OSD_WINDOW_7_FUNCTION_MASK_REGION_TRANSPARENT_ALL    or
+             - _OSD_WINDOW_7_FUNCTION_MASK_REGION_TRANSPARENT_FONT
+  56          // Output Value :
+  57          //--------------------------------------------------
+  58          void ScalerOsdWindow7SpecialFunction(EnumOsdWindow7FunctionType enumOsdWindow7FunctionType)
+  59          {
+  60   1          if((enumOsdWindow7FunctionType == _OSD_WINDOW_7_FUNCTION_NO_BLENDING_BOTH) ||
+  61   1             (enumOsdWindow7FunctionType == _OSD_WINDOW_7_FUNCTION_NO_BLENDING_FOREGROUND) ||
+  62   1             (enumOsdWindow7FunctionType == _OSD_WINDOW_7_FUNCTION_NO_BLENDING_BACKGROUND) ||
+  63   1             (enumOsdWindow7FunctionType == _OSD_WINDOW_7_FUNCTION_BLENDING_BOTH))
+  64   1          {
+  65   2              ScalerSetBit(P3A_09_FRAME_CTRL_09, ~(_BIT6 | _BIT5), _BIT5);  // 01: Blending (blending type 3)
+  66   2              ScalerSetBit(P3A_21_FRAME_CTRL_21, ~(_BIT5 | _BIT4), ((enumOsdWindow7FunctionType - _OSD_WINDOW_7_
+             -FUNCTION_NO_BLENDING_BOTH) << 4));
+  67   2          }
+  68   1          else if(enumOsdWindow7FunctionType == _OSD_WINDOW_7_FUNCTION_MASK_REGION_APPEAR)
+  69   1          {
+  70   2              ScalerSetBit(P3A_09_FRAME_CTRL_09, ~(_BIT6 | _BIT5), _BIT6);  // 10: Window 7 mask region appear
+  71   2          }
+  72   1          else if((enumOsdWindow7FunctionType == _OSD_WINDOW_7_FUNCTION_MASK_REGION_TRANSPARENT_ALL) || (enumOsd
+             -Window7FunctionType == _OSD_WINDOW_7_FUNCTION_MASK_REGION_TRANSPARENT_FONT))
+  73   1          {
+  74   2              ScalerSetBit(P3A_09_FRAME_CTRL_09, ~(_BIT6 | _BIT5), (_BIT6 | _BIT5));  // 11: Window 7 mask regio
+             -n transparent
+  75   2              ScalerSetBit(P3A_07_FRAME_CTRL_07, ~_BIT3, ((enumOsdWindow7FunctionType - _OSD_WINDOW_7_FUNCTION_M
+             -ASK_REGION_TRANSPARENT_ALL) << 3));
+  76   2          }
+  77   1          else
+  78   1          {
+  79   2              ScalerSetBit(P3A_09_FRAME_CTRL_09, ~(_BIT6 | _BIT5), 0x00);
+  80   2          }
+  81   1      }
+  82          
+  83          
+  84          /*
+  85          //--------------------------------------------------
+  86          // example
+  87          //--------------------------------------------------
+  88              ScalerOsdWindow7SpecialFunction(_OSD_WINDOW_7_FUNCTION_DISABLE);
+  89          */
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     98    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,134 @@
+C51 COMPILER V8.12   OSDSRAMADDRESSCOUNT                                                   05/25/2022 15:41:17 PAGE 1   
+
+
+C51 COMPILER V8.12, COMPILATION OF MODULE OSDSRAMADDRESSCOUNT
+OBJECT MODULE PLACED IN .\Output\OsdSramAddressCount.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE ..\..\ScalerFunction\Lib\Code\ScalerOSD\SRAM\OsdSramAddressCount.c LARGE OP
+                    -TIMIZE(9,SPEED) INCDIR(..\..\..\Common;..\Header;.\Header;..\..\ScalerFunction\Lib\Header;..\..\ScalerFunction\Header;..
+                    -\..\ScalerCommonFunction\Lib\Header;..\..\ScalerCommonFunction\Header;..\..\RL6432_Series_Common\Lib\Header;..\..\RL6432
+                    -_Series_Common\Header) DEFINE(_TRANSLATOR_SUPPORT=_OFF,_SCALER_TYPE=_RL6432_SERIES) DEBUG OBJECTEXTEND PRINT(.\Output\Os
+                    -dSramAddressCount.lst) OBJECT(.\Output\OsdSramAddressCount.obj)
+
+line level    source
+
+   1          /********************************************************************************/
+   2          /*   The  Software  is  proprietary,  confidential,  and  valuable to Realtek   */
+   3          /*   Semiconductor  Corporation  ("Realtek").  All  rights, including but not   */
+   4          /*   limited  to  copyrights,  patents,  trademarks, trade secrets, mask work   */
+   5          /*   rights, and other similar rights and interests, are reserved to Realtek.   */
+   6          /*   Without  prior  written  consent  from  Realtek,  copying, reproduction,   */
+   7          /*   modification,  distribution,  or  otherwise  is strictly prohibited. The   */
+   8          /*   Software  shall  be  kept  strictly  in  confidence,  and  shall  not be   */
+   9          /*   disclosed to or otherwise accessed by any third party.                     */
+  10          /*   c<2003> - <2012>                                                           */
+  11          /*   The Software is provided "AS IS" without any warranty of any kind,         */
+  12          /*   express, implied, statutory or otherwise.                                  */
+  13          /********************************************************************************/
+  14          
+  15          //----------------------------------------------------------------------------------------------------
+  16          // ID Code      : OsdSramAddressCount.c
+  17          // Update Note  :
+  18          //----------------------------------------------------------------------------------------------------
+  19          #include "ScalerOSDLibInternalInclude.h"
+  20          
+  21          //****************************************************************************
+  22          // DEFINITIONS / MACROS
+  23          //****************************************************************************
+  24          
+  25          
+  26          //****************************************************************************
+  27          // STRUCT / TYPE / ENUM DEFINITTIONS
+  28          //****************************************************************************
+  29          
+  30          
+  31          //****************************************************************************
+  32          // CODE TABLES
+  33          //****************************************************************************
+  34          
+  35          
+  36          //****************************************************************************
+  37          // VARIABLE DECLARATIONS
+  38          //****************************************************************************
+  39          BYTE g_ucColAMax;
+  40          BYTE g_ucColBMax;
+  41          
+  42          
+  43          //****************************************************************************
+  44          // FUNCTION DECLARATIONS
+  45          //****************************************************************************
+  46          void ScalerOsdSramAddressCount(BYTE ucRow, BYTE ucCol, EnumOsdWriteType enumOsdWriteType);
+  47          
+  48          
+  49          //****************************************************************************
+  50          // FUNCTION DEFINITIONS
+  51          //****************************************************************************
+C51 COMPILER V8.12   OSDSRAMADDRESSCOUNT                                                   05/25/2022 15:41:17 PAGE 2   
+
+  52          //--------------------------------------------------
+  53          // Description  : SRAM address value and which byte
+  54          // Input Value  : ucRow. ucCol.     -> Just that !!
+  55          //                enumOsdWriteType  -> _OSD_BYTE0 or _OSD_BYTE1 or _OSD_BYTE2
+  56          // Output Value :
+  57          //--------------------------------------------------
+  58          void ScalerOsdSramAddressCount(BYTE ucRow, BYTE ucCol, EnumOsdWriteType enumOsdWriteType)
+  59          {
+  60   1          WORD usCharCommandStartAddress = 0;
+  61   1          BYTE ucColSize = 0;
+  62   1          BYTE ucByte0 = 0;
+  63   1          BYTE ucByte1 = 0;
+  64   1          BYTE ucByte2 = 0;
+  65   1      
+  66   1          if(ScalerGetBit(P3A_18_FRAME_CTRL_18, _BIT3) == _BIT3) // OSD 2 Font Function
+  67   1          {
+  68   2              ucByte0 = ScalerGetByte(P3A_1B_FRAME_CTRL_1B);
+  69   2              ucByte1 = ScalerGetByte(P3A_1C_FRAME_CTRL_1C);
+  70   2              ucByte2 = ScalerGetByte(P3A_1D_FRAME_CTRL_1D);
+  71   2      
+  72   2              if(ucRow >= _OSD_MAP_B_ROW_OFFSET)
+  73   2              {
+  74   3                  ucRow -= _OSD_MAP_B_ROW_OFFSET;
+  75   3                  ucColSize = GET_OSD_MAPB_COL_MAX();
+  76   3                  // Font Select Base 1
+  77   3                  usCharCommandStartAddress = ((ucByte0 & 0x0F) << 8) | ucByte2;
+  78   3              }
+  79   2              else
+  80   2              {
+  81   3                  ucColSize = GET_OSD_MAPA_COL_MAX();
+  82   3                  // Font Select Base 0
+  83   3                  usCharCommandStartAddress = ((ucByte0 & 0xF0) << 4) | ucByte1;
+  84   3              }
+  85   2          }
+  86   1          else
+  87   1          {
+  88   2              ucByte0 = ScalerGetByte(P3A_0C_FRAME_CTRL_0C);
+  89   2              ucByte1 = ScalerGetByte(P3A_0D_FRAME_CTRL_0D);
+  90   2              ucByte2 = ScalerGetByte(P3A_0E_FRAME_CTRL_0E);
+  91   2      
+  92   2              ucColSize = GET_OSD_MAPA_COL_MAX();
+  93   2      
+  94   2              // Font Select Base Address
+  95   2              usCharCommandStartAddress = ((ucByte1 & 0xF0) << 4) | ucByte0;
+  96   2          }
+  97   1      
+  98   1          usCharCommandStartAddress = usCharCommandStartAddress + (ucRow * ucColSize) + ucCol;
+  99   1      
+ 100   1          ScalerOsdAddrSet(_OSD_SRAM, enumOsdWriteType, usCharCommandStartAddress, _OSD_WITHOUT_DB);
+ 101   1      }
+ 102          
+ 103          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    192    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =      2       6
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+C51 COMPILER V8.12   OSDSRAMADDRESSCOUNT                                                   05/25/2022 15:41:17 PAGE 3   
+
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

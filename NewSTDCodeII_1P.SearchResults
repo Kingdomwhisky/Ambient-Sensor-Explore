@@ -1,0 +1,6 @@
+---- RTDNVRamSaveMonitorSNData Matches (5 in 3 files) ----
+BEA2014Ddcci.c (user\rtd series\bea2014osd\code):                    RTDNVRamSaveMonitorSNData(_SN_BUF_LENGTH,&CmdPara[1]); 
+BEA2014Ddcci.c (user\rtd series\bea2014osd\code):				if(RTDNVRamSaveMonitorSNData(_SN_BUF_LENGTH,Buffer) == _SUCCESS)
+BEA2014NVRamOsd.c (user\rtd series\bea2014osd\code):bit RTDNVRamSaveMonitorSNData(BYTE ucLength, BYTE *pucData);
+BEA2014NVRamOsd.c (user\rtd series\bea2014osd\code):bit RTDNVRamSaveMonitorSNData(BYTE ucLength,BYTE *pucData)
+BEA2014NVRamOsd.h (user\rtd series\bea2014osd\header):extern bit RTDNVRamSaveMonitorSNData(BYTE ucLength, BYTE *pucData);

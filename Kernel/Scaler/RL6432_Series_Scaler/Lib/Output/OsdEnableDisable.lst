@@ -1,0 +1,102 @@
+C51 COMPILER V8.12   OSDENABLEDISABLE                                                      05/25/2022 15:41:09 PAGE 1   
+
+
+C51 COMPILER V8.12, COMPILATION OF MODULE OSDENABLEDISABLE
+OBJECT MODULE PLACED IN .\Output\OsdEnableDisable.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE ..\..\ScalerFunction\Lib\Code\ScalerOSD\Function\OsdEnableDisable.c LARGE O
+                    -PTIMIZE(9,SPEED) INCDIR(..\..\..\Common;..\Header;.\Header;..\..\ScalerFunction\Lib\Header;..\..\ScalerFunction\Header;.
+                    -.\..\ScalerCommonFunction\Lib\Header;..\..\ScalerCommonFunction\Header;..\..\RL6432_Series_Common\Lib\Header;..\..\RL643
+                    -2_Series_Common\Header) DEFINE(_TRANSLATOR_SUPPORT=_OFF,_SCALER_TYPE=_RL6432_SERIES) DEBUG OBJECTEXTEND PRINT(.\Output\O
+                    -sdEnableDisable.lst) OBJECT(.\Output\OsdEnableDisable.obj)
+
+line level    source
+
+   1          /********************************************************************************/
+   2          /*   The  Software  is  proprietary,  confidential,  and  valuable to Realtek   */
+   3          /*   Semiconductor  Corporation  ("Realtek").  All  rights, including but not   */
+   4          /*   limited  to  copyrights,  patents,  trademarks, trade secrets, mask work   */
+   5          /*   rights, and other similar rights and interests, are reserved to Realtek.   */
+   6          /*   Without  prior  written  consent  from  Realtek,  copying, reproduction,   */
+   7          /*   modification,  distribution,  or  otherwise  is strictly prohibited. The   */
+   8          /*   Software  shall  be  kept  strictly  in  confidence,  and  shall  not be   */
+   9          /*   disclosed to or otherwise accessed by any third party.                     */
+  10          /*   c<2003> - <2012>                                                           */
+  11          /*   The Software is provided "AS IS" without any warranty of any kind,         */
+  12          /*   express, implied, statutory or otherwise.                                  */
+  13          /********************************************************************************/
+  14          
+  15          //----------------------------------------------------------------------------------------------------
+  16          // ID Code      : OsdEnableDisable.c
+  17          // Update Note  :
+  18          //----------------------------------------------------------------------------------------------------
+  19          #include "ScalerOSDLibInternalInclude.h"
+  20          
+  21          //****************************************************************************
+  22          // DEFINITIONS / MACROS
+  23          //****************************************************************************
+  24          
+  25          
+  26          //****************************************************************************
+  27          // STRUCT / TYPE / ENUM DEFINITTIONS
+  28          //****************************************************************************
+  29          
+  30          
+  31          //****************************************************************************
+  32          // CODE TABLES
+  33          //****************************************************************************
+  34          
+  35          
+  36          //****************************************************************************
+  37          // VARIABLE DECLARATIONS
+  38          //****************************************************************************
+  39          
+  40          
+  41          //****************************************************************************
+  42          // FUNCTION DECLARATIONS
+  43          //****************************************************************************
+  44          void ScalerOsdEnableOsd(void);
+  45          void ScalerOsdDisableOsd(void);
+  46          
+  47          //****************************************************************************
+  48          // FUNCTION DEFINITIONS
+  49          //****************************************************************************
+  50          //--------------------------------------------------
+  51          // Description  : Enable Display OSD
+C51 COMPILER V8.12   OSDENABLEDISABLE                                                      05/25/2022 15:41:09 PAGE 2   
+
+  52          // Input Value  :
+  53          // Output Value :
+  54          //--------------------------------------------------
+  55          void ScalerOsdEnableOsd(void)
+  56          {
+  57   1          ScalerOsdCircuitActivated(_ENABLE);
+  58   1      
+  59   1          // OSD Overlay Port Enable
+  60   1          ScalerSetBit(P0_6C_OVERLAY_CTRL, ~_BIT0, _BIT0);
+  61   1      }
+  62          
+  63          //--------------------------------------------------
+  64          // Description  : Disable Display OSD
+  65          // Input Value  :
+  66          // Output Value :
+  67          //--------------------------------------------------
+  68          void ScalerOsdDisableOsd(void)
+  69          {
+  70   1          // OSD Overlay Port Enable
+  71   1          ScalerSetBit(P0_6C_OVERLAY_CTRL, ~_BIT0, 0x00);
+  72   1      }
+  73          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     23    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

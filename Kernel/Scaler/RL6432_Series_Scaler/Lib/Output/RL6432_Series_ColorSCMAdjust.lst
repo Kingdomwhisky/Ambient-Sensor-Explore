@@ -1,0 +1,97 @@
+C51 COMPILER V8.12   RL6432_SERIES_COLORSCMADJUST                                          05/25/2022 15:41:32 PAGE 1   
+
+
+C51 COMPILER V8.12, COMPILATION OF MODULE RL6432_SERIES_COLORSCMADJUST
+OBJECT MODULE PLACED IN .\Output\RL6432_Series_ColorSCMAdjust.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Code\RL6432_Series_Color\RL6432_Series_ColorSCMAdjust.c LARGE OPTIMIZE(9,SP
+                    -EED) INCDIR(..\..\..\Common;..\Header;.\Header;..\..\ScalerFunction\Lib\Header;..\..\ScalerFunction\Header;..\..\ScalerC
+                    -ommonFunction\Lib\Header;..\..\ScalerCommonFunction\Header;..\..\RL6432_Series_Common\Lib\Header;..\..\RL6432_Series_Com
+                    -mon\Header) DEFINE(_TRANSLATOR_SUPPORT=_OFF,_SCALER_TYPE=_RL6432_SERIES) DEBUG OBJECTEXTEND PRINT(.\Output\RL6432_Series
+                    -_ColorSCMAdjust.lst) OBJECT(.\Output\RL6432_Series_ColorSCMAdjust.obj)
+
+line level    source
+
+   1          
+   2          /********************************************************************************/
+   3          /*   The  Software  is  proprietary,  confidential,  and  valuable to Realtek   */
+   4          /*   Semiconductor  Corporation  ("Realtek").  All  rights, including but not   */
+   5          /*   limited  to  copyrights,  patents,  trademarks, trade secrets, mask work   */
+   6          /*   rights, and other similar rights and interests, are reserved to Realtek.   */
+   7          /*   Without  prior  written  consent  from  Realtek,  copying, reproduction,   */
+   8          /*   modification,  distribution,  or  otherwise  is strictly prohibited. The   */
+   9          /*   Software  shall  be  kept  strictly  in  confidence,  and  shall  not be   */
+  10          /*   disclosed to or otherwise accessed by any third party.                     */
+  11          /*   c<2003> - <2012>                                                           */
+  12          /*   The Software is provided "AS IS" without any warranty of any kind,         */
+  13          /*   express, implied, statutory or otherwise.                                  */
+  14          /********************************************************************************/
+  15          
+  16          //----------------------------------------------------------------------------------------------------
+  17          // ID Code      : RL6432_Series_ColorSCMAdjust.c
+  18          // Update Note  :
+  19          //----------------------------------------------------------------------------------------------------
+  20          #include "RL6432_Series_ColorLibInternalInclude.h"
+  21          
+  22          //****************************************************************************
+  23          // DEFINITIONS / MACROS
+  24          //****************************************************************************
+  25          
+  26          
+  27          //****************************************************************************
+  28          // STRUCT / TYPE / ENUM DEFINITTIONS
+  29          //****************************************************************************
+  30          
+  31          
+  32          //****************************************************************************
+  33          // CODE TABLES
+  34          //****************************************************************************
+  35          
+  36          
+  37          //****************************************************************************
+  38          // VARIABLE DECLARATIONS
+  39          //****************************************************************************
+  40          
+  41          
+  42          //****************************************************************************
+  43          // FUNCTION DECLARATIONS
+  44          //****************************************************************************
+  45          void ScalerColorSCMAdjust(BYTE ucAdjustOption1, BYTE ucAdjustOption2);
+  46          
+  47          
+  48          //****************************************************************************
+  49          // FUNCTION DEFINITIONS
+  50          //****************************************************************************
+  51          //--------------------------------------------------
+C51 COMPILER V8.12   RL6432_SERIES_COLORSCMADJUST                                          05/25/2022 15:41:32 PAGE 2   
+
+  52          // Description  : Adjust SCM Function
+  53          // Input Value  : Adjust Option
+  54          // Output Value : None
+  55          //--------------------------------------------------
+  56          void ScalerColorSCMAdjust(BYTE ucAdjustOption1, BYTE ucAdjustOption2)
+  57          {
+  58   1          ScalerSetByte(P7_CC_SCM_BLOCK_ENABLE, (((BYTE)((bit)(ucAdjustOption2 & _SCM0_BLOCK0_ENABLE)) << 7) | (
+             -(BYTE)((bit)(ucAdjustOption2 & _SCM0_BLOCK1_ENABLE)) << 6) |
+  61   1                                                 ((BYTE)((bit)(ucAdjustOption2 & _SCM1_BLOCK0_ENABLE)) << 5) | (
+             -(BYTE)((bit)(ucAdjustOption2 & _SCM1_BLOCK1_ENABLE)) << 4) |
+  61   1                                                 ((BYTE)((bit)(ucAdjustOption2 & _SCM2_BLOCK0_ENABLE)) << 3) | (
+             -(BYTE)((bit)(ucAdjustOption2 & _SCM2_BLOCK1_ENABLE)) << 2) |
+  61   1                                                 ((BYTE)((bit)(ucAdjustOption2 & _SCM3_BLOCK0_ENABLE)) << 1) | (
+             -(BYTE)((bit)(ucAdjustOption2 & _SCM3_BLOCK1_ENABLE)))));
+  62   1      
+  63   1          ScalerSetBit(P7_CD_SCM_BLOCK_SELECT, ~_BIT4, (BYTE)((bit)(ucAdjustOption1 & _SCMN_SHARE_REG)) << 4);
+  64   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    100    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

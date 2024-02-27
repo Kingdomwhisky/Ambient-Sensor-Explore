@@ -1,0 +1,162 @@
+C51 COMPILER V8.12   RL6432_SERIES_OSDPOSITION                                             05/25/2022 15:41:36 PAGE 1   
+
+
+C51 COMPILER V8.12, COMPILATION OF MODULE RL6432_SERIES_OSDPOSITION
+OBJECT MODULE PLACED IN .\Output\RL6432_Series_OsdPosition.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Code\RL6432_Series_OSD\Function\RL6432_Series_OsdPosition.c LARGE OPTIMIZE(
+                    -9,SPEED) INCDIR(..\..\..\Common;..\Header;.\Header;..\..\ScalerFunction\Lib\Header;..\..\ScalerFunction\Header;..\..\Sca
+                    -lerCommonFunction\Lib\Header;..\..\ScalerCommonFunction\Header;..\..\RL6432_Series_Common\Lib\Header;..\..\RL6432_Series
+                    -_Common\Header) DEFINE(_TRANSLATOR_SUPPORT=_OFF,_SCALER_TYPE=_RL6432_SERIES) DEBUG OBJECTEXTEND PRINT(.\Output\RL6432_Se
+                    -ries_OsdPosition.lst) OBJECT(.\Output\RL6432_Series_OsdPosition.obj)
+
+line level    source
+
+   1          /********************************************************************************/
+   2          /*   The  Software  is  proprietary,  confidential,  and  valuable to Realtek   */
+   3          /*   Semiconductor  Corporation  ("Realtek").  All  rights, including but not   */
+   4          /*   limited  to  copyrights,  patents,  trademarks, trade secrets, mask work   */
+   5          /*   rights, and other similar rights and interests, are reserved to Realtek.   */
+   6          /*   Without  prior  written  consent  from  Realtek,  copying, reproduction,   */
+   7          /*   modification,  distribution,  or  otherwise  is strictly prohibited. The   */
+   8          /*   Software  shall  be  kept  strictly  in  confidence,  and  shall  not be   */
+   9          /*   disclosed to or otherwise accessed by any third party.                     */
+  10          /*   c<2003> - <2012>                                                           */
+  11          /*   The Software is provided "AS IS" without any warranty of any kind,         */
+  12          /*   express, implied, statutory or otherwise.                                  */
+  13          /********************************************************************************/
+  14          
+  15          //----------------------------------------------------------------------------------------------------
+  16          // ID Code      : RL6432_Series_OsdPosition.c
+  17          // Update Note  :
+  18          //----------------------------------------------------------------------------------------------------
+  19          #include "RL6432_Series_OSDLibInternalInclude.h"
+  20          
+  21          //****************************************************************************
+  22          // DEFINITIONS / MACROS
+  23          //****************************************************************************
+  24          
+  25          
+  26          //****************************************************************************
+  27          // STRUCT / TYPE / ENUM DEFINITTIONS
+  28          //****************************************************************************
+  29          
+  30          
+  31          //****************************************************************************
+  32          // CODE TABLES
+  33          //****************************************************************************
+  34          
+  35          
+  36          //****************************************************************************
+  37          // VARIABLE DECLARATIONS
+  38          //****************************************************************************
+  39          
+  40          
+  41          //****************************************************************************
+  42          // FUNCTION DECLARATIONS
+  43          //****************************************************************************
+  44          void ScalerOsdPosition(EnumOsdPositionType enumOsdPositionType, WORD usX, WORD usY);
+  45          
+  46          
+  47          //****************************************************************************
+  48          // FUNCTION DEFINITIONS
+  49          //****************************************************************************
+  50          //--------------------------------------------------
+  51          // Description  : Set osd position
+C51 COMPILER V8.12   RL6432_SERIES_OSDPOSITION                                             05/25/2022 15:41:36 PAGE 2   
+
+  52          // Input Value  : enumOsdPositionType -> _OSD_POSITION_GLOBAL_A or _OSD_POSITION_GLOBAL_B or _OSD_POSITION
+             -_FONT_A or _OSD_POSITION_FONT_B
+  53          //                usX                 -> Horizontal delay value (min:2)
+  54          //                usY                 -> Vertical  delay value (min:1)
+  55          // Output Value :
+  56          //--------------------------------------------------
+  57          void ScalerOsdPosition(EnumOsdPositionType enumOsdPositionType, WORD usX, WORD usY)
+  58          {
+  59   1          // Check Osd Double Buffer
+  60   1          if(ScalerGetBit(P0_93_OSD_MISC_PORT, _BIT7) == 0x00)
+  61   1          {
+  62   2              ScalerTimerWaitForEvent(_EVENT_DEN_STOP);
+  63   2          }
+  64   1      
+  65   1          if(enumOsdPositionType == _OSD_POSITION_GLOBAL_A)
+  66   1          {
+  67   2              // First Horizontal Delay Bit[11:10]
+  68   2              ScalerSetBit(P3A_06_FRAME_CTRL_06, ~(_BIT3 | _BIT2), ((usX & 0xC00) >> 8));
+  69   2      
+  70   2              // First Horizontal Delay [9:2]
+  71   2              ScalerSetByte(P3A_01_FRAME_CTRL_01, (BYTE)(usX >> 2));
+  72   2      
+  73   2              // First Vertical Delay [10:3]
+  74   2              ScalerSetByte(P3A_00_FRAME_CTRL_00, (BYTE)(usY >> 3));
+  75   2      
+  76   2              // (_BIT7 | _BIT6) : First Horizontal Delay Bit [1:0], (_BIT5 | _BIT4 | _BIT3) : First Vertical De
+             -lay [2:0].
+  77   2              ScalerSetBit(P3A_02_FRAME_CTRL_02, ~(_BIT7 | _BIT6 | _BIT5 | _BIT4 | _BIT3), (((usX & 0x0003) << 6
+             -) | ((usY & 0x07) << 3)));
+  78   2          }
+  79   1          else if(enumOsdPositionType == _OSD_POSITION_GLOBAL_B)
+  80   1          {
+  81   2              // Second Horizontal Delay Bit[11:10]
+  82   2              ScalerSetBit(P3A_06_FRAME_CTRL_06, ~(_BIT1 | _BIT0), ((usX & 0xC00) >> 10));
+  83   2      
+  84   2              // Second Horizontal Delay [9:2]
+  85   2              ScalerSetByte(P3A_04_FRAME_CTRL_04, (BYTE)(usX >> 2));
+  86   2      
+  87   2              // Second Vertical Delay [10:3]
+  88   2              ScalerSetByte(P3A_03_FRAME_CTRL_03, (BYTE)(usY >> 3));
+  89   2      
+  90   2              // (_BIT7 | _BIT6) : Second Horizontal Delay Bit [1:0],  (_BIT5 | _BIT4 | _BIT3) : Second Vertical
+             - Delay [2:0]
+  91   2              ScalerSetBit(P3A_05_FRAME_CTRL_05, ~(_BIT7 | _BIT6 | _BIT5 | _BIT4 | _BIT3), (((usX & 0x0003) << 6
+             -) | ((usY & 0x07) << 3)));
+  92   2          }
+  93   1          else if(enumOsdPositionType == _OSD_POSITION_FONT_A)
+  94   1          {
+  95   2              // (_BIT7 | _BIT6 | _BIT5 | _BIT4) : FONT A Horizontal Delay [11:8]
+  96   2              // (_BIT3 | _BIT2 | _BIT1 | _BIT0) : FONT A Vertical Delay [11:8]
+  97   2              ScalerSetByte(P3A_24_FRAME_CTRL_24, (((usX & 0xF00) >> 4) | ((usY & 0xF00) >> 8)));
+  98   2      
+  99   2              // FONT A Horizontal Delay [7:0]
+ 100   2              ScalerSetByte(P3A_25_FRAME_CTRL_25, (usX & 0x0FF));
+ 101   2      
+ 102   2              // FONT A Vertical Delay [7:0]
+ 103   2              ScalerSetByte(P3A_26_FRAME_CTRL_26, (usY & 0x0FF));
+ 104   2          }
+ 105   1          else if(enumOsdPositionType == _OSD_POSITION_FONT_B)
+ 106   1          {
+ 107   2              // (_BIT7 | _BIT6 | _BIT5 | _BIT4) : FONT B Horizontal Delay [11:8]
+ 108   2              // (_BIT3 | _BIT2 | _BIT1 | _BIT0) : FONT B Vertical Delay [11:8]
+C51 COMPILER V8.12   RL6432_SERIES_OSDPOSITION                                             05/25/2022 15:41:36 PAGE 3   
+
+ 109   2              ScalerSetByte(P3A_27_FRAME_CTRL_27, (((usX & 0xF00) >> 4) | ((usY & 0xF00) >> 8)));
+ 110   2      
+ 111   2              // FONT B Horizontal Delay [7:0]
+ 112   2              ScalerSetByte(P3A_28_FRAME_CTRL_28, (usX & 0x0FF));
+ 113   2      
+ 114   2              // FONT B Vertical Delay [7:0]
+ 115   2              ScalerSetByte(P3A_29_FRAME_CTRL_29, (usY & 0x0FF));
+ 116   2          }
+ 117   1      }
+ 118          
+ 119          
+ 120          
+ 121          /*
+ 122          //--------------------------------------------------
+ 123          // example
+ 124          //--------------------------------------------------
+ 125              ScalerOsdPosition(_OSD_POSITION_GLOBAL_A, XPOS(100), YPOS(100));
+ 126          */
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    304    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----       5
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

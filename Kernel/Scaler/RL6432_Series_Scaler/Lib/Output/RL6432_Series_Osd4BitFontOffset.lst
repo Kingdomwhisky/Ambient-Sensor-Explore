@@ -1,0 +1,86 @@
+C51 COMPILER V8.12   RL6432_SERIES_OSD4BITFONTOFFSET                                       05/25/2022 15:41:37 PAGE 1   
+
+
+C51 COMPILER V8.12, COMPILATION OF MODULE RL6432_SERIES_OSD4BITFONTOFFSET
+OBJECT MODULE PLACED IN .\Output\RL6432_Series_Osd4BitFontOffset.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Code\RL6432_Series_OSD\SRAM\RL6432_Series_Osd4BitFontOffset.c LARGE OPTIMIZ
+                    -E(9,SPEED) INCDIR(..\..\..\Common;..\Header;.\Header;..\..\ScalerFunction\Lib\Header;..\..\ScalerFunction\Header;..\..\S
+                    -calerCommonFunction\Lib\Header;..\..\ScalerCommonFunction\Header;..\..\RL6432_Series_Common\Lib\Header;..\..\RL6432_Seri
+                    -es_Common\Header) DEFINE(_TRANSLATOR_SUPPORT=_OFF,_SCALER_TYPE=_RL6432_SERIES) DEBUG OBJECTEXTEND PRINT(.\Output\RL6432_
+                    -Series_Osd4BitFontOffset.lst) OBJECT(.\Output\RL6432_Series_Osd4BitFontOffset.obj)
+
+line level    source
+
+   1          /********************************************************************************/
+   2          /*   The  Software  is  proprietary,  confidential,  and  valuable to Realtek   */
+   3          /*   Semiconductor  Corporation  ("Realtek").  All  rights, including but not   */
+   4          /*   limited  to  copyrights,  patents,  trademarks, trade secrets, mask work   */
+   5          /*   rights, and other similar rights and interests, are reserved to Realtek.   */
+   6          /*   Without  prior  written  consent  from  Realtek,  copying, reproduction,   */
+   7          /*   modification,  distribution,  or  otherwise  is strictly prohibited. The   */
+   8          /*   Software  shall  be  kept  strictly  in  confidence,  and  shall  not be   */
+   9          /*   disclosed to or otherwise accessed by any third party.                     */
+  10          /*   c<2003> - <2012>                                                           */
+  11          /*   The Software is provided "AS IS" without any warranty of any kind,         */
+  12          /*   express, implied, statutory or otherwise.                                  */
+  13          /********************************************************************************/
+  14          //----------------------------------------------------------------------------------------------------
+  15          // ID Code      : RL6432_Series_Osd4BitFontOffset.c
+  16          // Update Note  :
+  17          //----------------------------------------------------------------------------------------------------
+  18          #include "RL6432_Series_OSDLibInternalInclude.h"
+  19          
+  20          //****************************************************************************
+  21          // DEFINITIONS / MACROS
+  22          //****************************************************************************
+  23          
+  24          
+  25          //****************************************************************************
+  26          // STRUCT / TYPE / ENUM DEFINITTIONS
+  27          //****************************************************************************
+  28          
+  29          
+  30          //****************************************************************************
+  31          // CODE TABLES
+  32          //****************************************************************************
+  33          
+  34          
+  35          //****************************************************************************
+  36          // VARIABLE DECLARATIONS
+  37          //****************************************************************************
+  38          
+  39          //****************************************************************************
+  40          // FUNCTION DECLARATIONS
+  41          //****************************************************************************
+  42          void ScalerOsd4BitFontOffset(WORD usOffset);
+  43          
+  44          //****************************************************************************
+  45          // FUNCTION DEFINITIONS
+  46          //****************************************************************************
+  47          //--------------------------------------------------
+  48          // Description  : Set OSD 4 bit font offset
+  49          // Input Value  : ucOffset -> 0 ~ 511
+  50          // Output Value :
+  51          //--------------------------------------------------
+C51 COMPILER V8.12   RL6432_SERIES_OSD4BITFONTOFFSET                                       05/25/2022 15:41:37 PAGE 2   
+
+  52          void ScalerOsd4BitFontOffset(WORD usOffset)
+  53          {
+  54   1          ScalerSetBit(P3A_21_FRAME_CTRL_21, ~(_BIT0), ((usOffset & 0x100) >> 8));
+  55   1          ScalerSetByte(P3A_23_FRAME_CTRL_23, (BYTE)usOffset);
+  56   1      }
+  57          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     22    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

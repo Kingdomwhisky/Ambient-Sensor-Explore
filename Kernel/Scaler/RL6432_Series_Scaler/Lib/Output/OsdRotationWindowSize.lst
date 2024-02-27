@@ -1,0 +1,117 @@
+C51 COMPILER V8.12   OSDROTATIONWINDOWSIZE                                                 05/25/2022 15:41:19 PAGE 1   
+
+
+C51 COMPILER V8.12, COMPILATION OF MODULE OSDROTATIONWINDOWSIZE
+OBJECT MODULE PLACED IN .\Output\OsdRotationWindowSize.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE ..\..\ScalerFunction\Lib\Code\ScalerOSD\Windows\OsdRotationWindowSize.c LAR
+                    -GE OPTIMIZE(9,SPEED) INCDIR(..\..\..\Common;..\Header;.\Header;..\..\ScalerFunction\Lib\Header;..\..\ScalerFunction\Head
+                    -er;..\..\ScalerCommonFunction\Lib\Header;..\..\ScalerCommonFunction\Header;..\..\RL6432_Series_Common\Lib\Header;..\..\R
+                    -L6432_Series_Common\Header) DEFINE(_TRANSLATOR_SUPPORT=_OFF,_SCALER_TYPE=_RL6432_SERIES) DEBUG OBJECTEXTEND PRINT(.\Outp
+                    -ut\OsdRotationWindowSize.lst) OBJECT(.\Output\OsdRotationWindowSize.obj)
+
+line level    source
+
+   1          /********************************************************************************/
+   2          /*   The  Software  is  proprietary,  confidential,  and  valuable to Realtek   */
+   3          /*   Semiconductor  Corporation  ("Realtek").  All  rights, including but not   */
+   4          /*   limited  to  copyrights,  patents,  trademarks, trade secrets, mask work   */
+   5          /*   rights, and other similar rights and interests, are reserved to Realtek.   */
+   6          /*   Without  prior  written  consent  from  Realtek,  copying, reproduction,   */
+   7          /*   modification,  distribution,  or  otherwise  is strictly prohibited. The   */
+   8          /*   Software  shall  be  kept  strictly  in  confidence,  and  shall  not be   */
+   9          /*   disclosed to or otherwise accessed by any third party.                     */
+  10          /*   c<2003> - <2012>                                                           */
+  11          /*   The Software is provided "AS IS" without any warranty of any kind,         */
+  12          /*   express, implied, statutory or otherwise.                                  */
+  13          /********************************************************************************/
+  14          
+  15          //----------------------------------------------------------------------------------------------------
+  16          // ID Code      : OsdRotationWindowSize.c
+  17          // Update Note  :
+  18          //----------------------------------------------------------------------------------------------------
+  19          #include "ScalerOSDLibInternalInclude.h"
+  20          
+  21          //****************************************************************************
+  22          // DEFINITIONS / MACROS
+  23          //****************************************************************************
+  24          
+  25          
+  26          //****************************************************************************
+  27          // STRUCT / TYPE / ENUM DEFINITTIONS
+  28          //****************************************************************************
+  29          
+  30          
+  31          //****************************************************************************
+  32          // CODE TABLES
+  33          //****************************************************************************
+  34          
+  35          
+  36          //****************************************************************************
+  37          // VARIABLE DECLARATIONS
+  38          //****************************************************************************
+  39          
+  40          
+  41          //****************************************************************************
+  42          // FUNCTION DECLARATIONS
+  43          //****************************************************************************
+  44          void ScalerOsdRotationWindowSize(EnumOsdMapType enumOsdMapType, WORD usLength, WORD usWidth);
+  45          
+  46          //****************************************************************************
+  47          // FUNCTION DEFINITIONS
+  48          //****************************************************************************
+  49          //--------------------------------------------------
+  50          // Description  : Set window rotate reference size
+  51          // Input Value  : enumOsdMapType -> _OSD_A or _OSD_B
+C51 COMPILER V8.12   OSDROTATIONWINDOWSIZE                                                 05/25/2022 15:41:19 PAGE 2   
+
+  52          //                usLength       -> Horizontal max size
+  53          //                Width          -> Vertical max size
+  54          // Output Value :
+  55          //--------------------------------------------------
+  56          void ScalerOsdRotationWindowSize(EnumOsdMapType enumOsdMapType, WORD usLength, WORD usWidth)
+  57          {
+  58   1          if(enumOsdMapType == _OSD_A)
+  59   1          {
+  60   2              // First OSD Width
+  61   2              ScalerSetBit(P3A_38_FRAME_CTRL_38, ~(_BIT3 | _BIT2 | _BIT1 | _BIT0), ((usWidth & 0x0F00) >> 8));
+  62   2              ScalerSetByte(P3A_3A_FRAME_CTRL_3A, (usWidth & 0xFF));
+  63   2      
+  64   2              // First OSD Length
+  65   2              ScalerSetBit(P3A_38_FRAME_CTRL_38, ~(_BIT7 | _BIT6 | _BIT5 | _BIT4), ((usLength & 0x0F00) >> 4));
+  66   2              ScalerSetByte(P3A_39_FRAME_CTRL_39, (usLength & 0xFF));
+  67   2          }
+  68   1          else
+  69   1          {
+  70   2              // Second OSD Width
+  71   2              ScalerSetBit(P3A_3B_FRAME_CTRL_3B, ~(_BIT3 | _BIT2 | _BIT1 | _BIT0), ((usWidth & 0x0F00) >> 8));
+  72   2              ScalerSetByte(P3A_3D_FRAME_CTRL_3D, (usWidth & 0xFF));
+  73   2      
+  74   2              // Second OSD Length
+  75   2              ScalerSetBit(P3A_3B_FRAME_CTRL_3B, ~(_BIT7 | _BIT6 | _BIT5 | _BIT4), ((usLength & 0x0F00) >> 4));
+  76   2              ScalerSetByte(P3A_3C_FRAME_CTRL_3C, (usLength & 0xFF));
+  77   2          }
+  78   1      }
+  79          
+  80          /*
+  81          //--------------------------------------------------
+  82          // example
+  83          //--------------------------------------------------
+  84              ScalerOsdRotationWindowSize(_OSD_A, XEND(400), YEND(500));
+  85          */
+  86          
+  87          
+  88          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     71    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

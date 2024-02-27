@@ -1,0 +1,422 @@
+C51 COMPILER V8.12   RL6432_SERIES_COLORGLOBALHUESAT                                       05/25/2022 15:41:26 PAGE 1   
+
+
+C51 COMPILER V8.12, COMPILATION OF MODULE RL6432_SERIES_COLORGLOBALHUESAT
+OBJECT MODULE PLACED IN .\Output\RL6432_Series_ColorGlobalHueSat.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Code\RL6432_Series_Color\RL6432_Series_ColorGlobalHueSat.c LARGE OPTIMIZE(9
+                    -,SPEED) INCDIR(..\..\..\Common;..\Header;.\Header;..\..\ScalerFunction\Lib\Header;..\..\ScalerFunction\Header;..\..\Scal
+                    -erCommonFunction\Lib\Header;..\..\ScalerCommonFunction\Header;..\..\RL6432_Series_Common\Lib\Header;..\..\RL6432_Series_
+                    -Common\Header) DEFINE(_TRANSLATOR_SUPPORT=_OFF,_SCALER_TYPE=_RL6432_SERIES) DEBUG OBJECTEXTEND PRINT(.\Output\RL6432_Ser
+                    -ies_ColorGlobalHueSat.lst) OBJECT(.\Output\RL6432_Series_ColorGlobalHueSat.obj)
+
+line level    source
+
+   1          /********************************************************************************/
+   2          /*   The  Software  is  proprietary,  confidential,  and  valuable to Realtek   */
+   3          /*   Semiconductor  Corporation  ("Realtek").  All  rights, including but not   */
+   4          /*   limited  to  copyrights,  patents,  trademarks, trade secrets, mask work   */
+   5          /*   rights, and other similar rights and interests, are reserved to Realtek.   */
+   6          /*   Without  prior  written  consent  from  Realtek,  copying, reproduction,   */
+   7          /*   modification,  distribution,  or  otherwise  is strictly prohibited. The   */
+   8          /*   Software  shall  be  kept  strictly  in  confidence,  and  shall  not be   */
+   9          /*   disclosed to or otherwise accessed by any third party.                     */
+  10          /*   c<2003> - <2012>                                                           */
+  11          /*   The Software is provided "AS IS" without any warranty of any kind,         */
+  12          /*   express, implied, statutory or otherwise.                                  */
+  13          /********************************************************************************/
+  14          //-------------------------------------------------------------------------------------//
+  15          // ID Code      : RL6432_Series_ColorGlobalHueSat.c
+  16          // Update Note  :
+  17          //-------------------------------------------------------------------------------------//
+  18          #include "RL6432_Series_ColorLibInternalInclude.h"
+  19          
+  20          //****************************************************************************
+  21          // DEFINITIONS / MACROS
+  22          //****************************************************************************
+  23          //--------------------------------------------------
+  24          // Table Length
+  25          //--------------------------------------------------
+  26          #define _SRGB_TABLE_SIZE                        24
+  27          
+  28          
+  29          //****************************************************************************
+  30          // STRUCT / TYPE / ENUM DEFINITTIONS
+  31          //****************************************************************************
+  32          
+  33          
+  34          //****************************************************************************
+  35          // CODE TABLES
+  36          //****************************************************************************
+  37          BYTE code tCosCurveAngle[] = {0, 6, 12, 18, 24, 30, 37, 44, 52, 60, 68, 78, 90};
+  38          WORD code tCosCurveValue[] = {4096, 4074, 4006, 3896, 3742, 3547, 3271, 2946, 2522, 2048, 1534, 852, 0}; /
+             -/ to be edit
+  39          
+  40          BYTE code tSinCurveAngle[] = {0, 6, 12, 18, 24, 30, 37, 44, 52, 60, 68, 78, 90};
+  41          WORD code tSinCurveValue[] = {0, 428, 852, 1266, 1666, 2048, 2465, 2845, 3228, 3547, 3798, 4006, 4096}; //
+             - to be edit
+  42          
+  43          // 1->1024
+  44          SWORD code tYUV2RGB[][3] =
+  45          {
+  46              { 4096,       0,    5744,  },
+  47              { 4096,   -1408,   -2924,  },
+  48              { 4096,    7260,       0,  }
+  49          };
+C51 COMPILER V8.12   RL6432_SERIES_COLORGLOBALHUESAT                                       05/25/2022 15:41:26 PAGE 2   
+
+  50          
+  51          
+  52          // 1->1024
+  53          SWORD code tRGB2YUV[][3] =
+  54          {
+  55              {  1224,    2405,    467,  },
+  56              {  -691,   -1357,   2048,  },
+  57              {  2048,   -1715,   -333,  }
+  58          };
+  59          
+  60          
+  61          //****************************************************************************
+  62          // VARIABLE DECLARATIONS
+  63          //****************************************************************************
+  64          
+  65          
+  66          //****************************************************************************
+  67          // FUNCTION DECLARATIONS
+  68          //****************************************************************************
+  69          SWORD ScalerColorSRGBCosine(SWORD shDegree);
+  70          SWORD ScalerColorSRGBSine(SWORD shDegree);
+  71          void ScalerColorSRGBMatrixMultiply(SWORD (*ppshArrayA)[3], SWORD (*ppshArrayB)[3], SWORD (*ppshArrayC)[3])
+             -;
+  72          void ScalerColorSetSRGBGlobalHueSat(SWORD shDeltaHue, WORD usDeltaSat);
+  73          
+  74          //****************************************************************************
+  75          // FUNCTION DEFINITIONS
+  76          //****************************************************************************
+  77          //--------------------------------------------------
+  78          // Description  : Enable/Disable SRGB function
+  79          // Input Value  : EnumFunctionOnOFF
+  80          // Output Value : None
+  81          //--------------------------------------------------
+  82          
+  83          //--------------------------------------------------
+  84          // Description  : Calculate Cos(x)
+  85          // Input Value  : shDegree x (in 360 unit)
+  86          // Output Value : SWORD Cos(x)
+  87          //--------------------------------------------------
+  88          SWORD ScalerColorSRGBCosine(SWORD shDegree)
+  89          {
+  90   1          BYTE ucI = 0;
+  91   1          BYTE ucQuadrant = 0;
+  92   1          BYTE ucDegreeTemp = 0;
+  93   1          BYTE ucDegreeSpan = 0;
+  94   1          SWORD shCosValueSpan = 0;
+  95   1          SWORD shCosValue = 0;
+  96   1      
+  97   1          if(shDegree < 0)
+  98   1          {
+  99   2              shDegree += 360;
+ 100   2          }
+ 101   1      
+ 102   1          shDegree = shDegree % 360;
+ 103   1      
+ 104   1          // Locate degree on which quadrant
+ 105   1          ucQuadrant = (BYTE)(shDegree / 90);
+ 106   1          ucQuadrant++;
+ 107   1      
+ 108   1          switch(ucQuadrant)
+ 109   1          {
+ 110   2              // First quadrant
+C51 COMPILER V8.12   RL6432_SERIES_COLORGLOBALHUESAT                                       05/25/2022 15:41:26 PAGE 3   
+
+ 111   2              case 1:
+ 112   2      
+ 113   2                  shDegree = shDegree;
+ 114   2      
+ 115   2                  break;
+ 116   2      
+ 117   2              // Second quadrant
+ 118   2              case 2:
+ 119   2      
+ 120   2                  shDegree = 180 - shDegree;
+ 121   2      
+ 122   2                  break;
+ 123   2      
+ 124   2              // Third quadrant
+ 125   2              case 3:
+ 126   2      
+ 127   2                  shDegree = shDegree - 180;
+ 128   2      
+ 129   2                  break;
+ 130   2      
+ 131   2              // Forth quadrant
+ 132   2              case 4:
+ 133   2      
+ 134   2                  shDegree = 360 - shDegree;
+ 135   2      
+ 136   2                  break;
+ 137   2      
+ 138   2              default:
+ 139   2      
+ 140   2                  break;
+ 141   2          }
+ 142   1      
+ 143   1          // Locate degree on which quadrant
+ 144   1          if(shDegree <= tCosCurveAngle[0])
+ 145   1          {
+ 146   2              shCosValue = tCosCurveValue[0];
+ 147   2          }
+ 148   1          else
+ 149   1          {
+ 150   2              for(ucI = 0; tCosCurveAngle[ucI] < shDegree; ucI++) {}
+ 151   2      
+ 152   2              ucI--;
+ 153   2      
+ 154   2              ucDegreeTemp = shDegree - tCosCurveAngle[ucI];
+ 155   2              ucDegreeSpan = tCosCurveAngle[ucI + 1] - tCosCurveAngle[ucI];
+ 156   2              shCosValueSpan = tCosCurveValue[ucI + 1] - tCosCurveValue[ucI];
+ 157   2              shCosValue = tCosCurveValue[ucI] + (SWORD)ucDegreeTemp * shCosValueSpan / ucDegreeSpan;
+ 158   2          }
+ 159   1      
+ 160   1          if((ucQuadrant == 2) || (ucQuadrant == 3))
+ 161   1          {
+ 162   2              shCosValue = shCosValue * (-1);
+ 163   2          }
+ 164   1      
+ 165   1          return shCosValue;
+ 166   1      }
+ 167          
+ 168          //--------------------------------------------------
+ 169          // Description  : Calculate Sin(x)
+ 170          // Input Value  : shDegree x (in 360 unit)
+ 171          // Output Value : SWORD Sin(x)
+ 172          //--------------------------------------------------
+C51 COMPILER V8.12   RL6432_SERIES_COLORGLOBALHUESAT                                       05/25/2022 15:41:26 PAGE 4   
+
+ 173          SWORD ScalerColorSRGBSine(SWORD shDegree)
+ 174          {
+ 175   1          BYTE ucI = 0;
+ 176   1          BYTE ucQuadrant = 0;
+ 177   1          BYTE ucDegreeTemp = 0;
+ 178   1          BYTE ucDegreeSpan = 0;
+ 179   1          WORD usSinValueSpan = 0;
+ 180   1          SWORD shSinValue = 0;
+ 181   1      
+ 182   1      
+ 183   1          if(shDegree < 0)
+ 184   1          {
+ 185   2              shDegree += 360;
+ 186   2          }
+ 187   1      
+ 188   1          shDegree = shDegree % 360;
+ 189   1      
+ 190   1          // Locate degree on which quadrant
+ 191   1          ucQuadrant = (BYTE)(shDegree / 90);
+ 192   1          ucQuadrant++;
+ 193   1      
+ 194   1          switch(ucQuadrant)
+ 195   1          {
+ 196   2              // First quadrant
+ 197   2              case 1:
+ 198   2      
+ 199   2                  shDegree = shDegree;
+ 200   2      
+ 201   2                  break;
+ 202   2      
+ 203   2              // Second quadrant
+ 204   2              case 2:
+ 205   2      
+ 206   2                  shDegree = 180 - shDegree;
+ 207   2      
+ 208   2                  break;
+ 209   2      
+ 210   2              // Third quadrant
+ 211   2              case 3:
+ 212   2      
+ 213   2                  shDegree = shDegree - 180;
+ 214   2      
+ 215   2                  break;
+ 216   2      
+ 217   2              // Forth quadrant
+ 218   2              case 4:
+ 219   2      
+ 220   2                  shDegree = 360 - shDegree;
+ 221   2      
+ 222   2                  break;
+ 223   2      
+ 224   2              default:
+ 225   2      
+ 226   2                  break;
+ 227   2          }
+ 228   1      
+ 229   1          // Locate degree on which quadrant
+ 230   1          if(shDegree <= tSinCurveAngle[0])
+ 231   1          {
+ 232   2              shSinValue = tSinCurveValue[0];
+ 233   2          }
+ 234   1          else
+C51 COMPILER V8.12   RL6432_SERIES_COLORGLOBALHUESAT                                       05/25/2022 15:41:26 PAGE 5   
+
+ 235   1          {
+ 236   2              for(ucI = 0; tSinCurveAngle[ucI] < shDegree; ucI++) {}
+ 237   2      
+ 238   2              ucI--;
+ 239   2      
+ 240   2              ucDegreeTemp = shDegree - tSinCurveAngle[ucI];
+ 241   2              ucDegreeSpan = tSinCurveAngle[ucI + 1] - tSinCurveAngle[ucI];
+ 242   2              usSinValueSpan = tSinCurveValue[ucI + 1] - tSinCurveValue[ucI];
+ 243   2              shSinValue = tSinCurveValue[ucI] + (WORD)ucDegreeTemp * usSinValueSpan / ucDegreeSpan;
+ 244   2          }
+ 245   1      
+ 246   1          if((ucQuadrant == 3) || (ucQuadrant == 4))
+ 247   1          {
+ 248   2              shSinValue = shSinValue * (-1);
+ 249   2          }
+ 250   1      
+ 251   1          return shSinValue;
+ 252   1      }
+ 253          
+ 254          //--------------------------------------------------
+ 255          // Description  : Do matrix multiply(3x3)  C = A*B
+ 256          // Input Value  : shArrayA, shArrayB
+ 257          // Output Value : shArrayC
+ 258          //--------------------------------------------------
+ 259          void ScalerColorSRGBMatrixMultiply(SWORD (*ppshArrayA)[3], SWORD (*ppshArrayB)[3], SWORD (*ppshArrayC)[3])
+ 260          {
+ 261   1          BYTE ucI = 0;
+ 262   1          BYTE ucJ = 0;
+ 263   1      
+ 264   1          for(ucJ = 0; ucJ < 3; ucJ++)
+ 265   1          {
+ 266   2              for(ucI = 0; ucI < 3; ucI++)
+ 267   2              {
+ 268   3                  PDATA_DWORD(ucI) = (((SDWORD)ppshArrayA[ucI][0] * ppshArrayB[0][ucJ] + 2) >> 4) +
+ 269   3                                     (((SDWORD)ppshArrayA[ucI][1] * ppshArrayB[1][ucJ] + 2) >> 4) +
+ 270   3                                     (((SDWORD)ppshArrayA[ucI][2] * ppshArrayB[2][ucJ] + 2) >> 4);
+ 271   3              }
+ 272   2      
+ 273   2              for(ucI = 0; ucI < 3; ucI++)
+ 274   2              {
+ 275   3                  ppshArrayC[ucI][ucJ] = (SWORD)((PDATA_DWORD(ucI) + 128) >> 8);
+ 276   3              }
+ 277   2          }
+ 278   1      }
+ 279          
+ 280          //--------------------------------------------------
+ 281          // Description  : Set global Hue&Sat
+ 282          // Input Value  : DeltaHue(-180~180), DeltaSat(0-330)
+ 283          // Default Value: Delta Hue = 0, Delta Sat = 100;
+ 284          // Notice !! Rightnow the Hue/Sat value is saved to NVRAM as BYTE, if you
+ 285          // want to expand the Range, please edit relative functions and parameters.
+ 286          // Output Value : pColorMatrix(3x3, set to SRGB Matrix)
+ 287          //--------------------------------------------------
+ 288          void ScalerColorSetSRGBGlobalHueSat(SWORD shDeltaHue, WORD usDeltaSat)
+ 289          {
+ 290   1          SWORD ppshTempBuff[3][3];
+ 291   1          memset(ppshTempBuff, 0, sizeof(ppshTempBuff));
+ 292   1      
+ 293   1          if(_TRUE)
+ 294   1          {
+ 295   2              SWORD ppshMATRIX[3][3];
+ 296   2              memset(ppshMATRIX, 0, sizeof(ppshMATRIX));
+C51 COMPILER V8.12   RL6432_SERIES_COLORGLOBALHUESAT                                       05/25/2022 15:41:26 PAGE 6   
+
+ 297   2      
+ 298   2              // 1->1024
+ 299   2              ppshMATRIX[0][0] = 4096;
+ 300   2              ppshMATRIX[0][1] = 0;
+ 301   2              ppshMATRIX[0][2] = 0;
+ 302   2              ppshMATRIX[1][0] = 0;
+ 303   2              ppshMATRIX[1][1] = (DWORD)usDeltaSat * 4096 / 100;
+ 304   2              ppshMATRIX[1][2] = 0;
+ 305   2              ppshMATRIX[2][0] = 0;
+ 306   2              ppshMATRIX[2][1] = 0;
+ 307   2              ppshMATRIX[2][2] = ppshMATRIX[1][1];
+ 308   2      
+ 309   2              ScalerColorSRGBMatrixMultiply(ppshMATRIX, tRGB2YUV, ppshTempBuff);
+ 310   2      
+ 311   2              ppshMATRIX[0][0] = 4096;
+ 312   2              ppshMATRIX[0][1] = 0;
+ 313   2              ppshMATRIX[0][2] = 0;
+ 314   2              ppshMATRIX[1][0] = 0;
+ 315   2              ppshMATRIX[1][1] = ScalerColorSRGBCosine(shDeltaHue);
+ 316   2              ppshMATRIX[1][2] = (-1) * ScalerColorSRGBSine(shDeltaHue);
+ 317   2              ppshMATRIX[2][0] = 0;
+ 318   2              ppshMATRIX[2][1] = (-1) * ppshMATRIX[1][2];
+ 319   2              ppshMATRIX[2][2] = ppshMATRIX[1][1];
+ 320   2      
+ 321   2              ScalerColorSRGBMatrixMultiply(ppshMATRIX, ppshTempBuff, ppshTempBuff);
+ 322   2          }
+ 323   1      
+ 324   1          ScalerColorSRGBMatrixMultiply(tYUV2RGB, ppshTempBuff, ppshTempBuff);
+ 325   1      
+ 326   1          if(_TRUE)
+ 327   1          {
+ 328   2              BYTE pucColorMatrix[24];
+ 329   2              memset(pucColorMatrix, 0, sizeof(pucColorMatrix));
+ 330   2      
+ 331   2              // set 1+RR,  1+GG, 1+BB
+ 332   2              for(pData[0] = 0; pData[0] < 3; pData[0]++)
+ 333   2              {
+ 334   3                  for(pData[1] = 0; pData[1] < 3; pData[1]++)
+ 335   3                  {
+ 336   4                      if(pData[0] == pData[1])
+ 337   4                      {
+ 338   5                          ppshTempBuff[pData[0]][pData[1]] -= 4096; // 12bit data = 4096; 6369
+ 339   5                      }
+ 340   4      
+ 341   4                      if(ppshTempBuff[pData[0]][pData[1]] >= 0)
+ 342   4                      {
+ 343   5                          ppshTempBuff[pData[0]][pData[1]] = ((ppshTempBuff[pData[0]][pData[1]] + 4) / 8);
+ 344   5                      }
+ 345   4                      else
+ 346   4                      {
+ 347   5                          ppshTempBuff[pData[0]][pData[1]] = ((ppshTempBuff[pData[0]][pData[1]] - 4) / 8);
+ 348   5                      }
+ 349   4      
+ 350   4                      if(ppshTempBuff[pData[0]][pData[1]] > 2047)
+ 351   4                      {
+ 352   5                          ppshTempBuff[pData[0]][pData[1]] = 2047;
+ 353   5                      }
+ 354   4                      else if(ppshTempBuff[pData[0]][pData[1]] < -2048)  // 2.9 = 2048
+ 355   4                      {
+ 356   5                          ppshTempBuff[pData[0]][pData[1]] = -2048;
+ 357   5                      }
+ 358   4      
+C51 COMPILER V8.12   RL6432_SERIES_COLORGLOBALHUESAT                                       05/25/2022 15:41:26 PAGE 7   
+
+ 359   4                      // Set sign byteXXH
+ 360   4                      pucColorMatrix[2 * (3 * pData[0] + pData[1])] = (ppshTempBuff[pData[0]][pData[1]] < 0) ? 1
+             - : 0;  // [0] sign
+ 361   4                      pucColorMatrix[2 * (3 * pData[0] + pData[1])] += (((WORD)ppshTempBuff[pData[0]][pData[1]] 
+             -& 0x07) << 5); // [7:5] bit2~0
+ 362   4      
+ 363   4                      // Set data byte XXL
+ 364   4                      pucColorMatrix[2 * (3 * pData[0] + pData[1]) + 1] = ((WORD)ppshTempBuff[pData[0]][pData[1]
+             -] >> 3) & 0xFF;// [7:0] bit10~3
+ 365   4      
+ 366   4                  }
+ 367   3              }
+ 368   2      
+ 369   2              for(pData[0] = 18; pData[0] < 24; pData[0]++)
+ 370   2              {
+ 371   3                  pucColorMatrix[pData[0]] = 0;
+ 372   3              }
+ 373   2      
+ 374   2              ScalerColorSRGBAdjust(pucColorMatrix, _SRGB_3_BIT_SHIFT_LEFT);
+ 375   2          }
+ 376   1      }
+ 377          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1729    ----
+   CONSTANT SIZE    =    114    ----
+   XDATA SIZE       =   ----      73
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

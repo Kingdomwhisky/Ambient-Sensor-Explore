@@ -1,0 +1,125 @@
+C51 COMPILER V8.12   SCALERCOLORSPACECONVERTLOADTABLE                                      05/25/2022 15:41:05 PAGE 1   
+
+
+C51 COMPILER V8.12, COMPILATION OF MODULE SCALERCOLORSPACECONVERTLOADTABLE
+OBJECT MODULE PLACED IN .\Output\ScalerColorSpaceConvertLoadTable.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE ..\..\ScalerFunction\Lib\Code\ScalerColor\ScalerColorSpaceConvertLoadTable.
+                    -c LARGE OPTIMIZE(9,SPEED) INCDIR(..\..\..\Common;..\Header;.\Header;..\..\ScalerFunction\Lib\Header;..\..\ScalerFunction
+                    -\Header;..\..\ScalerCommonFunction\Lib\Header;..\..\ScalerCommonFunction\Header;..\..\RL6432_Series_Common\Lib\Header;..
+                    -\..\RL6432_Series_Common\Header) DEFINE(_TRANSLATOR_SUPPORT=_OFF,_SCALER_TYPE=_RL6432_SERIES) DEBUG OBJECTEXTEND PRINT(.
+                    -\Output\ScalerColorSpaceConvertLoadTable.lst) OBJECT(.\Output\ScalerColorSpaceConvertLoadTable.obj)
+
+line level    source
+
+   1          /********************************************************************************/
+   2          /*   The  Software  is  proprietary,  confidential,  and  valuable to Realtek   */
+   3          /*   Semiconductor  Corporation  ("Realtek").  All  rights, including but not   */
+   4          /*   limited  to  copyrights,  patents,  trademarks, trade secrets, mask work   */
+   5          /*   rights, and other similar rights and interests, are reserved to Realtek.   */
+   6          /*   Without  prior  written  consent  from  Realtek,  copying, reproduction,   */
+   7          /*   modification,  distribution,  or  otherwise  is strictly prohibited. The   */
+   8          /*   Software  shall  be  kept  strictly  in  confidence,  and  shall  not be   */
+   9          /*   disclosed to or otherwise accessed by any third party.                     */
+  10          /*   c<2003> - <2012>                                                           */
+  11          /*   The Software is provided "AS IS" without any warranty of any kind,         */
+  12          /*   express, implied, statutory or otherwise.                                  */
+  13          /********************************************************************************/
+  14          
+  15          //----------------------------------------------------------------------------------------------------
+  16          // ID Code      : ScalerColorSpaceConvertLoadTable.c
+  17          // Update Note  :
+  18          //----------------------------------------------------------------------------------------------------
+  19          #include "ScalerColorLibInternalInclude.h"
+  20          
+  21          //****************************************************************************
+  22          // DEFINITIONS / MACROS
+  23          //****************************************************************************
+  24          
+  25          
+  26          //****************************************************************************
+  27          // STRUCT / TYPE / ENUM DEFINITTIONS
+  28          //****************************************************************************
+  29          
+  30          
+  31          //****************************************************************************
+  32          // CODE TABLES
+  33          //****************************************************************************
+  34          //--------------------------------------------------
+  35          // Code Tables of Color Conversion
+  36          //--------------------------------------------------
+  37          // RGB to YCC Table
+  38          #if((_COLOR_CONVERSION_TYPE == _COLOR_CONVERSION_GEN_0) || (_COLOR_CONVERSION_TYPE == _COLOR_CONVERSION_GE
+             -N_1) || (_COLOR_CONVERSION_TYPE == _COLOR_CONVERSION_GEN_2))
+  39          BYTE code tCOLOR_CONV_RGB2YUV_ITU709[] = // enable RGB2YUV
+  40          {
+  41          #if((_COLOR_CONVERSION_TYPE == _COLOR_CONVERSION_GEN_0) || (_COLOR_CONVERSION_TYPE == _COLOR_CONVERSION_GE
+             -N_2))
+  42              26, _NON_AUTOINC, (BYTE)P0_9D_RGB2YCC_COEF_DATA,
+  43              0x00, 0xBA, 0x02, 0x73, 0x00, 0x3F, // h00~h02 MSB
+  44              0xFF, 0x99, 0xFE, 0xA6, 0x01, 0xC0, // h10~h12 MSB
+  45              0x01, 0xC0, 0xFE, 0x68, 0xFF, 0xD6, // h20~h22 MSB
+  46              0x31, 0x22, 0x34, 0x45, 0x70,       // h00~h22 LSB
+  47              _END
+  48          #elif(_COLOR_CONVERSION_TYPE == _COLOR_CONVERSION_GEN_1)
+                  21, _NON_AUTOINC, (BYTE)P0_9D_RGB2YCC_COEF_DATA,
+C51 COMPILER V8.12   SCALERCOLORSPACECONVERTLOADTABLE                                      05/25/2022 15:41:05 PAGE 2   
+
+                  0x00, 0xBA, 0x02, 0x73, 0x00, 0x3F, // h00~h02 MSB
+                  0xFF, 0x99, 0xFE, 0xA6, 0x01, 0xC0, // h10~h12 MSB
+                  0x01, 0xC0, 0xFE, 0x68, 0xFF, 0xD6, // h20~h22 MSB
+                  _END
+              #endif
+  55          };
+  56          #endif
+  57          
+  58          
+  59          //****************************************************************************
+  60          // VARIABLE DECLARATIONS
+  61          //****************************************************************************
+  62          
+  63          
+  64          //****************************************************************************
+  65          // FUNCTION DECLARATIONS
+  66          //****************************************************************************
+  67          #if((_COLOR_CONVERSION_TYPE == _COLOR_CONVERSION_GEN_0) || (_COLOR_CONVERSION_TYPE == _COLOR_CONVERSION_GE
+             -N_1) || (_COLOR_CONVERSION_TYPE == _COLOR_CONVERSION_GEN_2))
+  68          void ScalerColorSpaceConvertLoadTable(void);
+  69          #endif
+  70          
+  71          //****************************************************************************
+  72          // FUNCTION DEFINITIONS
+  73          //****************************************************************************
+  74          #if((_COLOR_CONVERSION_TYPE == _COLOR_CONVERSION_GEN_0) || (_COLOR_CONVERSION_TYPE == _COLOR_CONVERSION_GE
+             -N_1) || (_COLOR_CONVERSION_TYPE == _COLOR_CONVERSION_GEN_2))
+  75          //--------------------------------------------------
+  76          // Description  : Load Table for Color Space Conversion
+  77          // Input Value  : None
+  78          // Output Value : None
+  79          //--------------------------------------------------
+  80          void ScalerColorSpaceConvertLoadTable(void)
+  81          {
+  82   1          // Enable I-Domain RGB2YUV coefficient Access, Set Y_Out/CbCr_Out Shift
+  83   1          ScalerSetBit(P0_9C_RGB2YCC_CTRL, ~(_BIT7 | _BIT6 | _BIT5 | _BIT3), (_BIT7 | _BIT6 | _BIT3));
+  84   1      
+  85   1          // Load I-Domain RGB2YUV Table for UltraVivid or RGB Quantization Limit Range Case
+  86   1          ScalerBurstWrite(tCOLOR_CONV_RGB2YUV_ITU709, sizeof(tCOLOR_CONV_RGB2YUV_ITU709), GET_CURRENT_BANK_NUMB
+             -ER(), P0_9D_RGB2YCC_COEF_DATA, _BURSTWRITE_COMMAND, _BURSTWRITE_FROM_FLASH);
+  87   1      
+  88   1          // Disable I-Domain RGB2YUV coefficient Access
+  89   1          ScalerSetBit(P0_9C_RGB2YCC_CTRL, ~_BIT3, 0x00);
+  90   1      }
+  91          #endif
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     49    ----
+   CONSTANT SIZE    =     27    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,153 @@
+C51 COMPILER V8.12   OSDWINDOWDISABLE                                                      05/25/2022 15:41:21 PAGE 1   
+
+
+C51 COMPILER V8.12, COMPILATION OF MODULE OSDWINDOWDISABLE
+OBJECT MODULE PLACED IN .\Output\OsdWindowDisable.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE ..\..\ScalerFunction\Lib\Code\ScalerOSD\Windows\OsdWindowDisable.c LARGE OP
+                    -TIMIZE(9,SPEED) INCDIR(..\..\..\Common;..\Header;.\Header;..\..\ScalerFunction\Lib\Header;..\..\ScalerFunction\Header;..
+                    -\..\ScalerCommonFunction\Lib\Header;..\..\ScalerCommonFunction\Header;..\..\RL6432_Series_Common\Lib\Header;..\..\RL6432
+                    -_Series_Common\Header) DEFINE(_TRANSLATOR_SUPPORT=_OFF,_SCALER_TYPE=_RL6432_SERIES) DEBUG OBJECTEXTEND PRINT(.\Output\Os
+                    -dWindowDisable.lst) OBJECT(.\Output\OsdWindowDisable.obj)
+
+line level    source
+
+   1          /********************************************************************************/
+   2          /*   The  Software  is  proprietary,  confidential,  and  valuable to Realtek   */
+   3          /*   Semiconductor  Corporation  ("Realtek").  All  rights, including but not   */
+   4          /*   limited  to  copyrights,  patents,  trademarks, trade secrets, mask work   */
+   5          /*   rights, and other similar rights and interests, are reserved to Realtek.   */
+   6          /*   Without  prior  written  consent  from  Realtek,  copying, reproduction,   */
+   7          /*   modification,  distribution,  or  otherwise  is strictly prohibited. The   */
+   8          /*   Software  shall  be  kept  strictly  in  confidence,  and  shall  not be   */
+   9          /*   disclosed to or otherwise accessed by any third party.                     */
+  10          /*   c<2003> - <2012>                                                           */
+  11          /*   The Software is provided "AS IS" without any warranty of any kind,         */
+  12          /*   express, implied, statutory or otherwise.                                  */
+  13          /********************************************************************************/
+  14          
+  15          //----------------------------------------------------------------------------------------------------
+  16          // ID Code      : OsdWindowDisable.c
+  17          // Update Note  :
+  18          //----------------------------------------------------------------------------------------------------
+  19          #include "ScalerOSDLibInternalInclude.h"
+  20          
+  21          //****************************************************************************
+  22          // DEFINITIONS / MACROS
+  23          //****************************************************************************
+  24          
+  25          
+  26          //****************************************************************************
+  27          // STRUCT / TYPE / ENUM DEFINITTIONS
+  28          //****************************************************************************
+  29          
+  30          
+  31          //****************************************************************************
+  32          // CODE TABLES
+  33          //****************************************************************************
+  34          
+  35          
+  36          //****************************************************************************
+  37          // VARIABLE DECLARATIONS
+  38          //****************************************************************************
+  39          
+  40          
+  41          //****************************************************************************
+  42          // FUNCTION DECLARATIONS
+  43          //****************************************************************************
+  44          void ScalerOsdWindowDisable(EnumOsdWindowsType enumOsdWindowsType);
+  45          
+  46          
+  47          //****************************************************************************
+  48          // FUNCTION DEFINITIONS
+  49          //****************************************************************************
+  50          //--------------------------------------------------
+  51          // Description  : Disable window
+C51 COMPILER V8.12   OSDWINDOWDISABLE                                                      05/25/2022 15:41:21 PAGE 2   
+
+  52          // Input Value  : enumOsdWindowsType -> _OSD_WINDOW_0,   _OSD_WINDOW_1,   _OSD_WINDOW_2,   _OSD_WINDOW_3, 
+             -  _OSD_WINDOW_4,   _OSD_WINDOW_5,
+  53          //                                      _OSD_WINDOW_6,   _OSD_WINDOW_7,   _OSD_WINDOW_8,   _OSD_WINDOW_9, 
+             -  _OSD_WINDOW_4_1, _OSD_WINDOW_4_2,
+  54          //                                      _OSD_WINDOW_4_3, _OSD_WINDOW_4_4, _OSD_WINDOW_4_5, _OSD_WINDOW_4_6
+             -, _OSD_WINDOW_4_7, _OSD_WINDOW_4_8
+  55          //                                      _OSD_WINDOW_5_1, _OSD_WINDOW_5_2, _OSD_WINDOW_5_3, _OSD_WINDOW_5_4
+             -, _OSD_WINDOW_5_5, _OSD_WINDOW_5_6,
+  56          //                                      _OSD_WINDOW_5_7, _OSD_WINDOW_5_8
+  57          //                                      _OSD_WINDOW_ALL,
+  58          // Output Value :
+  59          //--------------------------------------------------
+  60          void ScalerOsdWindowDisable(EnumOsdWindowsType enumOsdWindowsType)
+  61          {
+  62   1          WORD usWinTemp = 0;
+  63   1      
+  64   1          if(enumOsdWindowsType == _OSD_WINDOW_ALL)
+  65   1          {
+  66   2              for(usWinTemp = 0; usWinTemp < 10; usWinTemp++)
+  67   2              {
+  68   3                  // Window 0~9
+  69   3                  ScalerOsdWriteByte((_OSD_WIN_CONTROL | _OSD_BYTE2), _OSD_WITHOUT_DB, ((_P0_92_PT_103_WIN0_ADR3
+             -_LSB >> 4) + usWinTemp * 4), 0x00);
+  70   3      
+  71   3                  if(usWinTemp < 8)
+  72   3                  {
+  73   4                      // Window 4-1~4-8
+  74   4                      ScalerOsdWriteByte((_OSD_WIN_CONTROL | _OSD_BYTE2), _OSD_WITHOUT_DB, ((_P0_92_PT_203_WIN4_
+             -1_ADR3_LSB >> 4) + usWinTemp * 4), 0x00);  // _OSD_WINDOW_4_1 ~ _OSD_WINDOW_4_8
+  75   4      
+  76   4      #if(_OSD_WINDOW_5_1_5_8_SUPPORT == _ON)
+  77   4                      // Window 5-1~5-8
+  78   4                      ScalerOsdWriteByte((_OSD_WIN_CONTROL | _OSD_BYTE2), _OSD_WITHOUT_DB, ((_P0_92_PT_223_WIN5_
+             -1_ADR3_LSB >> 4) + usWinTemp * 4), 0x00);  // _OSD_WINDOW_5_1 ~ _OSD_WINDOW_5_8
+  79   4      #endif
+  80   4                  }
+  81   3              }
+  82   2          }
+  83   1          else
+  84   1          {
+  85   2      #if(_OSD_WINDOW_5_1_5_8_SUPPORT == _ON)
+  86   2              if((enumOsdWindowsType >= _OSD_WINDOW_5_1) && (enumOsdWindowsType <= _OSD_WINDOW_5_8))
+  87   2              {
+  88   3                  usWinTemp = (_P0_92_PT_223_WIN5_1_ADR3_LSB >> 4) + ((enumOsdWindowsType - _OSD_WINDOW_5_1) * 4
+             -);
+  89   3              }
+  90   2              else
+  91   2      #endif
+  92   2              {
+  93   3                  if((enumOsdWindowsType >= _OSD_WINDOW_4_1) && (enumOsdWindowsType <= _OSD_WINDOW_4_8))
+  94   3                  {
+  95   4                      usWinTemp = (_P0_92_PT_203_WIN4_1_ADR3_LSB >> 4) + ((enumOsdWindowsType - _OSD_WINDOW_4_1)
+             - * 4);
+  96   4                  }
+  97   3                  else if(enumOsdWindowsType <= _OSD_WINDOW_9)
+  98   3                  {
+  99   4                      usWinTemp = (_P0_92_PT_103_WIN0_ADR3_LSB >> 4) + (enumOsdWindowsType * 4);
+ 100   4                  }
+ 101   3              }
+ 102   2      
+ 103   2              ScalerOsdWriteByte((_OSD_WIN_CONTROL | _OSD_BYTE2), _OSD_WITHOUT_DB, usWinTemp, 0x00);
+ 104   2          }
+C51 COMPILER V8.12   OSDWINDOWDISABLE                                                      05/25/2022 15:41:21 PAGE 3   
+
+ 105   1      }
+ 106          
+ 107          
+ 108          /*
+ 109          //--------------------------------------------------
+ 110          // example
+ 111          //--------------------------------------------------
+ 112              ScalerOsdWindowDisable(_OSD_WINDOW_0);
+ 113          */
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    236    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----       3
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

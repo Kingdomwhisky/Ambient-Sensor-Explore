@@ -1,0 +1,314 @@
+C51 COMPILER V8.12   RL6432_SERIES_ODFUNCTION                                              05/25/2022 15:41:36 PAGE 1   
+
+
+C51 COMPILER V8.12, COMPILATION OF MODULE RL6432_SERIES_ODFUNCTION
+OBJECT MODULE PLACED IN .\Output\RL6432_Series_ODFunction.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Code\RL6432_Series_OD\RL6432_Series_ODFunction.c LARGE OPTIMIZE(9,SPEED) IN
+                    -CDIR(..\..\..\Common;..\Header;.\Header;..\..\ScalerFunction\Lib\Header;..\..\ScalerFunction\Header;..\..\ScalerCommonFu
+                    -nction\Lib\Header;..\..\ScalerCommonFunction\Header;..\..\RL6432_Series_Common\Lib\Header;..\..\RL6432_Series_Common\Hea
+                    -der) DEFINE(_TRANSLATOR_SUPPORT=_OFF,_SCALER_TYPE=_RL6432_SERIES) DEBUG OBJECTEXTEND PRINT(.\Output\RL6432_Series_ODFunc
+                    -tion.lst) OBJECT(.\Output\RL6432_Series_ODFunction.obj)
+
+line level    source
+
+   1          /********************************************************************************/
+   2          /*   The  Software  is  proprietary,  confidential,  and  valuable to Realtek   */
+   3          /*   Semiconductor  Corporation  ("Realtek").  All  rights, including but not   */
+   4          /*   limited  to  copyrights,  patents,  trademarks, trade secrets, mask work   */
+   5          /*   rights, and other similar rights and interests, are reserved to Realtek.   */
+   6          /*   Without  prior  written  consent  from  Realtek,  copying, reproduction,   */
+   7          /*   modification,  distribution,  or  otherwise  is strictly prohibited. The   */
+   8          /*   Software  shall  be  kept  strictly  in  confidence,  and  shall  not be   */
+   9          /*   disclosed to or otherwise accessed by any third party.                     */
+  10          /*   c<2003> - <2012>                                                           */
+  11          /*   The Software is provided "AS IS" without any warranty of any kind,         */
+  12          /*   express, implied, statutory or otherwise.                                  */
+  13          /********************************************************************************/
+  14          
+  15          //----------------------------------------------------------------------------------------------------
+  16          // ID Code      : RL6432_Series_ODFunction.c No.0000
+  17          // Update Note  :
+  18          //----------------------------------------------------------------------------------------------------
+  19          #include "RL6432_Series_ODLibInternalInclude.h"
+  20          
+  21          //****************************************************************************
+  22          // DEFINITIONS / MACROS
+  23          //****************************************************************************
+  24          #define _OD_LBNRT_ENABLE                    _ON
+  25          #define _OD_LBNRT_MODE                      _NEWMODE
+  26          
+  27          #define _OD_SRC_PIXEL_RESOL_8               0
+  28          #define _OD_SRC_PIXEL_RESOL_6               1
+  29          #define _OD_SRC_PIXEL_RESOL_5               2
+  30          #define _OD_SRC_PIXEL_RESOL_4               3
+  31          
+  32          #define _OD_YUV_444_TO_422                  0
+  33          #define _OD_YUV_444_TO_411                  1
+  34          #define _OD_SPR_PIXEL_1X2                   2
+  35          #define _OD_SPR_PIXEL_1X3                   3
+  36          #define _OD_SPR_PIXEL_1X4                   4
+  37          
+  38          #define _OD_LEGME_RANGE_BYPASS              0
+  39          #define _OD_LEGME_RANGE_8                   1
+  40          #define _OD_LEGME_RANGE_16                  2
+  41          #define _OD_LEGME_RANGE_32                  3
+  42          #define _OD_LEGME_RANGE                     _OD_LEGME_RANGE_BYPASS
+  43          #define _OD_LEGME_GROUP_INFO_SIZE           8
+  44          
+  45          #define _OD_8BIT_LUT_LENGTH                 289
+  46          
+  47          
+  48          //****************************************************************************
+  49          // STRUCT / TYPE / ENUM DEFINITTIONS
+  50          //****************************************************************************
+  51          
+C51 COMPILER V8.12   RL6432_SERIES_ODFUNCTION                                              05/25/2022 15:41:36 PAGE 2   
+
+  52          
+  53          //****************************************************************************
+  54          // CODE TABLES
+  55          //****************************************************************************
+  56          
+  57          
+  58          //****************************************************************************
+  59          // VARIABLE DECLARATIONS
+  60          //****************************************************************************
+  61          BYTE g_ucMemoryODUseBit;
+  62          
+  63          //****************************************************************************
+  64          // FUNCTION DECLARATIONS
+  65          //****************************************************************************
+  66          void ScalerODInitial(WORD usPanelHWidth, WORD usPanelVHeight);
+  67          void ScalerODAdjustDeltaGain(BYTE ucValue);
+  68          void ScalerODLoadLUT(BYTE code *pucODTable, BYTE ucBankNum, bit bLUTMode);
+  69          void ScalerODCompressionSetting(void);
+  70          void ScalerODSetFIFO(WORD usWidth, WORD usHeight);
+  71          void ScalerODHLWinSetting(EnumHLWType enumHLWType, EnumDBApply enumDBApply);
+  72          
+  73          //****************************************************************************
+  74          // FUNCTION DEFINITIONS
+  75          //****************************************************************************
+  76          
+  77          //--------------------------------------------------
+  78          // Description  : OD initialization setting
+  79          // Input Value  : None
+  80          // Output Value : None
+  81          //--------------------------------------------------
+  82          void ScalerODInitial(WORD usPanelHWidth, WORD usPanelVHeight)
+  83          {
+  84   1          ScalerODEnable(_FUNCTION_OFF);
+  85   1      
+  86   1          if(GET_OD_USE_BIT() != _OFF)
+  87   1          {
+  88   2              // Set OD compression settings
+  89   2              ScalerODCompressionSetting();
+  90   2      
+  91   2              // Set OD FIFO settings
+  92   2              ScalerODSetFIFO(usPanelHWidth, usPanelVHeight);
+  93   2          }
+  94   1      }
+  95          
+  96          //--------------------------------------------------
+  97          // Description  : Adjust OD delta gain
+  98          // Input Value  : Delta gain
+  99          // Output Value : None
+ 100          //--------------------------------------------------
+ 101          void ScalerODAdjustDeltaGain(BYTE ucValue)
+ 102          {
+ 103   1          ScalerSetByte(P3_A3_DELTA_GAIN, ucValue);
+ 104   1      }
+ 105          
+ 106          //--------------------------------------------------
+ 107          // Description  : Load OD LUT
+ 108          // Input Value  :
+ 109          //                pODTable -> OD TABLE Pointer
+ 110          //                ucBankNum -> Bank number
+ 111          //                bLUTMode -> OD LUT Type (8bit/10bit LUT)
+ 112          // Output Value : None
+ 113          //--------------------------------------------------
+C51 COMPILER V8.12   RL6432_SERIES_ODFUNCTION                                              05/25/2022 15:41:36 PAGE 3   
+
+ 114          void ScalerODLoadLUT(BYTE code *pucODTable, BYTE ucBankNum, bit bLUTMode)
+ 115          {
+ 116   1          // Support 8bit LUT mode only
+ 117   1          bLUTMode = _OD_8BIT_LUT;
+ 118   1      
+ 119   1          // Enable LUT access
+ 120   1          ScalerSetBit(P3_BF_LS_LUT_CTRL, ~(_BIT7 | _BIT6), _BIT7);
+ 121   1      
+ 122   1          ScalerBurstWrite(pucODTable, _OD_8BIT_LUT_LENGTH, ucBankNum, P3_C0_LS_LUT_DATA, _BURSTWRITE_DATA_COMMO
+             -N, _BURSTWRITE_FROM_FLASH);
+ 123   1      
+ 124   1          // Disable LUT access
+ 125   1          ScalerSetBit(P3_BF_LS_LUT_CTRL, ~_BIT7, 0x00);
+ 126   1      }
+ 127          
+ 128          //--------------------------------------------------
+ 129          // Description  : OD compression, level estimation, noise reduction setting
+ 130          // Input Value  : None
+ 131          // Output Value : None
+ 132          //--------------------------------------------------
+ 133          void ScalerODCompressionSetting(void)
+ 134          {
+ 135   1          BYTE ucODLevelEstimationGain = 0;
+ 136   1          BYTE ucODLevelEstimationValue = 0;
+ 137   1          BYTE ucODNRThreshold = 0;
+ 138   1      
+ 139   1          if(GET_OD_USE_BIT() == _OD_SUPERPIXEL1X2_75BIT_BIT_NUM)
+ 140   1          {
+ 141   2              // Set previous frame source pixel resolution: 5bit
+ 142   2              ScalerSetBit(P3_A1_LS_CTRL0, ~(_BIT1 | _BIT0), _OD_SRC_PIXEL_RESOL_5);
+ 143   2      
+ 144   2              // Current path: disable RGB->YUV, enable compression(average mode), set to Super-pixel 1x2
+ 145   2              ScalerSetBit(P3_B0_LS_FRAME0, ~(_BIT5 | _BIT4 | _BIT3 | _BIT2 | _BIT1), (_BIT4 | (_OD_SPR_PIXEL_1X
+             -2 << 1)));
+ 146   2      
+ 147   2              // Enable previous/current frame decompression(duplication mode), disable previous/current frame Y
+             -UV->RGB
+ 148   2              ScalerSetBit(P3_B1_LS_FRAME1, ~(_BIT7 | _BIT6 | _BIT5 | _BIT3 | _BIT2 | _BIT1), (_BIT7 | _BIT6 | _
+             -BIT3 | _BIT2));
+ 149   2      
+ 150   2              // Set current frame source pixel resolution: 5bit
+ 151   2              // Disable previous/current frame UV round
+ 152   2              ScalerSetBit(P3_B2_LS_FRAME2, ~(_BIT7 | _BIT6 | _BIT5 | _BIT4), (_OD_SRC_PIXEL_RESOL_5 << 6));
+ 153   2      
+ 154   2              ucODLevelEstimationGain = 0;
+ 155   2              ucODLevelEstimationValue = 4;
+ 156   2              ucODNRThreshold = 3;
+ 157   2          }
+ 158   1          else if(GET_OD_USE_BIT() == _OD_SUPERPIXEL1X4_60BIT_BIT_NUM)
+ 159   1          {
+ 160   2              // Set previous frame source pixel resolution: 8bit
+ 161   2              ScalerSetBit(P3_A1_LS_CTRL0, ~(_BIT1 | _BIT0), _OD_SRC_PIXEL_RESOL_8);
+ 162   2      
+ 163   2              // Current path: disable RGB->YUV, enable compression(average mode), set to Super-pixel 1x4
+ 164   2              ScalerSetBit(P3_B0_LS_FRAME0, ~(_BIT5 | _BIT4 | _BIT3 | _BIT2 | _BIT1), (_BIT4 | (_OD_SPR_PIXEL_1X
+             -4 << 1)));
+ 165   2      
+ 166   2              // Enable previous/current frame decompression(duplication mode), disable previous/current frame Y
+             -UV->RGB
+ 167   2              ScalerSetBit(P3_B1_LS_FRAME1, ~(_BIT7 | _BIT6 | _BIT5 | _BIT3 | _BIT2 | _BIT1), (_BIT7 | _BIT6 | _
+             -BIT3 | _BIT2));
+ 168   2      
+C51 COMPILER V8.12   RL6432_SERIES_ODFUNCTION                                              05/25/2022 15:41:36 PAGE 4   
+
+ 169   2              // Set current frame source pixel resolution: 8bit
+ 170   2              // Disable previous/current frame UV round
+ 171   2              ScalerSetBit(P3_B2_LS_FRAME2, ~(_BIT7 | _BIT6 | _BIT5 | _BIT4), (_OD_SRC_PIXEL_RESOL_8 << 6));
+ 172   2      
+ 173   2              ucODLevelEstimationGain = 0;
+ 174   2              ucODLevelEstimationValue = 2;
+ 175   2              ucODNRThreshold = 1;
+ 176   2          }
+ 177   1      
+ 178   1          // Set level estimation range, level estimation gain
+ 179   1          ScalerSetBit(P3_B3_LS_FRAME4, ~(_BIT5 | _BIT4 | _BIT3 | _BIT2 | _BIT1 | _BIT0), ((_OD_LEGME_RANGE << 4
+             -) | (ucODLevelEstimationGain & 0x0F)));
+ 180   1      
+ 181   1          // Set level estimation value
+ 182   1          ScalerSetBit(P3_B4_LS_FRAME5, ~(_BIT5 | _BIT4 | _BIT3 | _BIT2 | _BIT1 | _BIT0), (ucODLevelEstimationVa
+             -lue & 0x3F));
+ 183   1      
+ 184   1          // Enable level estimation
+ 185   1          ScalerSetBit(P3_A1_LS_CTRL0, ~(_BIT5), _BIT5);
+ 186   1      
+ 187   1          // Enable gain
+ 188   1          ScalerSetBit(P3_A1_LS_CTRL0, ~(_BIT3), _BIT3);
+ 189   1      
+ 190   1          // Set OD apply on full window
+ 191   1          ScalerODHLWinSetting(_HLW_FULL_WINDOW, _DB_APPLY_NO_POLLING);
+ 192   1      
+ 193   1          // Set noise reduction threshold
+ 194   1          ScalerSetBit(P3_A2_LS_CTRL1, ~(_BIT4 | _BIT3 | _BIT2 | _BIT1 | _BIT0), _OD_LBNRT_ENABLE << 4 | _OD_LBN
+             -RT_MODE << 3 | (ucODNRThreshold & 0x07));
+ 195   1      
+ 196   1          // Clear flag
+ 197   1          ScalerSetByte(P3_A4_LS_STATUS0, _BIT0);
+ 198   1      }
+ 199          
+ 200          //--------------------------------------------------
+ 201          // Description  : OD memory & FIFO setting
+ 202          // Input Value  : usWidth -> Display Width
+ 203          //                usHeight -> Display Height
+ 204          // Output Value : None
+ 205          //--------------------------------------------------
+ 206          void ScalerODSetFIFO(WORD usWidth, WORD usHeight)
+ 207          {
+ 208   1          // Calculate total size of a frame (in each path) to be saved in memory
+ 209   1          PDATA_DWORD(0) = ((DWORD)CEILING(usWidth, _OD_PIXEL_PER_COMP)) * GET_OD_USE_BIT() / 10 * usHeight;
+ 210   1          PDATA_DWORD(0) = CEILING_OF_INT_DIVISION(PDATA_DWORD(0), _OD_FIFO_BUS_WIDTH);
+ 211   1      
+ 212   1          // Calculate Number and Remain --> (Number x Length + Remain) x OD_FIFO_BUS_WIDTH = Total size
+ 213   1          PDATA_DWORD(0) = ScalerMemoryCalculateNumberAndRemain(PDATA_DWORD(0), _OD_FIFO_WR_LENGTH, 1);
+ 214   1      
+ 215   1          // Set FIFO Write Water Level
+ 216   1          ScalerSetByte(P3_D1_LS_DDR_FIFO_WTLVL_W_L, ((_OD_FIFO_WR_LENGTH / 2) & 0xFF));
+ 217   1      
+ 218   1          // Set FIFO Read Water Level
+ 219   1          ScalerSetByte(P3_D3_LS_DDR_FIFO_WTLVL_R_L, (_OD_FIFO_WR_LENGTH & 0xFF));
+ 220   1      
+ 221   1          // Set FIFO RW Number
+ 222   1          ScalerSetByte(P3_D4_LS_DDR_FIFO_RW_NUM_H, pData[2]);
+ 223   1          ScalerSetByte(P3_D5_LS_DDR_FIFO_RW_NUM_L, pData[3]);
+ 224   1      
+ 225   1          // Set FIFO RW Length
+ 226   1          ScalerSetByte(P3_D7_LS_DDR_FIFO_RW_LEN_L, (_OD_FIFO_WR_LENGTH & 0xFF));
+ 227   1      
+C51 COMPILER V8.12   RL6432_SERIES_ODFUNCTION                                              05/25/2022 15:41:36 PAGE 5   
+
+ 228   1          // Set FIFO RW Remain
+ 229   1          ScalerSetByte(P3_D9_LS_DDR_FIFO_RW_REMAIN_L, pData[1]);
+ 230   1      }
+ 231          
+ 232          //--------------------------------------------------
+ 233          // Description  : OD HLW type select
+ 234          // Input Value  : enumHLWType --> _FULL_WINDOW, _INSIDE_WINDOW or _OUTSIDE_WINDOW
+ 235          // Output Value : None
+ 236          //--------------------------------------------------
+ 237          void ScalerODHLWinSetting(EnumHLWType enumHLWType, EnumDBApply enumDBApply)
+ 238          {
+ 239   1          // Select OD HLW type
+ 240   1          switch(enumHLWType)
+ 241   1          {
+ 242   2              case _HLW_FULL_WINDOW:
+ 243   2      
+ 244   2                  ScalerSetDataPortBit(P0_60_HLW_ADDR_PORT, _P0_61_PT_10_HLW_CONTROL3, ~(_BIT5 | _BIT4), 0x00);
+ 245   2      
+ 246   2                  break;
+ 247   2      
+ 248   2              case _HLW_INSIDE_WINDOW:
+ 249   2      
+ 250   2                  ScalerSetDataPortBit(P0_60_HLW_ADDR_PORT, _P0_61_PT_10_HLW_CONTROL3, ~(_BIT5 | _BIT4), 0x01 <<
+             - 4);
+ 251   2      
+ 252   2                  break;
+ 253   2      
+ 254   2              case _HLW_OUTSIDE_WINDOW:
+ 255   2      
+ 256   2                  ScalerSetDataPortBit(P0_60_HLW_ADDR_PORT, _P0_61_PT_10_HLW_CONTROL3, ~(_BIT5 | _BIT4), 0x02 <<
+             - 4);
+ 257   2      
+ 258   2                  break;
+ 259   2      
+ 260   2              default:
+ 261   2      
+ 262   2                  break;
+ 263   2          }
+ 264   1      
+ 265   1          ScalerGlobalDDomainDBApply(enumDBApply);
+ 266   1      }
+ 267          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    548    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =      1       9
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----       1
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

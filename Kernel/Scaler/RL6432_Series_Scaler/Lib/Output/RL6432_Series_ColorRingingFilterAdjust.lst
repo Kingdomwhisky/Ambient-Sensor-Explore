@@ -1,0 +1,121 @@
+C51 COMPILER V8.12   RL6432_SERIES_COLORRINGINGFILTERADJUST                                05/25/2022 15:41:32 PAGE 1   
+
+
+C51 COMPILER V8.12, COMPILATION OF MODULE RL6432_SERIES_COLORRINGINGFILTERADJUST
+OBJECT MODULE PLACED IN .\Output\RL6432_Series_ColorRingingFilterAdjust.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Code\RL6432_Series_Color\RL6432_Series_ColorRingingFilterAdjust.c LARGE OPT
+                    -IMIZE(9,SPEED) INCDIR(..\..\..\Common;..\Header;.\Header;..\..\ScalerFunction\Lib\Header;..\..\ScalerFunction\Header;..\
+                    -..\ScalerCommonFunction\Lib\Header;..\..\ScalerCommonFunction\Header;..\..\RL6432_Series_Common\Lib\Header;..\..\RL6432_
+                    -Series_Common\Header) DEFINE(_TRANSLATOR_SUPPORT=_OFF,_SCALER_TYPE=_RL6432_SERIES) DEBUG OBJECTEXTEND PRINT(.\Output\RL6
+                    -432_Series_ColorRingingFilterAdjust.lst) OBJECT(.\Output\RL6432_Series_ColorRingingFilterAdjust.obj)
+
+line level    source
+
+   1          /********************************************************************************/
+   2          /*   The  Software  is  proprietary,  confidential,  and  valuable to Realtek   */
+   3          /*   Semiconductor  Corporation  ("Realtek").  All  rights, including but not   */
+   4          /*   limited  to  copyrights,  patents,  trademarks, trade secrets, mask work   */
+   5          /*   rights, and other similar rights and interests, are reserved to Realtek.   */
+   6          /*   Without  prior  written  consent  from  Realtek,  copying, reproduction,   */
+   7          /*   modification,  distribution,  or  otherwise  is strictly prohibited. The   */
+   8          /*   Software  shall  be  kept  strictly  in  confidence,  and  shall  not be   */
+   9          /*   disclosed to or otherwise accessed by any third party.                     */
+  10          /*   c<2003> - <2012>                                                           */
+  11          /*   The Software is provided "AS IS" without any warranty of any kind,         */
+  12          /*   express, implied, statutory or otherwise.                                  */
+  13          /********************************************************************************/
+  14          
+  15          //----------------------------------------------------------------------------------------------------
+  16          // ID Code      : RL6432_Series_ColorRingingFilterAdjust.c
+  17          // Update Note  :
+  18          //----------------------------------------------------------------------------------------------------
+  19          #include "RL6432_Series_ColorLibInternalInclude.h"
+  20          
+  21          //****************************************************************************
+  22          // DEFINITIONS / MACROS
+  23          //****************************************************************************
+  24          #define _RINGING_FILTER_THRESHOLD           30
+  25          #define _RINGING_FILTER_THD_RANGE           4
+  26          #define _RINGING_JUMP_JUDGEMENT_EN          _DISABLE
+  27          #define _RINGING_JUMP_DIFF_THD_UB           1  // reg value
+  28          #define _RINGING_JUMP_DIFF_THD_LB           1  // reg value
+  29          #define _RINGING_FILTER_DELTA               5
+  30          
+  31          //****************************************************************************
+  32          // STRUCT / TYPE / ENUM DEFINITTIONS
+  33          //****************************************************************************
+  34          
+  35          
+  36          //****************************************************************************
+  37          // CODE TABLES
+  38          //****************************************************************************
+  39          
+  40          
+  41          //****************************************************************************
+  42          // VARIABLE DECLARATIONS
+  43          //****************************************************************************
+  44          
+  45          
+  46          //****************************************************************************
+  47          // FUNCTION DECLARATIONS
+  48          //****************************************************************************
+  49          void ScalerColorRingingFilterAdjust(BYTE *pucOffsetCoef);
+  50          
+  51          
+C51 COMPILER V8.12   RL6432_SERIES_COLORRINGINGFILTERADJUST                                05/25/2022 15:41:32 PAGE 2   
+
+  52          //****************************************************************************
+  53          // FUNCTION DEFINITIONS
+  54          //****************************************************************************
+  55          //--------------------------------------------------
+  56          // Description  : Adjust Ringing Filter
+  57          // Input Value  : Offset Coef
+  58          // Output Value : None
+  59          //--------------------------------------------------
+  60          void ScalerColorRingingFilterAdjust(BYTE *pucOffsetCoef)
+  61          {
+  62   1          BYTE ucTHD = 0;
+  63   1          BYTE ucRFEn = 0;
+  64   1      
+  65   1          if(*pucOffsetCoef > 0)
+  66   1          {
+  67   2              ucTHD = (WORD)_RINGING_FILTER_DELTA * 128 / (*pucOffsetCoef);
+  68   2          }
+  69   1          else
+  70   1          {
+  71   2              ucTHD = 255;
+  72   2          }
+  73   1      
+  74   1          if(ucTHD < _RINGING_FILTER_THRESHOLD)
+  75   1          {
+  76   2              ucTHD = _RINGING_FILTER_THRESHOLD;
+  77   2          }
+  78   1          else if(ucTHD > 255 - (1 << _RINGING_FILTER_THD_RANGE))
+  79   1          {
+  80   2              ucTHD = 255 - (1 << _RINGING_FILTER_THD_RANGE);
+  81   2          }
+  82   1      
+  83   1          ucRFEn = 1;
+  84   1      
+  85   1          ScalerSetByte(P25_A1_RFILTER_THD, ucTHD);
+  86   1          ScalerSetByte(P25_A2_RFILTER_THD_RNG_EXP, _RINGING_FILTER_THD_RANGE);
+  87   1          ScalerSetByte(P25_A3_RFILTER_OFS_COEF, (*pucOffsetCoef));
+  88   1          ScalerSetByte(P25_A5_RFILTER_DIFF_THD_UB, _RINGING_JUMP_DIFF_THD_UB);
+  89   1          ScalerSetByte(P25_A6_RFILTER_DIFF_THD_LB, _RINGING_JUMP_DIFF_THD_LB);
+  90   1          ScalerSetBit(P25_A0_RFILTER_CTRL, ~(_BIT7 | _BIT6 | _BIT5), ((ucRFEn << 7) | _BIT6 | (_RINGING_JUMP_JU
+             -DGEMENT_EN << 5)));
+  91   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    119    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----       4
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

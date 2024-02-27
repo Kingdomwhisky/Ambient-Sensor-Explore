@@ -1,0 +1,114 @@
+C51 COMPILER V8.12   OSDWINDOWSPECIALCOLORMASK                                             05/25/2022 15:41:23 PAGE 1   
+
+
+C51 COMPILER V8.12, COMPILATION OF MODULE OSDWINDOWSPECIALCOLORMASK
+OBJECT MODULE PLACED IN .\Output\OsdWindowSpecialColorMask.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE ..\..\ScalerFunction\Lib\Code\ScalerOSD\Windows\OsdWindowSpecialColorMask.c
+                    - LARGE OPTIMIZE(9,SPEED) INCDIR(..\..\..\Common;..\Header;.\Header;..\..\ScalerFunction\Lib\Header;..\..\ScalerFunction\
+                    -Header;..\..\ScalerCommonFunction\Lib\Header;..\..\ScalerCommonFunction\Header;..\..\RL6432_Series_Common\Lib\Header;..\
+                    -..\RL6432_Series_Common\Header) DEFINE(_TRANSLATOR_SUPPORT=_OFF,_SCALER_TYPE=_RL6432_SERIES) DEBUG OBJECTEXTEND PRINT(.\
+                    -Output\OsdWindowSpecialColorMask.lst) OBJECT(.\Output\OsdWindowSpecialColorMask.obj)
+
+line level    source
+
+   1          /********************************************************************************/
+   2          /*   The  Software  is  proprietary,  confidential,  and  valuable to Realtek   */
+   3          /*   Semiconductor  Corporation  ("Realtek").  All  rights, including but not   */
+   4          /*   limited  to  copyrights,  patents,  trademarks, trade secrets, mask work   */
+   5          /*   rights, and other similar rights and interests, are reserved to Realtek.   */
+   6          /*   Without  prior  written  consent  from  Realtek,  copying, reproduction,   */
+   7          /*   modification,  distribution,  or  otherwise  is strictly prohibited. The   */
+   8          /*   Software  shall  be  kept  strictly  in  confidence,  and  shall  not be   */
+   9          /*   disclosed to or otherwise accessed by any third party.                     */
+  10          /*   c<2003> - <2012>                                                           */
+  11          /*   The Software is provided "AS IS" without any warranty of any kind,         */
+  12          /*   express, implied, statutory or otherwise.                                  */
+  13          /********************************************************************************/
+  14          
+  15          //----------------------------------------------------------------------------------------------------
+  16          // ID Code      : OsdWindowSpecialColorMask.c
+  17          // Update Note  :
+  18          //----------------------------------------------------------------------------------------------------
+  19          #include "ScalerOSDLibInternalInclude.h"
+  20          
+  21          //****************************************************************************
+  22          // DEFINITIONS / MACROS
+  23          //****************************************************************************
+  24          
+  25          
+  26          //****************************************************************************
+  27          // STRUCT / TYPE / ENUM DEFINITTIONS
+  28          //****************************************************************************
+  29          
+  30          
+  31          //****************************************************************************
+  32          // CODE TABLES
+  33          //****************************************************************************
+  34          
+  35          
+  36          //****************************************************************************
+  37          // VARIABLE DECLARATIONS
+  38          //****************************************************************************
+  39          
+  40          
+  41          //****************************************************************************
+  42          // FUNCTION DECLARATIONS
+  43          //****************************************************************************
+  44          void ScalerOsdWindowSpecialColorMask(bit bEnable, EnumOsdWindowsType enumOsdWindowsType, EnumOsdSpecialCol
+             -orMaskOperation enumOsdSpecialColorMaskOperation);
+  45          
+  46          
+  47          //****************************************************************************
+  48          // FUNCTION DEFINITIONS
+  49          //****************************************************************************
+  50          //--------------------------------------------------
+C51 COMPILER V8.12   OSDWINDOWSPECIALCOLORMASK                                             05/25/2022 15:41:23 PAGE 2   
+
+  51          // Description  : Set window special color mask
+  52          // Input Value  : bEnable            -> _ENABLE or _DISABLE
+  53          //                enumOsdWindowsType -> _OSD_WINDOW_0, _OSD_WINDOW_5, _OSD_WINDOW_6, _OSD_WINDOW_7, _OSD_W
+             -INDOW_8, _OSD_WINDOW_9
+  54          //                EnumOsdSpecialColorMaskOperation  -> _OSD_SPECIAL_COLOR_MASK_AND_OPERATION or _OSD_SPECI
+             -AL_COLOR_MASK_OR_OPERATION
+  55          // Output Value :
+  56          //--------------------------------------------------
+  57          void ScalerOsdWindowSpecialColorMask(bit bEnable, EnumOsdWindowsType enumOsdWindowsType, EnumOsdSpecialCol
+             -orMaskOperation enumOsdSpecialColorMaskOperation)
+  58          {
+  59   1          BYTE ucTemp = 0;
+  60   1          WORD usTempWindowNumber = 0;
+  61   1      
+  62   1          usTempWindowNumber = 0x177 + (enumOsdWindowsType * 7);
+  63   1          ucTemp = ScalerOsdFrameControlByteGet(usTempWindowNumber, _OSD_BYTE0);
+  64   1          ucTemp = ((ucTemp & ~(_BIT3 | _BIT2)) | (((BYTE)enumOsdSpecialColorMaskOperation << 3) | ((BYTE)bEnabl
+             -e << 2)));
+  65   1      
+  66   1          ScalerOsdFrameControlByte(usTempWindowNumber, _OSD_BYTE0, ucTemp);
+  67   1      }
+  68          
+  69          
+  70          
+  71          /*
+  72          //--------------------------------------------------
+  73          // example
+  74          //--------------------------------------------------
+  75              SET_OSD_WINDOW_NUMBER(0);
+  76              SET_OSD_WINDOW_ENABLE(_ENABLE);
+  77              SET_OSD_WINDOW_COLOR(4);
+  78              ScalerOsdDrawWindow(XSTART(100), YSTART(200), XEND(300), YEND(400));
+  79              ScalerOsdWindowSpecialColorMask(_ENABLE, _OSD_WINDOW_0, _OSD_SPECIAL_COLOR_MASK_AND_OPERATION);
+  80          */
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     75    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----       4
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----       1
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

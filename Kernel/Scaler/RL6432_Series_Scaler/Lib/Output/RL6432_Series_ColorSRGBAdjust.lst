@@ -1,0 +1,118 @@
+C51 COMPILER V8.12   RL6432_SERIES_COLORSRGBADJUST                                         05/25/2022 15:41:35 PAGE 1   
+
+
+C51 COMPILER V8.12, COMPILATION OF MODULE RL6432_SERIES_COLORSRGBADJUST
+OBJECT MODULE PLACED IN .\Output\RL6432_Series_ColorSRGBAdjust.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Code\RL6432_Series_Color\RL6432_Series_ColorSRGBAdjust.c LARGE OPTIMIZE(9,S
+                    -PEED) INCDIR(..\..\..\Common;..\Header;.\Header;..\..\ScalerFunction\Lib\Header;..\..\ScalerFunction\Header;..\..\Scaler
+                    -CommonFunction\Lib\Header;..\..\ScalerCommonFunction\Header;..\..\RL6432_Series_Common\Lib\Header;..\..\RL6432_Series_Co
+                    -mmon\Header) DEFINE(_TRANSLATOR_SUPPORT=_OFF,_SCALER_TYPE=_RL6432_SERIES) DEBUG OBJECTEXTEND PRINT(.\Output\RL6432_Serie
+                    -s_ColorSRGBAdjust.lst) OBJECT(.\Output\RL6432_Series_ColorSRGBAdjust.obj)
+
+line level    source
+
+   1          /********************************************************************************/
+   2          /*   The  Software  is  proprietary,  confidential,  and  valuable to Realtek   */
+   3          /*   Semiconductor  Corporation  ("Realtek").  All  rights, including but not   */
+   4          /*   limited  to  copyrights,  patents,  trademarks, trade secrets, mask work   */
+   5          /*   rights, and other similar rights and interests, are reserved to Realtek.   */
+   6          /*   Without  prior  written  consent  from  Realtek,  copying, reproduction,   */
+   7          /*   modification,  distribution,  or  otherwise  is strictly prohibited. The   */
+   8          /*   Software  shall  be  kept  strictly  in  confidence,  and  shall  not be   */
+   9          /*   disclosed to or otherwise accessed by any third party.                     */
+  10          /*   c<2003> - <2012>                                                           */
+  11          /*   The Software is provided "AS IS" without any warranty of any kind,         */
+  12          /*   express, implied, statutory or otherwise.                                  */
+  13          /********************************************************************************/
+  14          //-------------------------------------------------------------------------------------//
+  15          // ID Code      : RL6432_Series_ColorSRGBAdjust.c
+  16          // Update Note  :
+  17          //-------------------------------------------------------------------------------------//
+  18          #include "RL6432_Series_ColorLibInternalInclude.h"
+  19          
+  20          //****************************************************************************
+  21          // DEFINITIONS / MACROS
+  22          //****************************************************************************
+  23          //--------------------------------------------------
+  24          // Table Length
+  25          //--------------------------------------------------
+  26          #define _SRGB_TABLE_SIZE                        24
+  27          
+  28          
+  29          //****************************************************************************
+  30          // STRUCT / TYPE / ENUM DEFINITTIONS
+  31          //****************************************************************************
+  32          
+  33          
+  34          //****************************************************************************
+  35          // CODE TABLES
+  36          //****************************************************************************
+  37          
+  38          
+  39          //****************************************************************************
+  40          // VARIABLE DECLARATIONS
+  41          //****************************************************************************
+  42          
+  43          
+  44          //****************************************************************************
+  45          // FUNCTION DECLARATIONS
+  46          //****************************************************************************
+  47          bit ScalerColorSRGBAdjust(BYTE *pucSRGBArray, EnumSrgbPrecision enumPrecision);
+  48          
+  49          
+  50          //****************************************************************************
+  51          // FUNCTION DEFINITIONS
+C51 COMPILER V8.12   RL6432_SERIES_COLORSRGBADJUST                                         05/25/2022 15:41:35 PAGE 2   
+
+  52          //****************************************************************************
+  53          
+  54          //--------------------------------------------------
+  55          // Description  : Adjust SRGB function
+  56          // Input Value  : SRGB Matrix
+  57          //                SRGB Precision
+  58          // Output Value : _TRUE/_FALSE
+  59          //--------------------------------------------------
+  60          bit ScalerColorSRGBAdjust(BYTE *pucSRGBArray, EnumSrgbPrecision enumPrecision)
+  61          {
+  62   1          // Clear Waiting flag
+  63   1          ScalerSetBit(P0_62_SRGB_CTRL, ~_BIT7, 0x00);
+  64   1          ScalerSetBit(P0_62_SRGB_CTRL, ~_BIT6, _BIT6); // Reset Port
+  65   1      
+  66   1          if(ScalerTimerPollingFlagProc(2, P0_62_SRGB_CTRL, _BIT6, 0) == _FALSE) // pollling till Reset port add
+             -ress finished
+  67   1          {
+  68   2              return _FALSE;
+  69   2          }
+  70   1      
+  71   1          ScalerSetBit(P0_62_SRGB_CTRL, ~(_BIT5 | _BIT4 | _BIT3), 0x00); // Write sequence
+  72   1      
+  73   1          if(ScalerGetBit(P9_A1_INPUT_GAMMA_CTRL, _BIT6) == _BIT6)
+  74   1          {
+  75   2              ScalerTimerWaitForEvent(_EVENT_DEN_STOP);
+  76   2          }
+  77   1      
+  78   1          ScalerBurstWrite(pucSRGBArray, _SRGB_TABLE_SIZE, GET_CURRENT_BANK_NUMBER(), P0_63_SRGB_ACCESS_PORT_SET
+             -A, _BURSTWRITE_DATA_COMMON, _BURSTWRITE_FROM_XRAM);
+  79   1      
+  80   1          ScalerSetBit(P0_68_GAMMA_BIST_DITHER_SETA, ~(_BIT6 | _BIT5), (enumPrecision << 5)); // Precision
+  81   1      
+  82   1          ScalerSetBit(P0_62_SRGB_CTRL, ~_BIT7, _BIT7);   // no apply none, always effective on dvs
+  83   1      
+  84   1          return _TRUE;
+  85   1      }
+  86          
+  87          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    134    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----       4
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

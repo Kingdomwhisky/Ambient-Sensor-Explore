@@ -1,0 +1,107 @@
+C51 COMPILER V8.12   SCALERCOMMONDEBUGTIMERCURSORMS                                        05/25/2022 15:40:54 PAGE 1   
+
+
+C51 COMPILER V8.12, COMPILATION OF MODULE SCALERCOMMONDEBUGTIMERCURSORMS
+OBJECT MODULE PLACED IN .\Output\ScalerCommonDebugTimerCursorMS.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE ..\..\ScalerCommonFunction\Lib\Code\ScalerCommon\ScalerCommonDebugTimerCurs
+                    -orMS.c LARGE OPTIMIZE(9,SPEED) INCDIR(..\..\..\Common;..\Header;.\Header;..\..\ScalerFunction\Lib\Header;..\..\ScalerFun
+                    -ction\Header;..\..\ScalerCommonFunction\Lib\Header;..\..\ScalerCommonFunction\Header;..\..\RL6432_Series_Common\Lib\Head
+                    -er;..\..\RL6432_Series_Common\Header) DEFINE(_TRANSLATOR_SUPPORT=_OFF,_SCALER_TYPE=_RL6432_SERIES) DEBUG OBJECTEXTEND PR
+                    -INT(.\Output\ScalerCommonDebugTimerCursorMS.lst) OBJECT(.\Output\ScalerCommonDebugTimerCursorMS.obj)
+
+line level    source
+
+   1          /********************************************************************************/
+   2          /*   The  Software  is  proprietary,  confidential,  and  valuable to Realtek   */
+   3          /*   Semiconductor  Corporation  ("Realtek").  All  rights, including but not   */
+   4          /*   limited  to  copyrights,  patents,  trademarks, trade secrets, mask work   */
+   5          /*   rights, and other similar rights and interests, are reserved to Realtek.   */
+   6          /*   Without  prior  written  consent  from  Realtek,  copying, reproduction,   */
+   7          /*   modification,  distribution,  or  otherwise  is strictly prohibited. The   */
+   8          /*   Software  shall  be  kept  strictly  in  confidence,  and  shall  not be   */
+   9          /*   disclosed to or otherwise accessed by any third party.                     */
+  10          /*   c<2003> - <2012>                                                           */
+  11          /*   The Software is provided "AS IS" without any warranty of any kind,         */
+  12          /*   express, implied, statutory or otherwise.                                  */
+  13          /********************************************************************************/
+  14          
+  15          #include "ScalerCommonLibInternalInclude.h"
+  16          
+  17          //----------------------------------------------------------------------------------------------------
+  18          // ID Code      : ScalerCommonDebugTimerCursorMS.c No.0000
+  19          // Update Note  :
+  20          //----------------------------------------------------------------------------------------------------
+  21          
+  22          
+  23          //****************************************************************************
+  24          // DEFINITIONS / MACROS
+  25          //****************************************************************************
+  26          
+  27          //****************************************************************************
+  28          // STRUCT / TYPE / ENUM DEFINITTIONS
+  29          //****************************************************************************
+  30          
+  31          //****************************************************************************
+  32          // CODE TABLES
+  33          //****************************************************************************
+  34          
+  35          //****************************************************************************
+  36          // VARIABLE DECLARATIONS
+  37          //****************************************************************************
+  38          StructTimerSampleMS g_pstTimerCursorMS[_DEBUG_TIME_CURSOR_END];
+  39          BYTE g_ucTimerCursorUsedMS;
+  40          
+  41          
+  42          //****************************************************************************
+  43          // FUNCTION DECLARATIONS
+  44          //****************************************************************************
+  45          WORD ScalerDebugGetTimerCursorMSDifference(EnumDebugTimeCursor enumIndex);
+  46          
+  47          
+  48          //****************************************************************************
+  49          // FUNCTION DEFINITIONS
+  50          //****************************************************************************
+  51          //--------------------------------------------------
+C51 COMPILER V8.12   SCALERCOMMONDEBUGTIMERCURSORMS                                        05/25/2022 15:40:54 PAGE 2   
+
+  52          // Description  : Get Time Cursor Difference for MS
+  53          // Input Value  : Debug Time Cursor
+  54          // Output Value : Time Difference for Ms
+  55          //--------------------------------------------------
+  56          WORD ScalerDebugGetTimerCursorMSDifference(EnumDebugTimeCursor enumIndex)
+  57          {
+  58   1          // Check if cursor is used
+  59   1          if(((g_ucTimerCursorUsedMS >> enumIndex) & _BIT0) == _DISABLE)
+  60   1          {
+  61   2              return 0xFFFF;
+  62   2          }
+  63   1          else
+  64   1          {
+  65   2              // Calculate counter difference
+  66   2              if(g_pstTimerCursorMS[enumIndex].usCounter_Start <= g_pstTimerCursorMS[enumIndex].usCounter_End)
+  67   2              {
+  68   3                  return g_pstTimerCursorMS[enumIndex].usCounter_End - g_pstTimerCursorMS[enumIndex].usCounter_S
+             -tart;
+  69   3              }
+  70   2              else
+  71   2              {
+  72   3                  return 0xFFFF - g_pstTimerCursorMS[enumIndex].usCounter_Start + g_pstTimerCursorMS[enumIndex].
+             -usCounter_End;
+  73   3              }
+  74   2          }
+  75   1      }
+  76          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    122    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =     21    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

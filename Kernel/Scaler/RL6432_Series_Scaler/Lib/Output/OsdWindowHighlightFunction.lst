@@ -1,0 +1,175 @@
+C51 COMPILER V8.12   OSDWINDOWHIGHLIGHTFUNCTION                                            05/25/2022 15:41:22 PAGE 1   
+
+
+C51 COMPILER V8.12, COMPILATION OF MODULE OSDWINDOWHIGHLIGHTFUNCTION
+OBJECT MODULE PLACED IN .\Output\OsdWindowHighlightFunction.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE ..\..\ScalerFunction\Lib\Code\ScalerOSD\Windows\OsdWindowHighlightFunction.
+                    -c LARGE OPTIMIZE(9,SPEED) INCDIR(..\..\..\Common;..\Header;.\Header;..\..\ScalerFunction\Lib\Header;..\..\ScalerFunction
+                    -\Header;..\..\ScalerCommonFunction\Lib\Header;..\..\ScalerCommonFunction\Header;..\..\RL6432_Series_Common\Lib\Header;..
+                    -\..\RL6432_Series_Common\Header) DEFINE(_TRANSLATOR_SUPPORT=_OFF,_SCALER_TYPE=_RL6432_SERIES) DEBUG OBJECTEXTEND PRINT(.
+                    -\Output\OsdWindowHighlightFunction.lst) OBJECT(.\Output\OsdWindowHighlightFunction.obj)
+
+line level    source
+
+   1          /********************************************************************************/
+   2          /*   The  Software  is  proprietary,  confidential,  and  valuable to Realtek   */
+   3          /*   Semiconductor  Corporation  ("Realtek").  All  rights, including but not   */
+   4          /*   limited  to  copyrights,  patents,  trademarks, trade secrets, mask work   */
+   5          /*   rights, and other similar rights and interests, are reserved to Realtek.   */
+   6          /*   Without  prior  written  consent  from  Realtek,  copying, reproduction,   */
+   7          /*   modification,  distribution,  or  otherwise  is strictly prohibited. The   */
+   8          /*   Software  shall  be  kept  strictly  in  confidence,  and  shall  not be   */
+   9          /*   disclosed to or otherwise accessed by any third party.                     */
+  10          /*   c<2003> - <2012>                                                           */
+  11          /*   The Software is provided "AS IS" without any warranty of any kind,         */
+  12          /*   express, implied, statutory or otherwise.                                  */
+  13          /********************************************************************************/
+  14          
+  15          //----------------------------------------------------------------------------------------------------
+  16          // ID Code      : OsdWindowHighlightFunction.c
+  17          // Update Note  :
+  18          //----------------------------------------------------------------------------------------------------
+  19          #include "ScalerOSDLibInternalInclude.h"
+  20          
+  21          //****************************************************************************
+  22          // DEFINITIONS / MACROS
+  23          //****************************************************************************
+  24          
+  25          
+  26          //****************************************************************************
+  27          // STRUCT / TYPE / ENUM DEFINITTIONS
+  28          //****************************************************************************
+  29          
+  30          
+  31          //****************************************************************************
+  32          // CODE TABLES
+  33          //****************************************************************************
+  34          
+  35          
+  36          //****************************************************************************
+  37          // VARIABLE DECLARATIONS
+  38          //****************************************************************************
+  39          
+  40          
+  41          //****************************************************************************
+  42          // FUNCTION DECLARATIONS
+  43          //****************************************************************************
+  44          void ScalerOsdWindowHighlightFunction(bit bEnable, EnumOsdWindowsType enumOsdWindowsType, BYTE ucForegroun
+             -dColor, BYTE ucBackgroundColor, BYTE ucCharactorBorderColor);
+  45          
+  46          
+  47          //****************************************************************************
+  48          // FUNCTION DEFINITIONS
+  49          //****************************************************************************
+  50          //--------------------------------------------------
+C51 COMPILER V8.12   OSDWINDOWHIGHLIGHTFUNCTION                                            05/25/2022 15:41:22 PAGE 2   
+
+  51          // Description  : Set window highlight function
+  52          // Input Value  : bEnable              -> _ENABLE or _DISABLE
+  53          //                enumOsdWindowsType   -> _OSD_WINDOW_4_1 ~ _OSD_WINDOW_4_8
+  54          //                ucForegroundColor    -> 0 ~ 63
+  55          //                BackgroundColor      -> 0 ~ 63
+  56          //                CharactorBorderColor -> 0 ~ 63
+  57          // Output Value :
+  58          //--------------------------------------------------
+  59          void ScalerOsdWindowHighlightFunction(bit bEnable, EnumOsdWindowsType enumOsdWindowsType, BYTE ucForegroun
+             -dColor, BYTE ucBackgroundColor, BYTE ucCharactorBorderColor)
+  60          {
+  61   1          ucCharactorBorderColor = ucCharactorBorderColor;
+  62   1      
+  63   1          switch(enumOsdWindowsType)
+  64   1          {
+  65   2              case _OSD_WINDOW_4_1:
+  66   2                  ScalerSetBit(P3A_2A_FRAME_CTRL_2A, ~_BIT6, ((BYTE)bEnable << 6));
+  67   2                  ScalerSetBit(P3A_2A_FRAME_CTRL_2A, ~(_BIT5 | _BIT4 | _BIT3 | _BIT2 | _BIT1 | _BIT0), ucForegro
+             -undColor);
+  68   2                  ScalerSetBit(P3A_2B_FRAME_CTRL_2B, ~(_BIT5 | _BIT4 | _BIT3 | _BIT2 | _BIT1 | _BIT0), ucBackgro
+             -undColor);
+  69   2                  break;
+  70   2      
+  71   2              case _OSD_WINDOW_4_2:
+  72   2                  ScalerSetBit(P3A_2D_FRAME_CTRL_2D, ~_BIT6, ((BYTE)bEnable << 6));
+  73   2                  ScalerSetBit(P3A_2D_FRAME_CTRL_2D, ~(_BIT5 | _BIT4 | _BIT3 | _BIT2 | _BIT1 | _BIT0), ucForegro
+             -undColor);
+  74   2                  ScalerSetBit(P3A_2E_FRAME_CTRL_2E, ~(_BIT5 | _BIT4 | _BIT3 | _BIT2 | _BIT1 | _BIT0), ucBackgro
+             -undColor);
+  75   2                  break;
+  76   2      
+  77   2              case _OSD_WINDOW_4_3:
+  78   2                  ScalerSetBit(P3A_30_FRAME_CTRL_30, ~_BIT6, ((BYTE)bEnable << 6));
+  79   2                  ScalerSetBit(P3A_30_FRAME_CTRL_30, ~(_BIT5 | _BIT4 | _BIT3 | _BIT2 | _BIT1 | _BIT0), ucForegro
+             -undColor);
+  80   2                  ScalerSetBit(P3A_31_FRAME_CTRL_31, ~(_BIT5 | _BIT4 | _BIT3 | _BIT2 | _BIT1 | _BIT0), ucBackgro
+             -undColor);
+  81   2                  break;
+  82   2      
+  83   2              case _OSD_WINDOW_4_4:
+  84   2                  ScalerSetBit(P3A_4D_FRAME_CTRL_4D, ~_BIT6, ((BYTE)bEnable << 6));
+  85   2                  ScalerSetBit(P3A_4D_FRAME_CTRL_4D, ~(_BIT5 | _BIT4 | _BIT3 | _BIT2 | _BIT1 | _BIT0), ucForegro
+             -undColor);
+  86   2                  ScalerSetBit(P3A_4E_FRAME_CTRL_4E, ~(_BIT5 | _BIT4 | _BIT3 | _BIT2 | _BIT1 | _BIT0), ucBackgro
+             -undColor);
+  87   2                  break;
+  88   2      
+  89   2              case _OSD_WINDOW_4_5:
+  90   2                  ScalerSetBit(P3A_4F_FRAME_CTRL_4F, ~_BIT6, ((BYTE)bEnable << 6));
+  91   2                  ScalerSetBit(P3A_4F_FRAME_CTRL_4F, ~(_BIT5 | _BIT4 | _BIT3 | _BIT2 | _BIT1 | _BIT0), ucForegro
+             -undColor);
+  92   2                  ScalerSetBit(P3A_50_FRAME_CTRL_50, ~(_BIT5 | _BIT4 | _BIT3 | _BIT2 | _BIT1 | _BIT0), ucBackgro
+             -undColor);
+  93   2                  break;
+  94   2      
+  95   2              case _OSD_WINDOW_4_6:
+  96   2                  ScalerSetBit(P3A_51_FRAME_CTRL_51, ~_BIT6, ((BYTE)bEnable << 6));
+  97   2                  ScalerSetBit(P3A_51_FRAME_CTRL_51, ~(_BIT5 | _BIT4 | _BIT3 | _BIT2 | _BIT1 | _BIT0), ucForegro
+             -undColor);
+  98   2                  ScalerSetBit(P3A_52_FRAME_CTRL_52, ~(_BIT5 | _BIT4 | _BIT3 | _BIT2 | _BIT1 | _BIT0), ucBackgro
+             -undColor);
+  99   2                  break;
+C51 COMPILER V8.12   OSDWINDOWHIGHLIGHTFUNCTION                                            05/25/2022 15:41:22 PAGE 3   
+
+ 100   2      
+ 101   2              case _OSD_WINDOW_4_7:
+ 102   2                  ScalerSetBit(P3A_53_FRAME_CTRL_53, ~_BIT6, ((BYTE)bEnable << 6));
+ 103   2                  ScalerSetBit(P3A_53_FRAME_CTRL_53, ~(_BIT5 | _BIT4 | _BIT3 | _BIT2 | _BIT1 | _BIT0), ucForegro
+             -undColor);
+ 104   2                  ScalerSetBit(P3A_54_FRAME_CTRL_54, ~(_BIT5 | _BIT4 | _BIT3 | _BIT2 | _BIT1 | _BIT0), ucBackgro
+             -undColor);
+ 105   2                  break;
+ 106   2      
+ 107   2              case _OSD_WINDOW_4_8:
+ 108   2                  ScalerSetBit(P3A_55_FRAME_CTRL_55, ~_BIT6, ((BYTE)bEnable << 6));
+ 109   2                  ScalerSetBit(P3A_55_FRAME_CTRL_55, ~(_BIT5 | _BIT4 | _BIT3 | _BIT2 | _BIT1 | _BIT0), ucForegro
+             -undColor);
+ 110   2                  ScalerSetBit(P3A_56_FRAME_CTRL_56, ~(_BIT5 | _BIT4 | _BIT3 | _BIT2 | _BIT1 | _BIT0), ucBackgro
+             -undColor);
+ 111   2                  break;
+ 112   2      
+ 113   2              default:
+ 114   2                  break;
+ 115   2          }
+ 116   1      }
+ 117          
+ 118          
+ 119          /*
+ 120          //--------------------------------------------------
+ 121          // example
+ 122          //--------------------------------------------------
+ 123              ScalerOsdWindowHighlightFunction(_ENABLE, _OSD_WINDOW_4_1, 1, 3, 5);
+ 124          */
+ 125          
+ 126          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    256    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----       4
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----       1
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

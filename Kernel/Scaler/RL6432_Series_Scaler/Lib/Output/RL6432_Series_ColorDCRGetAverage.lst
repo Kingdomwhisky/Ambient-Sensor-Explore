@@ -1,0 +1,162 @@
+C51 COMPILER V8.12   RL6432_SERIES_COLORDCRGETAVERAGE                                      05/25/2022 15:41:25 PAGE 1   
+
+
+C51 COMPILER V8.12, COMPILATION OF MODULE RL6432_SERIES_COLORDCRGETAVERAGE
+OBJECT MODULE PLACED IN .\Output\RL6432_Series_ColorDCRGetAverage.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Code\RL6432_Series_Color\RL6432_Series_ColorDCRGetAverage.c LARGE OPTIMIZE(
+                    -9,SPEED) INCDIR(..\..\..\Common;..\Header;.\Header;..\..\ScalerFunction\Lib\Header;..\..\ScalerFunction\Header;..\..\Sca
+                    -lerCommonFunction\Lib\Header;..\..\ScalerCommonFunction\Header;..\..\RL6432_Series_Common\Lib\Header;..\..\RL6432_Series
+                    -_Common\Header) DEFINE(_TRANSLATOR_SUPPORT=_OFF,_SCALER_TYPE=_RL6432_SERIES) DEBUG OBJECTEXTEND PRINT(.\Output\RL6432_Se
+                    -ries_ColorDCRGetAverage.lst) OBJECT(.\Output\RL6432_Series_ColorDCRGetAverage.obj)
+
+line level    source
+
+   1          /********************************************************************************/
+   2          /*   The  Software  is  proprietary,  confidential,  and  valuable to Realtek   */
+   3          /*   Semiconductor  Corporation  ("Realtek").  All  rights, including but not   */
+   4          /*   limited  to  copyrights,  patents,  trademarks, trade secrets, mask work   */
+   5          /*   rights, and other similar rights and interests, are reserved to Realtek.   */
+   6          /*   Without  prior  written  consent  from  Realtek,  copying, reproduction,   */
+   7          /*   modification,  distribution,  or  otherwise  is strictly prohibited. The   */
+   8          /*   Software  shall  be  kept  strictly  in  confidence,  and  shall  not be   */
+   9          /*   disclosed to or otherwise accessed by any third party.                     */
+  10          /*   c<2003> - <2012>                                                           */
+  11          /*   The Software is provided "AS IS" without any warranty of any kind,         */
+  12          /*   express, implied, statutory or otherwise.                                  */
+  13          /********************************************************************************/
+  14          
+  15          //----------------------------------------------------------------------------------------------------
+  16          // ID Code      : RL6432_Series_ColorDCRGetAverage.c
+  17          // Update Note  :
+  18          //----------------------------------------------------------------------------------------------------
+  19          #include "RL6432_Series_ColorLibInternalInclude.h"
+  20          
+  21          //****************************************************************************
+  22          // DEFINITIONS / MACROS
+  23          //****************************************************************************
+  24          
+  25          
+  26          //****************************************************************************
+  27          // STRUCT / TYPE / ENUM DEFINITTIONS
+  28          //****************************************************************************
+  29          
+  30          
+  31          //****************************************************************************
+  32          // CODE TABLES
+  33          //****************************************************************************
+  34          
+  35          
+  36          //****************************************************************************
+  37          // VARIABLE DECLARATIONS
+  38          //****************************************************************************
+  39          
+  40          
+  41          //****************************************************************************
+  42          // FUNCTION DECLARATIONS
+  43          //****************************************************************************
+  44          WORD ScalerColorDCRGetAverage(EnumDCRAverageOption enumDCRAverageOption, DWORD ulDivider);
+  45          
+  46          
+  47          //****************************************************************************
+  48          // FUNCTION DEFINITIONS
+  49          //****************************************************************************
+  50          //--------------------------------------------------
+  51          // Description  : Get DCR Average Result
+C51 COMPILER V8.12   RL6432_SERIES_COLORDCRGETAVERAGE                                      05/25/2022 15:41:25 PAGE 2   
+
+  52          // Input Value  : stDCRResult : DCR Measute Result
+  53          //                ulDivider   : GET_MDOMAIN_OUTPUT_HWIDTH() * GET_MDOMAIN_OUTPUT_VHEIGHT() * n(3 or 8)
+  54          //                              n = 3; when DCR Measure _MEASURE_AVERAGE(R+G+B)
+  55          //                              n = 8; when DCR Measure _MEASURE_Y(2R+5G+B)
+  56          // Output Value : None
+  57          //--------------------------------------------------
+  58          WORD ScalerColorDCRGetAverage(EnumDCRAverageOption enumDCRAverageOption, DWORD ulDivider)
+  59          {
+  60   1          WORD usResult = 0;
+  61   1      
+  62   1          BYTE ucHighPart = 0;
+  63   1          DWORD ulLowPart = 0;
+  64   1      
+  65   1          if(GET_DCR_READY_STATUS() == _FALSE)
+  66   1          {
+  67   2              return 0;
+  68   2          }
+  69   1      
+  70   1          switch(enumDCRAverageOption)
+  71   1          {
+  72   2              case _DCR_ABOVE_TH1_VAL_TOTAL:
+  73   2                  ScalerSetByte(P7_D8_DCR_ADDRESS_PORT, (_P7_D9_PT_05_DCR_ABOVE_TH1_VAL_4 << 2) | _BIT1 | _BIT0)
+             -;
+  74   2                  ScalerRead(P7_D9_DCR_DATA_PORT, 4, pData, _NON_AUTOINC);
+  75   2                  ScalerSetByte(P7_D8_DCR_ADDRESS_PORT, (_P7_D9_PT_2A_DCR_ABOVE_TH_VAL_5 << 2) | _BIT1 | _BIT0);
+  76   2                  ucHighPart = ((ScalerGetByte(P7_D9_DCR_DATA_PORT) & (_BIT7 | _BIT6 | _BIT5)) >> 3) | ((pData[0
+             -] & 0xC0) >> 6);
+  77   2                  ScalerSetByte(P7_D8_DCR_ADDRESS_PORT, (_P7_D9_PT_2B_DCR_ABOVE_TH_VAL_0 << 2) | _BIT1 | _BIT0);
+  78   2                  ulLowPart = (PDATA_DWORD(0) << 2) | ((ScalerGetByte(P7_D9_DCR_DATA_PORT) & (_BIT7 | _BIT6)) >>
+             - 6);
+  79   2                  break;
+  80   2      
+  81   2              case _DCR_ABOVE_TH2_VAL_TOTAL:
+  82   2                  ScalerSetByte(P7_D8_DCR_ADDRESS_PORT, (_P7_D9_PT_0C_DCR_ABOVE_TH2_VAL_4 << 2) | _BIT1 | _BIT0)
+             -;
+  83   2                  ScalerRead(P7_D9_DCR_DATA_PORT, 4, pData, _NON_AUTOINC);
+  84   2                  ScalerSetByte(P7_D8_DCR_ADDRESS_PORT, (_P7_D9_PT_2A_DCR_ABOVE_TH_VAL_5 << 2) | _BIT1 | _BIT0);
+  85   2                  ucHighPart = ((ScalerGetByte(P7_D9_DCR_DATA_PORT) & (_BIT3 | _BIT2 | _BIT1)) << 1) | ((pData[0
+             -] & 0xC0) >> 6);
+  86   2                  ScalerSetByte(P7_D8_DCR_ADDRESS_PORT, (_P7_D9_PT_2B_DCR_ABOVE_TH_VAL_0 << 2) | _BIT1 | _BIT0);
+  87   2                  ulLowPart = (PDATA_DWORD(0) << 2) | ((ScalerGetByte(P7_D9_DCR_DATA_PORT) & (_BIT3 | _BIT2)) >>
+             - 2);
+  88   2                  break;
+  89   2      
+  90   2              default:
+  91   2                  break;
+  92   2          }
+  93   1      
+  94   1          if(ucHighPart > 15)
+  95   1          {
+  96   2              usResult = (((((((DWORD)ucHighPart) << 27) % ulDivider) << 5) + (ulLowPart % ulDivider)) / ulDivid
+             -er) + (ulLowPart / ulDivider) + (((((DWORD)ucHighPart) << 27) / ulDivider) << 5);
+  97   2          }
+  98   1          else if(ucHighPart > 7)
+  99   1          {
+ 100   2              usResult = (((((((DWORD)ucHighPart) << 28) % ulDivider) << 4) + (ulLowPart % ulDivider)) / ulDivid
+             -er) + (ulLowPart / ulDivider) + (((((DWORD)ucHighPart) << 28) / ulDivider) << 4);
+ 101   2          }
+ 102   1          else if(ucHighPart > 3)
+ 103   1          {
+ 104   2              usResult = (((((((DWORD)ucHighPart) << 29) % ulDivider) << 3) + (ulLowPart % ulDivider)) / ulDivid
+             -er) + (ulLowPart / ulDivider) + (((((DWORD)ucHighPart) << 29) / ulDivider) << 3);
+C51 COMPILER V8.12   RL6432_SERIES_COLORDCRGETAVERAGE                                      05/25/2022 15:41:25 PAGE 3   
+
+ 105   2          }
+ 106   1          else if(ucHighPart > 1)
+ 107   1          {
+ 108   2              usResult = (((((((DWORD)ucHighPart) << 30) % ulDivider) << 2) + (ulLowPart % ulDivider)) / ulDivid
+             -er) + (ulLowPart / ulDivider) + (((((DWORD)ucHighPart) << 30) / ulDivider) << 2);
+ 109   2          }
+ 110   1          else if(ucHighPart > 0)
+ 111   1          {
+ 112   2              usResult = (((((((DWORD)ucHighPart) << 31) % ulDivider) << 1) + (ulLowPart % ulDivider)) / ulDivid
+             -er) + (ulLowPart / ulDivider) + (((((DWORD)ucHighPart) << 31) / ulDivider) << 1);
+ 113   2          }
+ 114   1          else
+ 115   1          {
+ 116   2              usResult = ulLowPart / ulDivider;
+ 117   2          }
+ 118   1      
+ 119   1          return usResult;
+ 120   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    809    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----      12
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

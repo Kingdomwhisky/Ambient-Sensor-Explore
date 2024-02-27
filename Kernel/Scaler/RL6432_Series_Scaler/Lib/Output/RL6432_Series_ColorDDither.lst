@@ -1,0 +1,143 @@
+C51 COMPILER V8.12   RL6432_SERIES_COLORDDITHER                                            05/25/2022 15:41:25 PAGE 1   
+
+
+C51 COMPILER V8.12, COMPILATION OF MODULE RL6432_SERIES_COLORDDITHER
+OBJECT MODULE PLACED IN .\Output\RL6432_Series_ColorDDither.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Code\RL6432_Series_Color\RL6432_Series_ColorDDither.c LARGE OPTIMIZE(9,SPEE
+                    -D) INCDIR(..\..\..\Common;..\Header;.\Header;..\..\ScalerFunction\Lib\Header;..\..\ScalerFunction\Header;..\..\ScalerCom
+                    -monFunction\Lib\Header;..\..\ScalerCommonFunction\Header;..\..\RL6432_Series_Common\Lib\Header;..\..\RL6432_Series_Commo
+                    -n\Header) DEFINE(_TRANSLATOR_SUPPORT=_OFF,_SCALER_TYPE=_RL6432_SERIES) DEBUG OBJECTEXTEND PRINT(.\Output\RL6432_Series_C
+                    -olorDDither.lst) OBJECT(.\Output\RL6432_Series_ColorDDither.obj)
+
+line level    source
+
+   1          /********************************************************************************/
+   2          /*   The  Software  is  proprietary,  confidential,  and  valuable to Realtek   */
+   3          /*   Semiconductor  Corporation  ("Realtek").  All  rights, including but not   */
+   4          /*   limited  to  copyrights,  patents,  trademarks, trade secrets, mask work   */
+   5          /*   rights, and other similar rights and interests, are reserved to Realtek.   */
+   6          /*   Without  prior  written  consent  from  Realtek,  copying, reproduction,   */
+   7          /*   modification,  distribution,  or  otherwise  is strictly prohibited. The   */
+   8          /*   Software  shall  be  kept  strictly  in  confidence,  and  shall  not be   */
+   9          /*   disclosed to or otherwise accessed by any third party.                     */
+  10          /*   c<2003> - <2012>                                                           */
+  11          /*   The Software is provided "AS IS" without any warranty of any kind,         */
+  12          /*   express, implied, statutory or otherwise.                                  */
+  13          /********************************************************************************/
+  14          
+  15          //----------------------------------------------------------------------------------------------------
+  16          // ID Code      : RL6432_Series_ColorDDither.c
+  17          // Update Note  :
+  18          //----------------------------------------------------------------------------------------------------
+  19          #include "RL6432_Series_ColorLibInternalInclude.h"
+  20          
+  21          //****************************************************************************
+  22          // DEFINITIONS / MACROS
+  23          //****************************************************************************
+  24          #define _DITHER_TABLE_LENGTH    (144)
+  25          #define _TEMPORAL_TABLE_LENGTH  (32)
+  26          
+  27          //****************************************************************************
+  28          // STRUCT / TYPE / ENUM DEFINITTIONS
+  29          //****************************************************************************
+  30          
+  31          
+  32          //****************************************************************************
+  33          // CODE TABLES
+  34          //****************************************************************************
+  35          
+  36          
+  37          //****************************************************************************
+  38          // VARIABLE DECLARATIONS
+  39          //****************************************************************************
+  40          
+  41          
+  42          //****************************************************************************
+  43          // FUNCTION DECLARATIONS
+  44          //****************************************************************************
+  45          void ScalerColorDDitherLoadDitherTable(BYTE code *pucDitherTable, BYTE ucBankAddress);
+  46          void ScalerColorDDitherLoadTempoTable(BYTE code *pucTempoTable, BYTE ucBankAddress);
+  47          void ScalerColorDDitherLoadSetting(DWORD ulSettingOption);
+  48          
+  49          
+  50          //****************************************************************************
+  51          // FUNCTION DEFINITIONS
+C51 COMPILER V8.12   RL6432_SERIES_COLORDDITHER                                            05/25/2022 15:41:25 PAGE 2   
+
+  52          //****************************************************************************
+  53          //--------------------------------------------------
+  54          // Description  : Adjust D Dither Setting
+  55          // Input Value  :
+  56          //                pucDitherTable : Dither Table Pointer
+  57          //                ucBankAddress : Bank Address
+  58          // Output Value : None
+  59          //--------------------------------------------------
+  60          void ScalerColorDDitherLoadDitherTable(BYTE code *pucDitherTable, BYTE ucBankAddress)
+  61          {
+  62   1          if(pucDitherTable != _NULL_POINTER)
+  63   1          {
+  64   2              ScalerSetBit(P0_6A_D_DITHER_COMMON_CTRL1, ~(_BIT7 | _BIT6), 0x80);
+  65   2              ScalerBurstWrite(pucDitherTable, _DITHER_TABLE_LENGTH, ucBankAddress, P0_69_D_DITHER_DATA_ACCESS, 
+             -_BURSTWRITE_DATA_COMMON, _BURSTWRITE_FROM_FLASH);
+  66   2              ScalerSetBit(P0_6A_D_DITHER_COMMON_CTRL1, ~(_BIT7 | _BIT6), 0x00);
+  67   2          }
+  68   1      }
+  69          
+  70          //--------------------------------------------------
+  71          // Description  : Adjust D Dither Setting
+  72          // Input Value  :
+  73          //                pucTempoTable : Temporal Table Pointer
+  74          //                ucBankAddress : Bank Address
+  75          // Output Value : None
+  76          //--------------------------------------------------
+  77          void ScalerColorDDitherLoadTempoTable(BYTE code *pucTempoTable, BYTE ucBankAddress)
+  78          {
+  79   1          if(pucTempoTable != _NULL_POINTER)
+  80   1          {
+  81   2              ScalerSetBit(P0_6A_D_DITHER_COMMON_CTRL1, ~(_BIT7 | _BIT6), 0xC0);
+  82   2              ScalerBurstWrite(pucTempoTable, _TEMPORAL_TABLE_LENGTH, ucBankAddress, P0_69_D_DITHER_DATA_ACCESS,
+             - _BURSTWRITE_DATA_COMMON, _BURSTWRITE_FROM_FLASH);
+  83   2              ScalerSetBit(P0_6A_D_DITHER_COMMON_CTRL1, ~(_BIT7 | _BIT6), 0x00);
+  84   2          }
+  85   1      }
+  86          
+  87          //--------------------------------------------------
+  88          // Description  : Adjust D Dither Common Setting
+  89          // Input Value  : D Dither Setting Option
+  90          // Output Value : None
+  91          //--------------------------------------------------
+  92          void ScalerColorDDitherLoadSetting(DWORD ulSettingOption)
+  93          {
+  94   1          BYTE ucData = 0;
+  95   1          ScalerSetBit(P0_6A_D_DITHER_COMMON_CTRL1, ~(_BIT7 | _BIT6 | _BIT4 | _BIT1 | _BIT0), ulSettingOption & 
+             -0x0000003F);
+  96   1          ScalerSetByte(P0_6B_D_DITHER_REGISTER_ADDR, _P0_69_PT_00_D_DITHER_COMMON_SET0);
+  97   1          ScalerSetByte(P0_69_D_DITHER_DATA_ACCESS, ((ulSettingOption & 0x00007F00) >> 8) | (ulSettingOption & 0
+             -x00000080));
+  98   1          ScalerSetByte(P0_6B_D_DITHER_REGISTER_ADDR, _P0_69_PT_02_D_DITHER_COMMON_SET2);
+  99   1          ScalerSetByte(P0_69_D_DITHER_DATA_ACCESS, (ulSettingOption & 0x00FF0000) >> 16);
+ 100   1          ScalerSetByte(P0_6B_D_DITHER_REGISTER_ADDR, _P0_69_PT_0D_D_DITHER_COMMON_CTRL2);
+ 101   1          ScalerSetByte(P0_69_D_DITHER_DATA_ACCESS, (ulSettingOption & 0xFF000000) >> 24);
+ 102   1      
+ 103   1          // reset frame counter
+ 104   1          ScalerSetByte(P0_6B_D_DITHER_REGISTER_ADDR, _P0_69_PT_01_D_DITHER_COMMON_SET1);
+ 105   1          ucData = ScalerGetByte(P0_69_D_DITHER_DATA_ACCESS) | _BIT7;
+ 106   1          ScalerSetByte(P0_6B_D_DITHER_REGISTER_ADDR, _P0_69_PT_01_D_DITHER_COMMON_SET1);
+ 107   1          ScalerSetByte(P0_69_D_DITHER_DATA_ACCESS, ucData);
+ 108   1      }
+
+C51 COMPILER V8.12   RL6432_SERIES_COLORDDITHER                                            05/25/2022 15:41:25 PAGE 3   
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    257    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----       6
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,123 @@
+C51 COMPILER V8.12   RL6432_SERIES_OSDSRAMBASEADDRESSSET                                   05/25/2022 15:41:38 PAGE 1   
+
+
+C51 COMPILER V8.12, COMPILATION OF MODULE RL6432_SERIES_OSDSRAMBASEADDRESSSET
+OBJECT MODULE PLACED IN .\Output\RL6432_Series_OsdSramBaseAddressSet.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Code\RL6432_Series_OSD\SRAM\RL6432_Series_OsdSramBaseAddressSet.c LARGE OPT
+                    -IMIZE(9,SPEED) INCDIR(..\..\..\Common;..\Header;.\Header;..\..\ScalerFunction\Lib\Header;..\..\ScalerFunction\Header;..\
+                    -..\ScalerCommonFunction\Lib\Header;..\..\ScalerCommonFunction\Header;..\..\RL6432_Series_Common\Lib\Header;..\..\RL6432_
+                    -Series_Common\Header) DEFINE(_TRANSLATOR_SUPPORT=_OFF,_SCALER_TYPE=_RL6432_SERIES) DEBUG OBJECTEXTEND PRINT(.\Output\RL6
+                    -432_Series_OsdSramBaseAddressSet.lst) OBJECT(.\Output\RL6432_Series_OsdSramBaseAddressSet.obj)
+
+line level    source
+
+   1          /********************************************************************************/
+   2          /*   The  Software  is  proprietary,  confidential,  and  valuable to Realtek   */
+   3          /*   Semiconductor  Corporation  ("Realtek").  All  rights, including but not   */
+   4          /*   limited  to  copyrights,  patents,  trademarks, trade secrets, mask work   */
+   5          /*   rights, and other similar rights and interests, are reserved to Realtek.   */
+   6          /*   Without  prior  written  consent  from  Realtek,  copying, reproduction,   */
+   7          /*   modification,  distribution,  or  otherwise  is strictly prohibited. The   */
+   8          /*   Software  shall  be  kept  strictly  in  confidence,  and  shall  not be   */
+   9          /*   disclosed to or otherwise accessed by any third party.                     */
+  10          /*   c<2003> - <2012>                                                           */
+  11          /*   The Software is provided "AS IS" without any warranty of any kind,         */
+  12          /*   express, implied, statutory or otherwise.                                  */
+  13          /********************************************************************************/
+  14          
+  15          //----------------------------------------------------------------------------------------------------
+  16          // ID Code      : RL6432_Series_OsdSramBaseAddressSet.c
+  17          // Update Note  :
+  18          //----------------------------------------------------------------------------------------------------
+  19          #include "RL6432_Series_OSDLibInternalInclude.h"
+  20          
+  21          //****************************************************************************
+  22          // DEFINITIONS / MACROS
+  23          //****************************************************************************
+  24          
+  25          
+  26          //****************************************************************************
+  27          // STRUCT / TYPE / ENUM DEFINITTIONS
+  28          //****************************************************************************
+  29          
+  30          
+  31          //****************************************************************************
+  32          // CODE TABLES
+  33          //****************************************************************************
+  34          
+  35          
+  36          //****************************************************************************
+  37          // VARIABLE DECLARATIONS
+  38          //****************************************************************************
+  39          
+  40          
+  41          //****************************************************************************
+  42          // FUNCTION DECLARATIONS
+  43          //****************************************************************************
+  44          void ScalerOsdSramBaseAddressSet(EnumOsdMapType enumOsdMapType, BYTE ucRowCommandStart, WORD usCharactorCo
+             -mmandStart, WORD usFontStart);
+  45          
+  46          
+  47          //****************************************************************************
+  48          // FUNCTION DEFINITIONS
+  49          //****************************************************************************
+  50          //--------------------------------------------------
+C51 COMPILER V8.12   RL6432_SERIES_OSDSRAMBASEADDRESSSET                                   05/25/2022 15:41:38 PAGE 2   
+
+  51          // Description  : Row command & Charactor command & Font base address
+  52          // Input Value  : enumOsdMapType          -> _OSD_A or _OSD_B
+  53          //                ucRowCommandStart       -> Row command start address
+  54          //                ucCharactorCommandStart -> Charactor command start address
+  55          //                ucFontStart             -> Font start address
+  56          // Output Value :
+  57          //--------------------------------------------------
+  58          void ScalerOsdSramBaseAddressSet(EnumOsdMapType enumOsdMapType, BYTE ucRowCommandStart, WORD usCharactorCo
+             -mmandStart, WORD usFontStart)
+  59          {
+  60   1          ScalerSetBit(P3A_17_FRAME_CTRL_17, ~(_BIT4 | _BIT3), ((usFontStart & 0x3000) >> 9));            // Fon
+             -t Base Address[13:12]
+  61   1          ScalerSetByte(P3A_0E_FRAME_CTRL_0E, ((usFontStart & 0xFF0) >> 4));                              // Fon
+             -t Base Address[11:4]
+  62   1          ScalerSetBit(P3A_0D_FRAME_CTRL_0D, ~(_BIT3 | _BIT2 | _BIT1 | _BIT0), (usFontStart & 0x0F));     // Fon
+             -t Base Address[3:0]
+  63   1      
+  64   1          if(enumOsdMapType == _OSD_A)
+  65   1          {
+  66   2              ScalerSetBit(P3A_0D_FRAME_CTRL_0D, ~(_BIT7 | _BIT6 | _BIT5 | _BIT4), ((usCharactorCommandStart & 0
+             -xF00) >> 4));     // Font Select Base Address[11:8]
+  67   2              ScalerSetByte(P3A_0C_FRAME_CTRL_0C, (usCharactorCommandStart & 0x0FF));                           
+             -                  // Font Select Base Address[7:0]
+  68   2      
+  69   2              ScalerSetByte(P3A_19_FRAME_CTRL_19, ucRowCommandStart);                                           
+             -              // Row Command Base 0 [7:0]
+  70   2      
+  71   2              ScalerSetBit(P3A_1B_FRAME_CTRL_1B, ~(_BIT7 | _BIT6 | _BIT5 | _BIT4), ((usCharactorCommandStart & 0
+             -xF00) >> 4)); // Font Select Base 0 [11:8]
+  72   2              ScalerSetByte(P3A_1C_FRAME_CTRL_1C, (usCharactorCommandStart & 0x0FF));                           
+             -              // Font Select Base 0 [7:0]
+  73   2          }
+  74   1          else if(enumOsdMapType == _OSD_B)
+  75   1          {
+  76   2              ScalerSetByte(P3A_1A_FRAME_CTRL_1A, ucRowCommandStart);                                           
+             -              // Row Command Base 1 [7:0]
+  77   2      
+  78   2              ScalerSetBit(P3A_1B_FRAME_CTRL_1B, ~(_BIT3 | _BIT2 | _BIT1 | _BIT0), ((usCharactorCommandStart & 0
+             -xF00) >> 8)); // Font Select Base 1 [11:8]
+  79   2              ScalerSetByte(P3A_1D_FRAME_CTRL_1D, (usCharactorCommandStart & 0x0FF));                           
+             -              // Font Select Base 1 [7:0]
+  80   2          }
+  81   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    132    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----       6
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

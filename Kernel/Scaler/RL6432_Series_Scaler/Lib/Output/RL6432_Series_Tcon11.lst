@@ -1,0 +1,115 @@
+C51 COMPILER V8.12   RL6432_SERIES_TCON11                                                  05/25/2022 15:41:40 PAGE 1   
+
+
+C51 COMPILER V8.12, COMPILATION OF MODULE RL6432_SERIES_TCON11
+OBJECT MODULE PLACED IN .\Output\RL6432_Series_Tcon11.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Code\RL6432_Series_Tcon\RL6432_Series_Tcon11.c LARGE OPTIMIZE(9,SPEED) INCD
+                    -IR(..\..\..\Common;..\Header;.\Header;..\..\ScalerFunction\Lib\Header;..\..\ScalerFunction\Header;..\..\ScalerCommonFunc
+                    -tion\Lib\Header;..\..\ScalerCommonFunction\Header;..\..\RL6432_Series_Common\Lib\Header;..\..\RL6432_Series_Common\Heade
+                    -r) DEFINE(_TRANSLATOR_SUPPORT=_OFF,_SCALER_TYPE=_RL6432_SERIES) DEBUG OBJECTEXTEND PRINT(.\Output\RL6432_Series_Tcon11.l
+                    -st) OBJECT(.\Output\RL6432_Series_Tcon11.obj)
+
+line level    source
+
+   1          /********************************************************************************/
+   2          /*   The  Software  is  proprietary,  confidential,  and  valuable to Realtek   */
+   3          /*   Semiconductor  Corporation  ("Realtek").  All  rights, including but not   */
+   4          /*   limited  to  copyrights,  patents,  trademarks, trade secrets, mask work   */
+   5          /*   rights, and other similar rights and interests, are reserved to Realtek.   */
+   6          /*   Without  prior  written  consent  from  Realtek,  copying, reproduction,   */
+   7          /*   modification,  distribution,  or  otherwise  is strictly prohibited. The   */
+   8          /*   Software  shall  be  kept  strictly  in  confidence,  and  shall  not be   */
+   9          /*   disclosed to or otherwise accessed by any third party.                     */
+  10          /*   c<2003> - <2012>                                                           */
+  11          /*   The Software is provided "AS IS" without any warranty of any kind,         */
+  12          /*   express, implied, statutory or otherwise.                                  */
+  13          /********************************************************************************/
+  14          
+  15          //----------------------------------------------------------------------------------------------------
+  16          // ID Code      : RL6432_Series_Tcon11.c No.0000
+  17          // Update Note  :
+  18          //----------------------------------------------------------------------------------------------------
+  19          #include "RL6432_Series_TconLibInternalInclude.h"
+  20          
+  21          //****************************************************************************
+  22          // DEFINITIONS / MACROS
+  23          //****************************************************************************
+  24          
+  25          
+  26          //****************************************************************************
+  27          // STRUCT / TYPE / ENUM DEFINITTIONS
+  28          //****************************************************************************
+  29          
+  30          
+  31          //****************************************************************************
+  32          // CODE TABLES
+  33          //****************************************************************************
+  34          
+  35          
+  36          //****************************************************************************
+  37          // VARIABLE DECLARATIONS
+  38          //****************************************************************************
+  39          
+  40          
+  41          //****************************************************************************
+  42          // FUNCTION DECLARATIONS
+  43          //****************************************************************************
+  44          void ScalerTcon11Enable(bit bEnable);
+  45          void ScalerTcon11Adjust(WORD usHstart, WORD usHend, WORD usVstart, WORD usVend);
+  46          
+  47          //****************************************************************************
+  48          // FUNCTION DEFINITIONS
+  49          //****************************************************************************
+  50          
+  51          //--------------------------------------------------
+C51 COMPILER V8.12   RL6432_SERIES_TCON11                                                  05/25/2022 15:41:40 PAGE 2   
+
+  52          // Description  : Set Tcon11 local enable
+  53          // Input Value  : bEnable --> enable
+  54          // Output Value : None
+  55          //--------------------------------------------------
+  56          void ScalerTcon11Enable(bit bEnable)
+  57          {
+  58   1          ScalerSetDataPortBit(P15_A3_TCON_ADDR, _P15_A4_PT_C8_TC11_CTRL, ~(_BIT7), ((BYTE)bEnable << 7));
+  59   1      }
+  60          
+  61          //--------------------------------------------------
+  62          // Description  : Set Tcon11 Region
+  63          // Input Value  : usHstart --> Horizon start
+  64          //                usHend --> Horizon end
+  65          //                usVstart --> Vertical start
+  66          //                usVend --> Vertical end
+  67          // Output Value : None
+  68          //--------------------------------------------------
+  69          void ScalerTcon11Adjust(WORD usHstart, WORD usHend, WORD usVstart, WORD usVend)
+  70          {
+  71   1          usVstart &= 0x1FFF;
+  72   1          usVend &= 0x1FFF;
+  73   1      
+  74   1          usHstart &= 0x1FFF;
+  75   1          usHend &= 0x1FFF;
+  76   1      
+  77   1          ScalerSetDataPortByte(P15_A3_TCON_ADDR, _P15_A4_PT_C0_TC11_VS_MSB, HIBYTE(usVstart));
+  78   1          ScalerSetDataPortByte(P15_A3_TCON_ADDR, _P15_A4_PT_C1_TC11_VS_LSB, LOBYTE(usVstart));
+  79   1          ScalerSetDataPortByte(P15_A3_TCON_ADDR, _P15_A4_PT_C2_TC11_VE_MSB, HIBYTE(usVend));
+  80   1          ScalerSetDataPortByte(P15_A3_TCON_ADDR, _P15_A4_PT_C3_TC11_VE_LSB, LOBYTE(usVend));
+  81   1          ScalerSetDataPortByte(P15_A3_TCON_ADDR, _P15_A4_PT_C4_TC11_HS_MSB, HIBYTE(usHstart));
+  82   1          ScalerSetDataPortByte(P15_A3_TCON_ADDR, _P15_A4_PT_C5_TC11_HS_LSB, LOBYTE(usHstart));
+  83   1          ScalerSetDataPortByte(P15_A3_TCON_ADDR, _P15_A4_PT_C6_TC11_HE_MSB, HIBYTE(usHend));
+  84   1          ScalerSetDataPortByte(P15_A3_TCON_ADDR, _P15_A4_PT_C7_TC11_HE_LSB, LOBYTE(usHend));
+  85   1      }
+  86          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    191    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----       8
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----       1
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

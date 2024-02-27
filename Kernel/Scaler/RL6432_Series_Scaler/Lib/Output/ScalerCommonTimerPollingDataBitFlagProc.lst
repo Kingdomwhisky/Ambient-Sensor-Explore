@@ -1,0 +1,110 @@
+C51 COMPILER V8.12   SCALERCOMMONTIMERPOLLINGDATABITFLAGPROC                               05/25/2022 15:40:53 PAGE 1   
+
+
+C51 COMPILER V8.12, COMPILATION OF MODULE SCALERCOMMONTIMERPOLLINGDATABITFLAGPROC
+OBJECT MODULE PLACED IN .\Output\ScalerCommonTimerPollingDataBitFlagProc.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE ..\..\ScalerCommonFunction\Lib\Code\ScalerCommon\ScalerCommonTimerPollingDa
+                    -taBitFlagProc.c LARGE OPTIMIZE(9,SPEED) INCDIR(..\..\..\Common;..\Header;.\Header;..\..\ScalerFunction\Lib\Header;..\..\
+                    -ScalerFunction\Header;..\..\ScalerCommonFunction\Lib\Header;..\..\ScalerCommonFunction\Header;..\..\RL6432_Series_Common
+                    -\Lib\Header;..\..\RL6432_Series_Common\Header) DEFINE(_TRANSLATOR_SUPPORT=_OFF,_SCALER_TYPE=_RL6432_SERIES) DEBUG OBJECT
+                    -EXTEND PRINT(.\Output\ScalerCommonTimerPollingDataBitFlagProc.lst) OBJECT(.\Output\ScalerCommonTimerPollingDataBitFlagPr
+                    -oc.obj)
+
+line level    source
+
+   1          /********************************************************************************/
+   2          /*   The  Software  is  proprietary,  confidential,  and  valuable to Realtek   */
+   3          /*   Semiconductor  Corporation  ("Realtek").  All  rights, including but not   */
+   4          /*   limited  to  copyrights,  patents,  trademarks, trade secrets, mask work   */
+   5          /*   rights, and other similar rights and interests, are reserved to Realtek.   */
+   6          /*   Without  prior  written  consent  from  Realtek,  copying, reproduction,   */
+   7          /*   modification,  distribution,  or  otherwise  is strictly prohibited. The   */
+   8          /*   Software  shall  be  kept  strictly  in  confidence,  and  shall  not be   */
+   9          /*   disclosed to or otherwise accessed by any third party.                     */
+  10          /*   c<2003> - <2012>                                                           */
+  11          /*   The Software is provided "AS IS" without any warranty of any kind,         */
+  12          /*   express, implied, statutory or otherwise.                                  */
+  13          /********************************************************************************/
+  14          
+  15          //----------------------------------------------------------------------------------------------------
+  16          // ID Code      : ScalerCommonTimerPollingDataBitFlagProc.c No.0000
+  17          // Update Note  :
+  18          //----------------------------------------------------------------------------------------------------
+  19          
+  20          #include "ScalerCommonLibInternalInclude.h"
+  21          
+  22          //****************************************************************************
+  23          // DEFINITIONS / MACROS
+  24          //****************************************************************************
+  25          
+  26          //****************************************************************************
+  27          // STRUCT / TYPE / ENUM DEFINITTIONS
+  28          //****************************************************************************
+  29          
+  30          //****************************************************************************
+  31          // CODE TABLES
+  32          //****************************************************************************
+  33          
+  34          //****************************************************************************
+  35          // VARIABLE DECLARATIONS
+  36          //****************************************************************************
+  37          
+  38          //****************************************************************************
+  39          // FUNCTION DECLARATIONS
+  40          //****************************************************************************
+  41          bit ScalerTimerPollingDataBitFlagProc(WORD usTimeout, WORD usRegister, BYTE ucValue, BYTE ucBit, bit bSucc
+             -ess);
+  42          
+  43          //****************************************************************************
+  44          // FUNCTION DEFINITIONS
+  45          //****************************************************************************
+  46          //----------------------------------------------------------------------
+  47          // Description  : Polling Scaler Flag Process
+  48          // Input Value  : ucTimeout --> Timeout number (Max: 255 ms)
+  49          //                ucRegister--> Current Register
+C51 COMPILER V8.12   SCALERCOMMONTIMERPOLLINGDATABITFLAGPROC                               05/25/2022 15:40:53 PAGE 2   
+
+  50          //                ucBit     --> Polling Bit
+  51          //                bSuccess  --> 1 or 0 when finished for Polling Bit
+  52          // Output Value : Return _TRUE while polling success, _FALSE for timeout
+  53          //----------------------------------------------------------------------
+  54          bit ScalerTimerPollingDataBitFlagProc(WORD usTimeout, WORD usRegister, BYTE ucValue, BYTE ucBit, bit bSucc
+             -ess)
+  55          {
+  56   1          WORD usTimeElapsed = 0;
+  57   1          WORD usPreviousTime = 0;
+  58   1      
+  59   1          usPreviousTime = g_usTimerCounter;
+  60   1      
+  61   1          do
+  62   1          {
+  63   2              if(((bit)ScalerGetDataPortBit(usRegister, ucValue, ucBit) ^ bSuccess) == _FALSE)
+  64   2              {
+  65   3                  return _TRUE;
+  66   3              }
+  67   2      
+  68   2              if(usPreviousTime != g_usTimerCounter)
+  69   2              {
+  70   3                  usTimeElapsed++;
+  71   3                  usPreviousTime = g_usTimerCounter;
+  72   3              }
+  73   2          }
+  74   1          while(usTimeElapsed <= usTimeout);
+  75   1      
+  76   1          return _FALSE;
+  77   1      }
+  78          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    123    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----      10
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----       1
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,486 @@
+C51 COMPILER V8.12   SCALERCOLORSPACELOADYUV2RGBTABLE                                      05/25/2022 15:41:05 PAGE 1   
+
+
+C51 COMPILER V8.12, COMPILATION OF MODULE SCALERCOLORSPACELOADYUV2RGBTABLE
+OBJECT MODULE PLACED IN .\Output\ScalerColorSpaceLoadYuv2RgbTable.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE ..\..\ScalerFunction\Lib\Code\ScalerColor\ScalerColorSpaceLoadYuv2RgbTable.
+                    -c LARGE OPTIMIZE(9,SPEED) INCDIR(..\..\..\Common;..\Header;.\Header;..\..\ScalerFunction\Lib\Header;..\..\ScalerFunction
+                    -\Header;..\..\ScalerCommonFunction\Lib\Header;..\..\ScalerCommonFunction\Header;..\..\RL6432_Series_Common\Lib\Header;..
+                    -\..\RL6432_Series_Common\Header) DEFINE(_TRANSLATOR_SUPPORT=_OFF,_SCALER_TYPE=_RL6432_SERIES) DEBUG OBJECTEXTEND PRINT(.
+                    -\Output\ScalerColorSpaceLoadYuv2RgbTable.lst) OBJECT(.\Output\ScalerColorSpaceLoadYuv2RgbTable.obj)
+
+line level    source
+
+   1          /********************************************************************************/
+   2          /*   The  Software  is  proprietary,  confidential,  and  valuable to Realtek   */
+   3          /*   Semiconductor  Corporation  ("Realtek").  All  rights, including but not   */
+   4          /*   limited  to  copyrights,  patents,  trademarks, trade secrets, mask work   */
+   5          /*   rights, and other similar rights and interests, are reserved to Realtek.   */
+   6          /*   Without  prior  written  consent  from  Realtek,  copying, reproduction,   */
+   7          /*   modification,  distribution,  or  otherwise  is strictly prohibited. The   */
+   8          /*   Software  shall  be  kept  strictly  in  confidence,  and  shall  not be   */
+   9          /*   disclosed to or otherwise accessed by any third party.                     */
+  10          /*   c<2003> - <2012>                                                           */
+  11          /*   The Software is provided "AS IS" without any warranty of any kind,         */
+  12          /*   express, implied, statutory or otherwise.                                  */
+  13          /********************************************************************************/
+  14          
+  15          //----------------------------------------------------------------------------------------------------
+  16          // ID Code      : ScalerColorSpaceLoadYuv2RgbTable.c
+  17          // Update Note  :
+  18          //----------------------------------------------------------------------------------------------------
+  19          #include "ScalerColorLibInternalInclude.h"
+  20          
+  21          //****************************************************************************
+  22          // DEFINITIONS / MACROS
+  23          //****************************************************************************
+  24          #define _COLOR_CONV_YUV2RGB_TABLE_SIZE                          26
+  25          
+  26          
+  27          //****************************************************************************
+  28          // STRUCT / TYPE / ENUM DEFINITTIONS
+  29          //****************************************************************************
+  30          
+  31          
+  32          //****************************************************************************
+  33          // CODE TABLES
+  34          //****************************************************************************
+  35          //--------------------------------------------------
+  36          // Code Tables of Color Conversion
+  37          //--------------------------------------------------
+  38          // YCC to RGB Table
+  39          #if((_COLOR_CONVERSION_TYPE == _COLOR_CONVERSION_GEN_0) || (_COLOR_CONVERSION_TYPE == _COLOR_CONVERSION_GE
+             -N_1) || (_COLOR_CONVERSION_TYPE == _COLOR_CONVERSION_GEN_2))
+  40          BYTE code tCOLOR_CONV_YUV2RGB_ITU601[] =
+  41          {
+  42              25, _AUTOINC, (BYTE)P14_A2_SR_YCC2RGB_COEF_K11_MSB,
+  43              0xE4, 0xAB, 0x26, 0x67, 0x41, 0x92,
+  44              0xE3, 0x42, 0xC8, 0x17, 0x00, 0x00,
+  45              0x00, 0x00, 0x00, 0x00, 0x02, 0x00,
+  46              0x02, 0x00, 0x02, 0x00,
+  47              _END
+  48          };
+  49          
+  50          BYTE code tCOLOR_CONV_YUV2RGB_ITU709[] =
+C51 COMPILER V8.12   SCALERCOLORSPACELOADYUV2RGBTABLE                                      05/25/2022 15:41:05 PAGE 2   
+
+  51          {
+  52              25, _AUTOINC, (BYTE)P14_A2_SR_YCC2RGB_COEF_K11_MSB,
+  53              0xE4, 0xAB, 0x27, 0x31, 0x00, 0xDB,
+  54              0x42, 0x23, 0x88, 0x79, 0x00, 0x10,
+  55              0x00, 0x10, 0x00, 0x10, 0x02, 0x00,
+  56              0x02, 0x00, 0x02, 0x00,
+  57              _END
+  58          };
+  59          
+  60          BYTE code tCOLOR_CONV_YUV2RGB_ITU709_RGBLIMIT[] =
+  61          {
+  62          #if((_COLOR_CONVERSION_TYPE == _COLOR_CONVERSION_GEN_0) || (_COLOR_CONVERSION_TYPE == _COLOR_CONVERSION_GE
+             -N_2))
+  63              25, _AUTOINC, (BYTE)P14_A2_SR_YCC2RGB_COEF_K11_MSB,
+  64              0xE4, 0xAB, 0x27, 0x31, 0x00, 0xDB,
+  65              0x42, 0x23, 0x88, 0x79, 0xF0, 0x00,
+  66              0xF0, 0x00, 0xF0, 0x00, 0x02, 0x56,
+  67              0x02, 0x56, 0x02, 0x56,
+  68              _END
+  69          #elif(_COLOR_CONVERSION_TYPE == _COLOR_CONVERSION_GEN_1)
+                  25, _AUTOINC, (BYTE)P14_A2_SR_YCC2RGB_COEF_K11_MSB,
+                  0xE4, 0xAB, 0x27, 0x31, 0x00, 0xDB,
+                  0x42, 0x23, 0x88, 0x79, 0x3C, 0x00,
+                  0x3C, 0x00, 0x3C, 0x00, 0x02, 0x56,
+                  0x02, 0x56, 0x02, 0x56,
+                  _END
+              #endif
+  77          };
+  78          #endif // End of #if((_COLOR_CONVERSION_TYPE == _COLOR_CONVERSION_GEN_0) || (_COLOR_CONVERSION_TYPE == _CO
+             -LOR_CONVERSION_GEN_1) || (_COLOR_CONVERSION_TYPE == _COLOR_CONVERSION_GEN_2))
+  79          
+  80          BYTE code tCOLOR_CONV_YUV2RGB_ITU601_YUVFULL[] =
+  81          {
+  82          #if((_COLOR_CONVERSION_TYPE == _COLOR_CONVERSION_GEN_0) || (_COLOR_CONVERSION_TYPE == _COLOR_CONVERSION_GE
+             -N_1) || (_COLOR_CONVERSION_TYPE == _COLOR_CONVERSION_GEN_2))
+  83              25, _AUTOINC, (BYTE)P14_A2_SR_YCC2RGB_COEF_K11_MSB,
+  84              0x04, 0x00, 0xA5, 0x9B, 0x61, 0x60,
+  85              0x42, 0xDB, 0x87, 0x16, 0x00, 0x00,
+  86              0x00, 0x00, 0x00, 0x00, 0x02, 0x00,
+  87              0x02, 0x00, 0x02, 0x00,
+  88              _END
+  89          #elif(_COLOR_CONVERSION_TYPE == _COLOR_CONVERSION_GEN_3)
+                  25, _AUTOINC, (BYTE)P14_A2_SR_YCC2RGB_COEF_K11_MSB,
+                  0x04, 0x00, 0x05, 0x9C, 0x01, 0x60,
+                  0x02, 0xDB, 0x07, 0x17, 0x00, 0x00,
+                  0x00, 0x00, 0x00, 0x00, 0x02, 0x00,
+                  0x02, 0x00, 0x02, 0x00,
+                  _END
+              #endif
+  97          };
+  98          
+  99          BYTE code tCOLOR_CONV_YUV2RGB_ITU709_YUVFULL[] =
+ 100          {
+ 101          #if((_COLOR_CONVERSION_TYPE == _COLOR_CONVERSION_GEN_0) || (_COLOR_CONVERSION_TYPE == _COLOR_CONVERSION_GE
+             -N_1) || (_COLOR_CONVERSION_TYPE == _COLOR_CONVERSION_GEN_2))
+ 102              25, _AUTOINC, (BYTE)P14_A2_SR_YCC2RGB_COEF_K11_MSB,
+ 103              0x04, 0x00, 0xA6, 0x4C, 0xC0, 0xBF,
+ 104              0x61, 0xDF, 0x27, 0x6C, 0x00, 0x00,
+ 105              0x00, 0x00, 0x00, 0x00, 0x02, 0x00,
+ 106              0x02, 0x00, 0x02, 0x00,
+ 107              _END
+ 108          #elif(_COLOR_CONVERSION_TYPE == _COLOR_CONVERSION_GEN_3)
+C51 COMPILER V8.12   SCALERCOLORSPACELOADYUV2RGBTABLE                                      05/25/2022 15:41:05 PAGE 3   
+
+                  25, _AUTOINC, (BYTE)P14_A2_SR_YCC2RGB_COEF_K11_MSB,
+                  0x04, 0x00, 0x06, 0x4D, 0x00, 0xC0,
+                  0x01, 0xDF, 0x07, 0x6C, 0x00, 0x00,
+                  0x00, 0x00, 0x00, 0x00, 0x02, 0x00,
+                  0x02, 0x00, 0x02, 0x00,
+                  _END
+              #endif
+ 116          };
+ 117          
+ 118          // YCC to RGB Table - 8bit
+ 119          BYTE code tCOLOR_CONV_YUV2RGB_ITU601_8BIT[] =
+ 120          {
+ 121          #if((_COLOR_CONVERSION_TYPE == _COLOR_CONVERSION_GEN_0) || (_COLOR_CONVERSION_TYPE == _COLOR_CONVERSION_GE
+             -N_1) || (_COLOR_CONVERSION_TYPE == _COLOR_CONVERSION_GEN_2))
+ 122              25, _AUTOINC, (BYTE)P14_A2_SR_YCC2RGB_COEF_K11_MSB,
+ 123              0x64, 0xA8, 0x66, 0x62, 0x21, 0x91,
+ 124              0x63, 0x40, 0xA8, 0x11, 0x00, 0x00,
+ 125              0x00, 0x00, 0x00, 0x00, 0x02, 0x00,
+ 126              0x02, 0x00, 0x02, 0x00,
+ 127              _END
+ 128          #elif(_COLOR_CONVERSION_TYPE == _COLOR_CONVERSION_GEN_3)
+                  25, _AUTOINC, (BYTE)P14_A2_SR_YCC2RGB_COEF_K11_MSB,
+                  0x04, 0xA8, 0x06, 0x62, 0x01, 0x91,
+                  0x03, 0x40, 0x08, 0x12, 0x00, 0x00,
+                  0x00, 0x00, 0x00, 0x00, 0x02, 0x00,
+                  0x02, 0x00, 0x02, 0x00,
+                  _END
+              #endif
+ 136          };
+ 137          
+ 138          BYTE code tCOLOR_CONV_YUV2RGB_ITU709_8BIT[] =
+ 139          {
+ 140          #if((_COLOR_CONVERSION_TYPE == _COLOR_CONVERSION_GEN_0) || (_COLOR_CONVERSION_TYPE == _COLOR_CONVERSION_GE
+             -N_1) || (_COLOR_CONVERSION_TYPE == _COLOR_CONVERSION_GEN_2))
+ 141              25, _AUTOINC, (BYTE)P14_A2_SR_YCC2RGB_COEF_K11_MSB,
+ 142              0x64, 0xA8, 0xC7, 0x2B, 0x60, 0xDA,
+ 143              0xA2, 0x21, 0x28, 0x73, 0x00, 0x00,
+ 144              0x00, 0x00, 0x00, 0x00, 0x02, 0x00,
+ 145              0x02, 0x00, 0x02, 0x00,
+ 146              _END
+ 147          #elif(_COLOR_CONVERSION_TYPE == _COLOR_CONVERSION_GEN_3)
+                  25, _AUTOINC, (BYTE)P14_A2_SR_YCC2RGB_COEF_K11_MSB,
+                  0x04, 0xAD, 0x07, 0x34, 0x00, 0xDA,
+                  0x02, 0x23, 0x08, 0x7C, 0x00, 0x00,
+                  0x00, 0x00, 0x00, 0x00, 0x02, 0x00,
+                  0x02, 0x00, 0x02, 0x00,
+                  _END
+              #endif
+ 155          };
+ 156          
+ 157          BYTE code tCOLOR_CONV_YUV2RGB_ITU709_RGBLIMIT_8BIT[] =
+ 158          {
+ 159          #if((_COLOR_CONVERSION_TYPE == _COLOR_CONVERSION_GEN_0) || (_COLOR_CONVERSION_TYPE == _COLOR_CONVERSION_GE
+             -N_2))
+ 160              25, _AUTOINC, (BYTE)P14_A2_SR_YCC2RGB_COEF_K11_MSB,
+ 161              0xE4, 0xAB, 0x27, 0x31, 0x00, 0xDB,
+ 162              0x42, 0x23, 0x88, 0x79, 0xF0, 0x00,
+ 163              0xF0, 0x00, 0xF0, 0x00, 0x02, 0x54,
+ 164              0x02, 0x54, 0x02, 0x54,
+ 165              _END
+ 166          #elif(_COLOR_CONVERSION_TYPE == _COLOR_CONVERSION_GEN_1)
+                  25, _AUTOINC, (BYTE)P14_A2_SR_YCC2RGB_COEF_K11_MSB,
+C51 COMPILER V8.12   SCALERCOLORSPACELOADYUV2RGBTABLE                                      05/25/2022 15:41:05 PAGE 4   
+
+                  0xE4, 0xAB, 0x27, 0x31, 0x00, 0xDB,
+                  0x42, 0x23, 0x88, 0x79, 0x3C, 0x00,
+                  0x3C, 0x00, 0x3C, 0x00, 0x02, 0x54,
+                  0x02, 0x54, 0x02, 0x54,
+                  _END
+              #elif(_COLOR_CONVERSION_TYPE == _COLOR_CONVERSION_GEN_3)
+                  25, _AUTOINC, (BYTE)P14_A2_SR_YCC2RGB_COEF_K11_MSB,
+                  0x04, 0xAD, 0x07, 0x34, 0x00, 0xDA,
+                  0x02, 0x23, 0x08, 0x7C, 0x3C, 0x00,
+                  0x3C, 0x00, 0x3C, 0x00, 0x02, 0x54,
+                  0x02, 0x54, 0x02, 0x54,
+                  _END
+              #endif
+ 181          };
+ 182          
+ 183          #if(_COLOR_CONVERSION_TYPE == _COLOR_CONVERSION_GEN_2)
+ 184          // BT2020 Constant Table
+ 185          /*
+ 186          BYTE code tCOLOR_CONV_YUV2RGB_ITU_BT2020_CL[] =
+ 187          {
+ 188              52, _AUTOINC, (BYTE)P14_40_SR_BT2020_COEF_H11_HSB,
+ 189              0x01, 0x2A, 0xF8, 0x01, 0x2A, 0xF8, 0x01, 0x2A, 0xF8,
+ 190              0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x37, 0x28,
+ 191              0x01, 0xF6, 0x40, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+ 192              0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0xCE, 0x48,
+ 193              0x01, 0x22, 0x68, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+ 194              0x80, 0x00, 0x80, 0x00,
+ 195          
+ 196              15, _AUTOINC, (BYTE)P14_AC_SR_YCC2RGB_R_OFFSET_MSB,
+ 197              0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+ 198              0x02, 0x00, 0x02, 0x00, 0x02, 0x00,
+ 199              _END
+ 200          };*/
+ 201          
+ 202          // BT2020 NonConstant Table
+ 203          BYTE code tCOLOR_CONV_YUV2RGB_ITU_BT2020_NCL[] =
+ 204          {
+ 205              25, _AUTOINC, (BYTE)P14_A2_SR_YCC2RGB_COEF_K11_MSB,
+ 206              0xE4, 0xAB, 0x06, 0xBC, 0x60, 0xC0,
+ 207              0x02, 0x9C, 0xA8, 0x97, 0x00, 0x00,
+ 208              0x00, 0x00, 0x00, 0x00, 0x02, 0x00,
+ 209              0x02, 0x00, 0x02, 0x00,
+ 210              _END
+ 211          };
+ 212          
+ 213          BYTE code tCOLOR_CONV_YUV2RGB_ITU_BT2020_NCL_YUVFULL[] =
+ 214          {
+ 215              25, _AUTOINC, (BYTE)P14_A2_SR_YCC2RGB_COEF_K11_MSB,
+ 216              0x04, 0x00, 0x05, 0xE6, 0x80, 0xA8,
+ 217              0x22, 0x49, 0x87, 0x86, 0x00, 0x00,
+ 218              0x00, 0x00, 0x00, 0x00, 0x02, 0x00,
+ 219              0x02, 0x00, 0x02, 0x00,
+ 220              _END
+ 221          };
+ 222          #endif // End of #if(_COLOR_CONVERSION_TYPE == _COLOR_CONVERSION_GEN_2)
+ 223          
+ 224          //****************************************************************************
+ 225          // VARIABLE DECLARATIONS
+ 226          //****************************************************************************
+ 227          
+ 228          
+ 229          //****************************************************************************
+C51 COMPILER V8.12   SCALERCOLORSPACELOADYUV2RGBTABLE                                      05/25/2022 15:41:05 PAGE 5   
+
+ 230          // FUNCTION DECLARATIONS
+ 231          //****************************************************************************
+ 232          void ScalerColorSpaceLoadYuv2RgbTable(EnumColorSpace enumColorSpace, bit bUltraVividSupport);
+ 233          
+ 234          //****************************************************************************
+ 235          // FUNCTION DEFINITIONS
+ 236          //****************************************************************************
+ 237          //--------------------------------------------------
+ 238          // Description  : Color Space Load YUV2RGB table
+ 239          // Input Value  : enumColorSpace --> Color Space RGB or not
+ 240          //                bUltraVividSupport --> UltraVivid Support
+ 241          // Output Value : None
+ 242          //--------------------------------------------------
+ 243          void ScalerColorSpaceLoadYuv2RgbTable(EnumColorSpace enumColorSpace, bit bUltraVividSupport)
+ 244          {
+ 245   1          BYTE *pucYUV2RGBTable = 0x00;
+ 246   1      
+ 247   1      #if((_COLOR_CONVERSION_TYPE == _COLOR_CONVERSION_GEN_0) || (_COLOR_CONVERSION_TYPE == _COLOR_CONVERSION_GE
+             -N_1) || (_COLOR_CONVERSION_TYPE == _COLOR_CONVERSION_GEN_2))
+ 248   1          BYTE code *pucYUV2RGB601Table = tCOLOR_CONV_YUV2RGB_ITU601;
+ 249   1          BYTE code *pucYUV2RGB709Table = tCOLOR_CONV_YUV2RGB_ITU709;
+ 250   1          BYTE code *pucYUV2RGB709RGBLimitTable = tCOLOR_CONV_YUV2RGB_ITU709_RGBLIMIT;
+ 251   1          BYTE code *pucYUV2RGB601Table8bit = tCOLOR_CONV_YUV2RGB_ITU601_8BIT;
+ 252   1          BYTE code *pucYUV2RGB709Table8bit = tCOLOR_CONV_YUV2RGB_ITU709_8BIT;
+ 253   1          BYTE code *pucYUV2RGB709RGBLimitTable8bit = tCOLOR_CONV_YUV2RGB_ITU709_RGBLIMIT_8BIT;
+ 254   1      #elif(_COLOR_CONVERSION_TYPE == _COLOR_CONVERSION_GEN_3)
+                  BYTE code *pucYUV2RGB601Table = tCOLOR_CONV_YUV2RGB_ITU601_8BIT;
+                  BYTE code *pucYUV2RGB709Table = tCOLOR_CONV_YUV2RGB_ITU709_8BIT;
+                  BYTE code *pucYUV2RGB709RGBLimitTable = tCOLOR_CONV_YUV2RGB_ITU709_RGBLIMIT_8BIT;
+                  BYTE code *pucYUV2RGB601Table8bit = tCOLOR_CONV_YUV2RGB_ITU601_8BIT;
+                  BYTE code *pucYUV2RGB709Table8bit = tCOLOR_CONV_YUV2RGB_ITU709_8BIT;
+                  BYTE code *pucYUV2RGB709RGBLimitTable8bit = tCOLOR_CONV_YUV2RGB_ITU709_RGBLIMIT_8BIT;
+              #endif
+ 262   1      
+ 263   1          bUltraVividSupport = bUltraVividSupport;
+ 264   1      
+ 265   1          if((GET_COLOR_SPACE_RGB(enumColorSpace) == _TRUE) &&
+ 266   1             (GET_COLOR_RGB_LIMIT_RANGE_USER() == _TRUE))
+ 267   1          {
+ 268   2              // Load D-Domain YUV2RGB Table according for RGB Limit Range
+ 269   2              if(GET_COLOR_DEPTH() > _COLOR_DEPTH_8_BITS)
+ 270   2              {
+ 271   3                  pucYUV2RGBTable = pucYUV2RGB709RGBLimitTable;
+ 272   3              }
+ 273   2              else
+ 274   2              {
+ 275   3                  pucYUV2RGBTable = pucYUV2RGB709RGBLimitTable8bit;
+ 276   3              }
+ 277   2      
+ 278   2      #if(_COLOR_CONVERSION_TYPE == _COLOR_CONVERSION_GEN_0)
+                      if(bUltraVividSupport == _ON)
+                      {
+                          // Set D-Domain YUV2RGB YCbCr Clamp
+                          ScalerSetBit(P14_A1_SR_YCC2RGB_CTRL, ~(_BIT2 | _BIT1), (_BIT2 | _BIT1));
+                      }
+                      else
+              #endif
+ 286   2              {
+ 287   3                  if(ScalerGetBit(P0_9C_RGB2YCC_CTRL, _BIT0) == 0x00)
+ 288   3                  {
+ 289   4                      // Disable D-Domain YUV2RGB YCbCr Clamp for Identity_Matrix
+ 290   4                      ScalerSetBit(P14_A1_SR_YCC2RGB_CTRL, ~(_BIT2 | _BIT1), 0x00);
+C51 COMPILER V8.12   SCALERCOLORSPACELOADYUV2RGBTABLE                                      05/25/2022 15:41:05 PAGE 6   
+
+ 291   4                  }
+ 292   3                  else
+ 293   3                  {
+ 294   4                      // Enable D-Domain YUV2RGB YCbCr Clamp
+ 295   4                      ScalerSetBit(P14_A1_SR_YCC2RGB_CTRL, ~(_BIT2 | _BIT1), (_BIT2 | _BIT1));
+ 296   4                  }
+ 297   3              }
+ 298   2          }
+ 299   1          else if((GET_COLOR_SPACE_RGB(enumColorSpace) == _FALSE) && (GET_COLOR_YCC_FULL_RANGE_USER() == _TRUE))
+ 300   1          {
+ 301   2              // Load D-Domain YUV2RGB Table according to Colorimetry
+ 302   2              switch(GET_COLORIMETRY())
+ 303   2              {
+ 304   3                  case _COLORIMETRY_YCC_SMPTE_170M:
+ 305   3                  case _COLORIMETRY_YCC_ITUR_BT601:
+ 306   3                  case _COLORIMETRY_YCC_XVYCC601:
+ 307   3                      pucYUV2RGBTable = tCOLOR_CONV_YUV2RGB_ITU601_YUVFULL;
+ 308   3                      break;
+ 309   3      
+ 310   3                  case _COLORIMETRY_YCC_ITUR_BT709:
+ 311   3                  case _COLORIMETRY_YCC_XVYCC709:
+ 312   3                      pucYUV2RGBTable = tCOLOR_CONV_YUV2RGB_ITU709_YUVFULL;
+ 313   3                      break;
+ 314   3      
+ 315   3                  case _COLORIMETRY_EXT:
+ 316   3                      switch(GET_EXT_COLORIMETRY())
+ 317   3                      {
+ 318   4                          case _COLORIMETRY_EXT_YCC_ITUR_BT601:
+ 319   4                          case _COLORIMETRY_EXT_YCC_XVYCC601:
+ 320   4                          case _COLORIMETRY_EXT_YCC_SYCC601:
+ 321   4                          case _COLORIMETRY_EXT_YCC_ADOBEYCC601:
+ 322   4                              pucYUV2RGBTable = tCOLOR_CONV_YUV2RGB_ITU601_YUVFULL;
+ 323   4                              break;
+ 324   4      
+ 325   4      #if(_COLOR_CONVERSION_TYPE == _COLOR_CONVERSION_GEN_2)
+ 326   4                          case _COLORIMETRY_EXT_YCC_ITUR_BT2020_CL:
+ 327   4                          case _COLORIMETRY_EXT_YCC_ITUR_BT2020_NCL:
+ 328   4                              pucYUV2RGBTable = tCOLOR_CONV_YUV2RGB_ITU_BT2020_NCL_YUVFULL;
+ 329   4                              break;
+ 330   4      #endif
+ 331   4      
+ 332   4                          case _COLORIMETRY_EXT_YCC_ITUR_BT709:
+ 333   4                          case _COLORIMETRY_EXT_YCC_XVYCC709:
+ 334   4                          default:
+ 335   4                              pucYUV2RGBTable = tCOLOR_CONV_YUV2RGB_ITU709_YUVFULL;
+ 336   4                              break;
+ 337   4                      }
+ 338   3                      break;
+ 339   3      
+ 340   3                  default:
+ 341   3                      pucYUV2RGBTable = tCOLOR_CONV_YUV2RGB_ITU709_YUVFULL;
+ 342   3                      break;
+ 343   3              }
+ 344   2      
+ 345   2              // Set D-Domain YUV2RGB YCbCr Clamp
+ 346   2              ScalerSetBit(P14_A1_SR_YCC2RGB_CTRL, ~(_BIT2 | _BIT1), _BIT2);
+ 347   2          }
+ 348   1          else
+ 349   1          {
+ 350   2              // Load D-Domain YUV2RGB Table according to Colorimetry
+ 351   2              switch(GET_COLORIMETRY())
+ 352   2              {
+C51 COMPILER V8.12   SCALERCOLORSPACELOADYUV2RGBTABLE                                      05/25/2022 15:41:05 PAGE 7   
+
+ 353   3                  case _COLORIMETRY_YCC_SMPTE_170M:
+ 354   3                  case _COLORIMETRY_YCC_ITUR_BT601:
+ 355   3                  case _COLORIMETRY_YCC_XVYCC601:
+ 356   3                      if(GET_COLOR_DEPTH() > _COLOR_DEPTH_8_BITS)
+ 357   3                      {
+ 358   4                          pucYUV2RGBTable = pucYUV2RGB601Table;
+ 359   4                      }
+ 360   3                      else
+ 361   3                      {
+ 362   4                          pucYUV2RGBTable = pucYUV2RGB601Table8bit;
+ 363   4                      }
+ 364   3                      break;
+ 365   3      
+ 366   3                  case _COLORIMETRY_YCC_ITUR_BT709:
+ 367   3                  case _COLORIMETRY_YCC_XVYCC709:
+ 368   3                      if(GET_COLOR_DEPTH() > _COLOR_DEPTH_8_BITS)
+ 369   3                      {
+ 370   4                          pucYUV2RGBTable = pucYUV2RGB709Table;
+ 371   4                      }
+ 372   3                      else
+ 373   3                      {
+ 374   4                          pucYUV2RGBTable = pucYUV2RGB709Table8bit;
+ 375   4                      }
+ 376   3                      break;
+ 377   3      
+ 378   3                  case _COLORIMETRY_EXT:
+ 379   3                      switch(GET_EXT_COLORIMETRY())
+ 380   3                      {
+ 381   4                          case _COLORIMETRY_EXT_YCC_ITUR_BT601:
+ 382   4                          case _COLORIMETRY_EXT_YCC_XVYCC601:
+ 383   4                          case _COLORIMETRY_EXT_YCC_SYCC601:
+ 384   4                          case _COLORIMETRY_EXT_YCC_ADOBEYCC601:
+ 385   4                              if(GET_COLOR_DEPTH() > _COLOR_DEPTH_8_BITS)
+ 386   4                              {
+ 387   5                                  pucYUV2RGBTable = pucYUV2RGB601Table;
+ 388   5                              }
+ 389   4                              else
+ 390   4                              {
+ 391   5                                  pucYUV2RGBTable = pucYUV2RGB601Table8bit;
+ 392   5                              }
+ 393   4                              break;
+ 394   4      
+ 395   4      #if(_COLOR_CONVERSION_TYPE == _COLOR_CONVERSION_GEN_2)
+ 396   4                          case _COLORIMETRY_EXT_YCC_ITUR_BT2020_CL:
+ 397   4                          case _COLORIMETRY_EXT_YCC_ITUR_BT2020_NCL:
+ 398   4                              pucYUV2RGBTable = tCOLOR_CONV_YUV2RGB_ITU_BT2020_NCL;
+ 399   4                              break;
+ 400   4      #endif
+ 401   4      
+ 402   4                          case _COLORIMETRY_EXT_YCC_ITUR_BT709:
+ 403   4                          case _COLORIMETRY_EXT_YCC_XVYCC709:
+ 404   4                          default:
+ 405   4                              if(GET_COLOR_DEPTH() > _COLOR_DEPTH_8_BITS)
+ 406   4                              {
+ 407   5                                  pucYUV2RGBTable = pucYUV2RGB709Table;
+ 408   5                              }
+ 409   4                              else
+ 410   4                              {
+ 411   5                                  pucYUV2RGBTable = pucYUV2RGB709Table8bit;
+ 412   5                              }
+ 413   4                              break;
+ 414   4                      }
+C51 COMPILER V8.12   SCALERCOLORSPACELOADYUV2RGBTABLE                                      05/25/2022 15:41:05 PAGE 8   
+
+ 415   3                      break;
+ 416   3      
+ 417   3                  default:
+ 418   3                      if(GET_COLOR_DEPTH() > _COLOR_DEPTH_8_BITS)
+ 419   3                      {
+ 420   4                          pucYUV2RGBTable = pucYUV2RGB709Table;
+ 421   4                      }
+ 422   3                      else
+ 423   3                      {
+ 424   4                          pucYUV2RGBTable = pucYUV2RGB709Table8bit;
+ 425   4                      }
+ 426   3                      break;
+ 427   3              }
+ 428   2      
+ 429   2              // Set D-Domain YUV2RGB YCbCr Clamp
+ 430   2              ScalerSetBit(P14_A1_SR_YCC2RGB_CTRL, ~(_BIT2 | _BIT1), (_BIT2 | _BIT1));
+ 431   2          }
+ 432   1      
+ 433   1          ScalerBurstWrite(pucYUV2RGBTable, _COLOR_CONV_YUV2RGB_TABLE_SIZE,
+ 434   1                           GET_CURRENT_BANK_NUMBER(), P14_A2_SR_YCC2RGB_COEF_K11_MSB,
+ 435   1                           _BURSTWRITE_COMMAND, _BURSTWRITE_FROM_FLASH);
+ 436   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    466    ----
+   CONSTANT SIZE    =    260    ----
+   XDATA SIZE       =   ----      12
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----       1
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

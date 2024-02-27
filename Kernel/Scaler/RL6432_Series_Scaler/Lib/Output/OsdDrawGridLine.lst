@@ -1,0 +1,151 @@
+C51 COMPILER V8.12   OSDDRAWGRIDLINE                                                       05/25/2022 15:41:18 PAGE 1   
+
+
+C51 COMPILER V8.12, COMPILATION OF MODULE OSDDRAWGRIDLINE
+OBJECT MODULE PLACED IN .\Output\OsdDrawGridLine.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE ..\..\ScalerFunction\Lib\Code\ScalerOSD\Windows\OsdDrawGridLine.c LARGE OPT
+                    -IMIZE(9,SPEED) INCDIR(..\..\..\Common;..\Header;.\Header;..\..\ScalerFunction\Lib\Header;..\..\ScalerFunction\Header;..\
+                    -..\ScalerCommonFunction\Lib\Header;..\..\ScalerCommonFunction\Header;..\..\RL6432_Series_Common\Lib\Header;..\..\RL6432_
+                    -Series_Common\Header) DEFINE(_TRANSLATOR_SUPPORT=_OFF,_SCALER_TYPE=_RL6432_SERIES) DEBUG OBJECTEXTEND PRINT(.\Output\Osd
+                    -DrawGridLine.lst) OBJECT(.\Output\OsdDrawGridLine.obj)
+
+line level    source
+
+   1          /********************************************************************************/
+   2          /*   The  Software  is  proprietary,  confidential,  and  valuable to Realtek   */
+   3          /*   Semiconductor  Corporation  ("Realtek").  All  rights, including but not   */
+   4          /*   limited  to  copyrights,  patents,  trademarks, trade secrets, mask work   */
+   5          /*   rights, and other similar rights and interests, are reserved to Realtek.   */
+   6          /*   Without  prior  written  consent  from  Realtek,  copying, reproduction,   */
+   7          /*   modification,  distribution,  or  otherwise  is strictly prohibited. The   */
+   8          /*   Software  shall  be  kept  strictly  in  confidence,  and  shall  not be   */
+   9          /*   disclosed to or otherwise accessed by any third party.                     */
+  10          /*   c<2003> - <2012>                                                           */
+  11          /*   The Software is provided "AS IS" without any warranty of any kind,         */
+  12          /*   express, implied, statutory or otherwise.                                  */
+  13          /********************************************************************************/
+  14          
+  15          //----------------------------------------------------------------------------------------------------
+  16          // ID Code      : OsdDrawGridLine.c
+  17          // Update Note  :
+  18          //----------------------------------------------------------------------------------------------------
+  19          #include "ScalerOSDLibInternalInclude.h"
+  20          
+  21          //****************************************************************************
+  22          // DEFINITIONS / MACROS
+  23          //****************************************************************************
+  24          
+  25          
+  26          //****************************************************************************
+  27          // STRUCT / TYPE / ENUM DEFINITTIONS
+  28          //****************************************************************************
+  29          
+  30          
+  31          //****************************************************************************
+  32          // CODE TABLES
+  33          //****************************************************************************
+  34          
+  35          
+  36          //****************************************************************************
+  37          // VARIABLE DECLARATIONS
+  38          //****************************************************************************
+  39          StructOsdGridWindow g_stOsdGridWindow;
+  40          
+  41          
+  42          //****************************************************************************
+  43          // FUNCTION DECLARATIONS
+  44          //****************************************************************************
+  45          void ScalerOsdDrawGridLine(void);
+  46          void ScalerOsdDrawGridLinePanelPitch(WORD usPitchHorizontal, WORD usPitchVertical);
+  47          
+  48          
+  49          //****************************************************************************
+  50          // FUNCTION DEFINITIONS
+  51          //****************************************************************************
+C51 COMPILER V8.12   OSDDRAWGRIDLINE                                                       05/25/2022 15:41:18 PAGE 2   
+
+  52          //--------------------------------------------------
+  53          // Description  : Draw grid line
+  54          // Input Value  :
+  55          // Output Value :
+  56          //--------------------------------------------------
+  57          void ScalerOsdDrawGridLine(void)
+  58          {
+  59   1          BYTE pucTemp[3];
+  60   1          memset(pucTemp, 0, sizeof(pucTemp));
+  61   1      
+  62   1          if((GET_OSD_GRID_WINDOW_NUMBER() == _OSD_WINDOW_2) || (GET_OSD_GRID_WINDOW_NUMBER() == _OSD_WINDOW_3) 
+             -|| (GET_OSD_GRID_WINDOW_NUMBER() == _OSD_WINDOW_4))
+  63   1          {
+  64   2              pucTemp[0] = ((BYTE)GET_OSD_GRID_LINE_WIDTH() << 6) | (BYTE) GET_OSD_GRID_LINE_COLOR();
+  65   2              pucTemp[1] = ((BYTE)GET_OSD_GRID_LINE_HORIZONTAL_ENABLE() << 7) | ((BYTE)GET_OSD_GRID_LINE_VERTICA
+             -L_ENABLE() << 6) | (BYTE)GET_OSD_GRID_LINE_OFFSET();
+  66   2              pucTemp[2] = (BYTE)GET_OSD_GRID_LINE_PITCH() & 0xFF;
+  67   2              ScalerOsdWriteAllByte((_OSD_WIN_CONTROL), (0x183 + (((BYTE)GET_OSD_GRID_WINDOW_NUMBER() - _OSD_WIN
+             -DOW_2) * 7)), pucTemp[0], pucTemp[1], pucTemp[2]);
+  68   2      
+  69   2              pucTemp[0] = ((GET_OSD_GRID_LINE_PITCH() & 0xFF00) >> 7) | (BYTE)GET_OSD_GRID_LINE_FUNCTION_ENABLE
+             -();
+  70   2              ScalerOsdWriteByte((_OSD_WIN_CONTROL | _OSD_BYTE0), _OSD_WITHOUT_DB, ((_P0_92_PT_184_WIN2_ADR8_LSB
+             - >> 4) + (((BYTE)GET_OSD_GRID_WINDOW_NUMBER() - _OSD_WINDOW_2) * 7)), pucTemp[0]);
+  71   2          }
+  72   1      }
+  73          
+  74          /*
+  75          //--------------------------------------------------
+  76          // example
+  77          //--------------------------------------------------
+  78              code StructOsdGridWindow g_stOsdWindowGridTest  = { _OSD_WINDOW_2,        bGridLineWindowNumber
+  79                                                                  1,                    bGridLineWidth
+  80                                                                  1,                    bGridLineColor
+  81                                                                  _DISABLE,             bGridLineHorizontalEnable
+  82                                                                  _ENABLE,              bGridLineVerticalEnable
+  83                                                                  0x03,                 bGridLineOffset
+  84                                                                  0x2710,               bGridLinePitch
+  85                                                                  _ENABLE               bGridFunctionEnable
+  86                                                                };
+  87              g_stOsdGridWindow = g_stOsdWindowGridTest;
+  88              ScalerOsdDrawGridLine();
+  89          
+  90          */
+  91          
+  92          
+  93          
+  94          
+  95          //--------------------------------------------------
+  96          // Description  : Set grid line pitch pixel
+  97          // Input Value  : ucPitchHorizontal -> Horizontal pitch
+  98          // Input Value  : ucPitchVertical   -> Vertical pitch
+  99          // Output Value :
+ 100          //--------------------------------------------------
+ 101          void ScalerOsdDrawGridLinePanelPitch(WORD usPitchHorizontal, WORD usPitchVertical)
+ 102          {
+ 103   1          ScalerSetByte(P3A_35_FRAME_CTRL_35, (((usPitchHorizontal & 0x700) >> 4) | ((usPitchVertical & 0x700) >
+             -> 8)));
+ 104   1          ScalerSetByte(P3A_36_FRAME_CTRL_36, LOBYTE(usPitchHorizontal));
+ 105   1          ScalerSetByte(P3A_37_FRAME_CTRL_37, LOBYTE(usPitchVertical));
+ 106   1      }
+ 107          
+C51 COMPILER V8.12   OSDDRAWGRIDLINE                                                       05/25/2022 15:41:18 PAGE 3   
+
+ 108          
+ 109          /*
+ 110          //--------------------------------------------------
+ 111          // example
+ 112          //--------------------------------------------------
+ 113              ScalerOsdDrawGridLinePanelPitch(993, 993);
+ 114          */
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    266    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =      5       5
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

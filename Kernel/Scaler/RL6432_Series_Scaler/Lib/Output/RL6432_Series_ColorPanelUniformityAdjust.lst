@@ -1,0 +1,120 @@
+C51 COMPILER V8.12   RL6432_SERIES_COLORPANELUNIFORMITYADJUST                              05/25/2022 15:41:29 PAGE 1   
+
+
+C51 COMPILER V8.12, COMPILATION OF MODULE RL6432_SERIES_COLORPANELUNIFORMITYADJUST
+OBJECT MODULE PLACED IN .\Output\RL6432_Series_ColorPanelUniformityAdjust.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Code\RL6432_Series_Color\RL6432_Series_ColorPanelUniformityAdjust.c LARGE O
+                    -PTIMIZE(9,SPEED) INCDIR(..\..\..\Common;..\Header;.\Header;..\..\ScalerFunction\Lib\Header;..\..\ScalerFunction\Header;.
+                    -.\..\ScalerCommonFunction\Lib\Header;..\..\ScalerCommonFunction\Header;..\..\RL6432_Series_Common\Lib\Header;..\..\RL643
+                    -2_Series_Common\Header) DEFINE(_TRANSLATOR_SUPPORT=_OFF,_SCALER_TYPE=_RL6432_SERIES) DEBUG OBJECTEXTEND PRINT(.\Output\R
+                    -L6432_Series_ColorPanelUniformityAdjust.lst) OBJECT(.\Output\RL6432_Series_ColorPanelUniformityAdjust.obj)
+
+line level    source
+
+   1          /********************************************************************************/
+   2          /*   The  Software  is  proprietary,  confidential,  and  valuable to Realtek   */
+   3          /*   Semiconductor  Corporation  ("Realtek").  All  rights, including but not   */
+   4          /*   limited  to  copyrights,  patents,  trademarks, trade secrets, mask work   */
+   5          /*   rights, and other similar rights and interests, are reserved to Realtek.   */
+   6          /*   Without  prior  written  consent  from  Realtek,  copying, reproduction,   */
+   7          /*   modification,  distribution,  or  otherwise  is strictly prohibited. The   */
+   8          /*   Software  shall  be  kept  strictly  in  confidence,  and  shall  not be   */
+   9          /*   disclosed to or otherwise accessed by any third party.                     */
+  10          /*   c<2003> - <2012>                                                           */
+  11          /*   The Software is provided "AS IS" without any warranty of any kind,         */
+  12          /*   express, implied, statutory or otherwise.                                  */
+  13          /********************************************************************************/
+  14          
+  15          //----------------------------------------------------------------------------------------------------
+  16          // ID Code      : RL6432_Series_ColorPanelUniformityAdjust.c
+  17          // Update Note  :
+  18          //----------------------------------------------------------------------------------------------------
+  19          #include "RL6432_Series_ColorLibInternalInclude.h"
+  20          
+  21          //****************************************************************************
+  22          // DEFINITIONS / MACROS
+  23          //****************************************************************************
+  24          
+  25          
+  26          //****************************************************************************
+  27          // STRUCT / TYPE / ENUM DEFINITTIONS
+  28          //****************************************************************************
+  29          
+  30          
+  31          //****************************************************************************
+  32          // CODE TABLES
+  33          //****************************************************************************
+  34          
+  35          
+  36          //****************************************************************************
+  37          // VARIABLE DECLARATIONS
+  38          //****************************************************************************
+  39          
+  40          
+  41          //****************************************************************************
+  42          // FUNCTION DECLARATIONS
+  43          //****************************************************************************
+  44          void ScalerColorPanelUniformityAdjust(BYTE *pucUNILUT, WORD usUNILUTSize, BYTE ucBankNum, EnumUniformityMo
+             -deSelect enumUniformityMode, EnumUniformityLevelSelect enumUniformityLevel);
+  45          
+  46          
+  47          //****************************************************************************
+  48          // FUNCTION DEFINITIONS
+  49          //****************************************************************************
+  50          //--------------------------------------------------
+C51 COMPILER V8.12   RL6432_SERIES_COLORPANELUNIFORMITYADJUST                              05/25/2022 15:41:29 PAGE 2   
+
+  51          // Description  : Load Panel Uniformity LUT
+  52          // Input Value  : LUT, Bank number, EnumUniformityModeSelect
+  53          // Output Value : None
+  54          //--------------------------------------------------
+  55          void ScalerColorPanelUniformityAdjust(BYTE *pucUNILUT, WORD usUNILUTSize, BYTE ucBankNum, EnumUniformityMo
+             -deSelect enumUniformityMode, EnumUniformityLevelSelect enumUniformityLevel)
+  56          {
+  57   1          BYTE ucMultiLUTMode = 0;
+  58   1      
+  59   1          switch(enumUniformityLevel)
+  60   1          {
+  61   2              default:
+  62   2                  break;
+  63   2      
+  64   2              case _UNIFORMITY_1LEVEL_MODE:
+  65   2      
+  66   2                  ucMultiLUTMode = 0;
+  67   2                  break;
+  68   2      
+  69   2              case _UNIFORMITY_4LEVEL_MODE:
+  70   2      
+  71   2                  ucMultiLUTMode = 2;
+  72   2                  break;
+  73   2          }
+  74   1          ScalerSetBit(P34_01_UN_MULTI_LUT_CTRL, ~(_BIT1 | _BIT0), (ucMultiLUTMode & 0x03));
+  75   1      
+  76   1          // Set uniformity mode
+  77   1          ScalerSetBit(P34_00_UN_GLOBAL_CTRL, ~_BIT1, (enumUniformityMode << 1));
+  78   1      
+  79   1          // Enable uniformity access
+  80   1          ScalerSetBit(P34_00_UN_GLOBAL_CTRL, ~_BIT2, _BIT2);
+  81   1      
+  82   1          // Load uniformity gain LUT
+  83   1          ScalerBurstWrite(pucUNILUT, usUNILUTSize, ucBankNum, P34_08_UN_GAIN_LUT_ACCESS_PORT, _BURSTWRITE_DATA_
+             -COMMON, _BURSTWRITE_FROM_FLASH);
+  84   1      
+  85   1          // Disable uniformity access
+  86   1          ScalerSetBit(P34_00_UN_GLOBAL_CTRL, ~_BIT2, 0x00);
+  87   1      }
+  88          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    100    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----       8
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,125 @@
+C51 COMPILER V8.12   OSDCHANGE1BITCOLORFONT256_511                                         05/25/2022 15:41:12 PAGE 1   
+
+
+C51 COMPILER V8.12, COMPILATION OF MODULE OSDCHANGE1BITCOLORFONT256_511
+OBJECT MODULE PLACED IN .\Output\OsdChange1BitColorFont256_511.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE ..\..\ScalerFunction\Lib\Code\ScalerOSD\SRAM\OsdChange1BitColorFont256_511.
+                    -c LARGE OPTIMIZE(9,SPEED) INCDIR(..\..\..\Common;..\Header;.\Header;..\..\ScalerFunction\Lib\Header;..\..\ScalerFunction
+                    -\Header;..\..\ScalerCommonFunction\Lib\Header;..\..\ScalerCommonFunction\Header;..\..\RL6432_Series_Common\Lib\Header;..
+                    -\..\RL6432_Series_Common\Header) DEFINE(_TRANSLATOR_SUPPORT=_OFF,_SCALER_TYPE=_RL6432_SERIES) DEBUG OBJECTEXTEND PRINT(.
+                    -\Output\OsdChange1BitColorFont256_511.lst) OBJECT(.\Output\OsdChange1BitColorFont256_511.obj)
+
+line level    source
+
+   1          /********************************************************************************/
+   2          /*   The  Software  is  proprietary,  confidential,  and  valuable to Realtek   */
+   3          /*   Semiconductor  Corporation  ("Realtek").  All  rights, including but not   */
+   4          /*   limited  to  copyrights,  patents,  trademarks, trade secrets, mask work   */
+   5          /*   rights, and other similar rights and interests, are reserved to Realtek.   */
+   6          /*   Without  prior  written  consent  from  Realtek,  copying, reproduction,   */
+   7          /*   modification,  distribution,  or  otherwise  is strictly prohibited. The   */
+   8          /*   Software  shall  be  kept  strictly  in  confidence,  and  shall  not be   */
+   9          /*   disclosed to or otherwise accessed by any third party.                     */
+  10          /*   c<2003> - <2012>                                                           */
+  11          /*   The Software is provided "AS IS" without any warranty of any kind,         */
+  12          /*   express, implied, statutory or otherwise.                                  */
+  13          /********************************************************************************/
+  14          
+  15          //----------------------------------------------------------------------------------------------------
+  16          // ID Code      : OsdChange1BitColorFont256_511.c
+  17          // Update Note  :
+  18          //----------------------------------------------------------------------------------------------------
+  19          #include "ScalerOSDLibInternalInclude.h"
+  20          
+  21          //****************************************************************************
+  22          // DEFINITIONS / MACROS
+  23          //****************************************************************************
+  24          
+  25          
+  26          //****************************************************************************
+  27          // STRUCT / TYPE / ENUM DEFINITTIONS
+  28          //****************************************************************************
+  29          
+  30          
+  31          //****************************************************************************
+  32          // CODE TABLES
+  33          //****************************************************************************
+  34          
+  35          
+  36          //****************************************************************************
+  37          // VARIABLE DECLARATIONS
+  38          //****************************************************************************
+  39          
+  40          
+  41          //****************************************************************************
+  42          // FUNCTION DECLARATIONS
+  43          //****************************************************************************
+  44          void ScalerOsdChange1BitColorFont256_511(BYTE ucRow, BYTE ucCol, BYTE ucLength, BYTE ucHeight, BYTE ucFore
+             -groundColor, BYTE ucBackgroundColor);
+  45          
+  46          
+  47          //****************************************************************************
+  48          // FUNCTION DEFINITIONS
+  49          //****************************************************************************
+  50          //--------------------------------------------------
+C51 COMPILER V8.12   OSDCHANGE1BITCOLORFONT256_511                                         05/25/2022 15:41:12 PAGE 2   
+
+  51          // Description  : SRAM address value and which byte
+  52          // Input Value  : ucRow. ucCol. ucLength. ucHeight.     -> Just that !!
+  53          //                ucForegroundColor. ucBackgroundColor  -> Color number
+  54          // Output Value :
+  55          //--------------------------------------------------
+  56          void ScalerOsdChange1BitColorFont256_511(BYTE ucRow, BYTE ucCol, BYTE ucLength, BYTE ucHeight, BYTE ucFore
+             -groundColor, BYTE ucBackgroundColor)
+  57          {
+  58   1          BYTE ucTemp = 0;
+  59   1          BYTE ucColorByte0 = (_BIT6 | _BIT5);
+  60   1          bit bOSDOn = _OFF;
+  61   1      
+  62   1          // Get OSD Status for Write-Protection Function setting OSD circuit enable.
+  63   1          bOSDOn = ScalerGetBit(P3A_02_FRAME_CTRL_02, _BIT0);
+  64   1      
+  65   1          for(ucTemp = 0; ucTemp < ucHeight; ucTemp++)
+  66   1          {
+  67   2              ScalerOsdSramDataValue(ucRow + ucTemp, ucCol, ucLength, ((ucForegroundColor << 4) | ucBackgroundCo
+             -lor), _OSD_BYTE2);
+  68   2          }
+  69   1      
+  70   1          ScalerOsdWriteProtection(_ENABLE, _OSD_BYTE0, (_BIT4 | _BIT3 | _BIT2 | _BIT1 | _BIT0));
+  71   1      
+  72   1          for(ucTemp = 0; ucTemp < ucHeight; ucTemp++)
+  73   1          {
+  74   2              ScalerOsdSramDataValue(ucRow + ucTemp, ucCol, ucLength, ucColorByte0, _OSD_BYTE0);
+  75   2          }
+  76   1      
+  77   1          ScalerOsdWriteProtection(_DISABLE, _OSD_BYTE0, (_BIT4 | _BIT3 | _BIT2 | _BIT1 | _BIT0));
+  78   1      
+  79   1          // Recovery OSD Status
+  80   1          if(bOSDOn == _OFF)
+  81   1          {
+  82   2              ScalerOsdCircuitActivated(bOSDOn);
+  83   2          }
+  84   1      }
+  85          
+  86          
+  87          /*
+  88          //--------------------------------------------------
+  89          // example
+  90          //--------------------------------------------------
+  91              ScalerOsdChange1BitColorFont256_511(ROW(0), COL(0), LENGTH(1), HEIGHT(1), FGCOLOR(3), BGCOLOR(4));
+  92          */
+  93          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    164    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----       8
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----       1
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

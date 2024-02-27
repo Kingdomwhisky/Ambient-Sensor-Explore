@@ -1,0 +1,150 @@
+C51 COMPILER V8.12   RL6432_SERIES_COLORICMUVOFFSETLOADTABLE                               05/25/2022 15:41:28 PAGE 1   
+
+
+C51 COMPILER V8.12, COMPILATION OF MODULE RL6432_SERIES_COLORICMUVOFFSETLOADTABLE
+OBJECT MODULE PLACED IN .\Output\RL6432_Series_ColorICMUVOffsetLoadTable.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Code\RL6432_Series_Color\RL6432_Series_ColorICMUVOffsetLoadTable.c LARGE OP
+                    -TIMIZE(9,SPEED) INCDIR(..\..\..\Common;..\Header;.\Header;..\..\ScalerFunction\Lib\Header;..\..\ScalerFunction\Header;..
+                    -\..\ScalerCommonFunction\Lib\Header;..\..\ScalerCommonFunction\Header;..\..\RL6432_Series_Common\Lib\Header;..\..\RL6432
+                    -_Series_Common\Header) DEFINE(_TRANSLATOR_SUPPORT=_OFF,_SCALER_TYPE=_RL6432_SERIES) DEBUG OBJECTEXTEND PRINT(.\Output\RL
+                    -6432_Series_ColorICMUVOffsetLoadTable.lst) OBJECT(.\Output\RL6432_Series_ColorICMUVOffsetLoadTable.obj)
+
+line level    source
+
+   1          
+   2          /********************************************************************************/
+   3          /*   The  Software  is  proprietary,  confidential,  and  valuable to Realtek   */
+   4          /*   Semiconductor  Corporation  ("Realtek").  All  rights, including but not   */
+   5          /*   limited  to  copyrights,  patents,  trademarks, trade secrets, mask work   */
+   6          /*   rights, and other similar rights and interests, are reserved to Realtek.   */
+   7          /*   Without  prior  written  consent  from  Realtek,  copying, reproduction,   */
+   8          /*   modification,  distribution,  or  otherwise  is strictly prohibited. The   */
+   9          /*   Software  shall  be  kept  strictly  in  confidence,  and  shall  not be   */
+  10          /*   disclosed to or otherwise accessed by any third party.                     */
+  11          /*   c<2003> - <2012>                                                           */
+  12          /*   The Software is provided "AS IS" without any warranty of any kind,         */
+  13          /*   express, implied, statutory or otherwise.                                  */
+  14          /********************************************************************************/
+  15          
+  16          //----------------------------------------------------------------------------------------------------
+  17          // ID Code      : RL6432_Series_ColorICMUVOffsetLoadTable.c
+  18          // Update Note  :
+  19          //----------------------------------------------------------------------------------------------------
+  20          #include "RL6432_Series_ColorLibInternalInclude.h"
+  21          
+  22          //****************************************************************************
+  23          // DEFINITIONS / MACROS
+  24          //****************************************************************************
+  25          //--------------------------------------------------
+  26          // Definitions of ICM
+  27          //--------------------------------------------------
+  28          #define _ICM_UVOFFSET_TABLE_SIZE                         100
+  29          #define _ICM_UVOFFSET_TABLE_SIZE_LSB                     24
+  30          #define _ONE_CM_TABLE_SIZE                               134
+  31          #define _CMN_INDEX_OFFSET                                3
+  32          #define _CMN_UV_TABLE_OFFSET                             4
+  33          #define _CMN_UV_LSB_TABLE_OFFSET                         112
+  34          
+  35          
+  36          //****************************************************************************
+  37          // STRUCT / TYPE / ENUM DEFINITTIONS
+  38          //****************************************************************************
+  39          
+  40          
+  41          //****************************************************************************
+  42          // CODE TABLES
+  43          //****************************************************************************
+  44          
+  45          
+  46          //****************************************************************************
+  47          // VARIABLE DECLARATIONS
+  48          //****************************************************************************
+  49          
+  50          
+  51          //****************************************************************************
+C51 COMPILER V8.12   RL6432_SERIES_COLORICMUVOFFSETLOADTABLE                               05/25/2022 15:41:28 PAGE 2   
+
+  52          // FUNCTION DECLARATIONS
+  53          //****************************************************************************
+  54          void ScalerColorICMUVOffsetLoadTable(BYTE code *pucICMTable, BYTE ucBankNum);
+  55          
+  56          
+  57          //****************************************************************************
+  58          // FUNCTION DEFINITIONS
+  59          //****************************************************************************
+  60          //--------------------------------------------------
+  61          // Description   : Fill ICM table, Enable Local CM, Set adjust option
+  62          // Input Value   : pICMTable: ICM Table
+  63          //                 ucBankNum: Bank Number
+  64          //                 ucCMSel: ICM Select
+  65          // Output Value  : None
+  66          //--------------------------------------------------
+  67          void ScalerColorICMUVOffsetLoadTable(BYTE code *pucICMTable, BYTE ucBankNum)
+  68          {
+  69   1          BYTE ucI = 0;
+  70   1          BYTE ucCMSel = 0;
+  71   1          BYTE ucTemp = 0;
+  72   1      
+  73   1          if(pucICMTable != NULL)
+  74   1          {
+  75   2              for(ucI = 0; ucI < 7; ucI++)
+  76   2              {
+  77   3                  ScalerFlashRead(ucBankNum, (WORD)(&pucICMTable[_CMN_INDEX_OFFSET + ucI * _ONE_CM_TABLE_SIZE]),
+             - 1, &ucTemp);
+  78   3      
+  79   3                  switch(ucTemp)
+  80   3                  {
+  81   4                      case _ICM_0:
+  82   4                          ucCMSel = 0;
+  83   4                          break;
+  84   4      
+  85   4                      case _ICM_1:
+  86   4                          ucCMSel = 1;
+  87   4                          break;
+  88   4      
+  89   4                      case _ICM_2:
+  90   4                          ucCMSel = 2;
+  91   4                          break;
+  92   4      
+  93   4                      case _ICM_3:
+  94   4                          ucCMSel = 3;
+  95   4                          break;
+  96   4      
+  97   4                      case _ICM_4:
+  98   4                          ucCMSel = 4;
+  99   4                          break;
+ 100   4      
+ 101   4                      case _ICM_5:
+ 102   4                          ucCMSel = 5;
+ 103   4                          break;
+ 104   4      
+ 105   4                      default:
+ 106   4                          return;
+ 107   4                  }
+ 108   3      
+ 109   3                  ScalerSetBit(P7_D1_ICM_SEL, ~(_BIT2 | _BIT1 | _BIT0), ucCMSel);
+ 110   3                  ScalerSetByte(P7_D2_ICM_ADDR, _P7_D3_PT_03_PORT_CMN_MST_00_DU_H);
+ 111   3                  ScalerBurstWrite(&pucICMTable[_CMN_UV_TABLE_OFFSET + ucI * _ONE_CM_TABLE_SIZE], _ICM_UVOFFSET_
+             -TABLE_SIZE, ucBankNum, P7_D3_ICM_DATA, _BURSTWRITE_DATA_COMMON, _BURSTWRITE_FROM_FLASH);
+C51 COMPILER V8.12   RL6432_SERIES_COLORICMUVOFFSETLOADTABLE                               05/25/2022 15:41:28 PAGE 3   
+
+ 112   3                  ScalerSetByte(P7_D2_ICM_ADDR, _P7_D3_PT_6F_PORT_CMN_MST_00_01_UV_OFFSET_L);
+ 113   3                  ScalerBurstWrite(&pucICMTable[_CMN_UV_LSB_TABLE_OFFSET + ucI * _ONE_CM_TABLE_SIZE], _ICM_UVOFF
+             -SET_TABLE_SIZE_LSB, ucBankNum, P7_D3_ICM_DATA, _BURSTWRITE_DATA_COMMON, _BURSTWRITE_FROM_FLASH);
+ 114   3              }
+ 115   2          }
+ 116   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    287    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----       6
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

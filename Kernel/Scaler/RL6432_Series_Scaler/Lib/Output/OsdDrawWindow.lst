@@ -1,0 +1,258 @@
+C51 COMPILER V8.12   OSDDRAWWINDOW                                                         05/25/2022 15:41:19 PAGE 1   
+
+
+C51 COMPILER V8.12, COMPILATION OF MODULE OSDDRAWWINDOW
+OBJECT MODULE PLACED IN .\Output\OsdDrawWindow.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE ..\..\ScalerFunction\Lib\Code\ScalerOSD\Windows\OsdDrawWindow.c LARGE OPTIM
+                    -IZE(9,SPEED) INCDIR(..\..\..\Common;..\Header;.\Header;..\..\ScalerFunction\Lib\Header;..\..\ScalerFunction\Header;..\..
+                    -\ScalerCommonFunction\Lib\Header;..\..\ScalerCommonFunction\Header;..\..\RL6432_Series_Common\Lib\Header;..\..\RL6432_Se
+                    -ries_Common\Header) DEFINE(_TRANSLATOR_SUPPORT=_OFF,_SCALER_TYPE=_RL6432_SERIES) DEBUG OBJECTEXTEND PRINT(.\Output\OsdDr
+                    -awWindow.lst) OBJECT(.\Output\OsdDrawWindow.obj)
+
+line level    source
+
+   1          /********************************************************************************/
+   2          /*   The  Software  is  proprietary,  confidential,  and  valuable to Realtek   */
+   3          /*   Semiconductor  Corporation  ("Realtek").  All  rights, including but not   */
+   4          /*   limited  to  copyrights,  patents,  trademarks, trade secrets, mask work   */
+   5          /*   rights, and other similar rights and interests, are reserved to Realtek.   */
+   6          /*   Without  prior  written  consent  from  Realtek,  copying, reproduction,   */
+   7          /*   modification,  distribution,  or  otherwise  is strictly prohibited. The   */
+   8          /*   Software  shall  be  kept  strictly  in  confidence,  and  shall  not be   */
+   9          /*   disclosed to or otherwise accessed by any third party.                     */
+  10          /*   c<2003> - <2012>                                                           */
+  11          /*   The Software is provided "AS IS" without any warranty of any kind,         */
+  12          /*   express, implied, statutory or otherwise.                                  */
+  13          /********************************************************************************/
+  14          
+  15          //----------------------------------------------------------------------------------------------------
+  16          // ID Code      : OsdDrawWindow.c
+  17          // Update Note  :
+  18          //----------------------------------------------------------------------------------------------------
+  19          #include "ScalerOSDLibInternalInclude.h"
+  20          
+  21          //****************************************************************************
+  22          // DEFINITIONS / MACROS
+  23          //****************************************************************************
+  24          
+  25          
+  26          //****************************************************************************
+  27          // STRUCT / TYPE / ENUM DEFINITTIONS
+  28          //****************************************************************************
+  29          
+  30          
+  31          //****************************************************************************
+  32          // CODE TABLES
+  33          //****************************************************************************
+  34          
+  35          
+  36          //****************************************************************************
+  37          // VARIABLE DECLARATIONS
+  38          //****************************************************************************
+  39          StructOsdWindow g_stOsdWindow;
+  40          
+  41          
+  42          //****************************************************************************
+  43          // FUNCTION DECLARATIONS
+  44          //****************************************************************************
+  45          void ScalerOsdDrawWindow(WORD usXStart, WORD usYStart, WORD usXEnd, WORD usYEnd);
+  46          
+  47          
+  48          //****************************************************************************
+  49          // FUNCTION DEFINITIONS
+  50          //****************************************************************************
+  51          //--------------------------------------------------
+C51 COMPILER V8.12   OSDDRAWWINDOW                                                         05/25/2022 15:41:19 PAGE 2   
+
+  52          // Description  : Draw window
+  53          // Input Value  : usXStart -> Horizontal start address
+  54          //                usYStart -> Vertical start address
+  55          //                usXEnd   -> Horizontal end address
+  56          //                usYEnd   -> Vertical end address
+  57          // Output Value :
+  58          //--------------------------------------------------
+  59          void ScalerOsdDrawWindow(WORD usXStart, WORD usYStart, WORD usXEnd, WORD usYEnd)
+  60          {
+  61   1          BYTE pucpTemp[12] = {0};
+  62   1          WORD usWinTemp = 0;
+  63   1      
+  64   1          if(GET_OSD_WINDOW_BUTTON_ENABLE() == _DISABLE)
+  65   1          {
+  66   2              SET_OSD_WINDOW_ENABLE(_ENABLE);
+  67   2          }
+  68   1      
+  69   1      #if(_OSD_WINDOW_5_1_5_8_SUPPORT == _ON)
+  70   1          if(GET_OSD_WINDOW_NUMBER() >= _OSD_WINDOW_5_1)
+  71   1          {
+  72   2              usWinTemp = 0x220 + (((BYTE)GET_OSD_WINDOW_NUMBER() - _OSD_WINDOW_5_1) * 4);
+  73   2          }
+  74   1          else
+  75   1      #endif
+  76   1          {
+  77   2              if(GET_OSD_WINDOW_NUMBER() >= _OSD_WINDOW_4_1)
+  78   2              {
+  79   3                  usWinTemp = 0x200 + (((BYTE)GET_OSD_WINDOW_NUMBER() - _OSD_WINDOW_4_1) * 4);
+  80   3              }
+  81   2              else
+  82   2              {
+  83   3                  usWinTemp = 0x100 + (GET_OSD_WINDOW_NUMBER() * 4);
+  84   3              }
+  85   2          }
+  86   1      
+  87   1          ScalerOsdAddrSet(_OSD_WIN_CONTROL, _OSD_BYTEALL, usWinTemp, _DISABLE);
+  88   1      
+  89   1      #if(_OSD_WINDOW_COLOR_PALETTE_INDEX_BIT == 4)
+                  pucpTemp[0] = ((BYTE)GET_OSD_WINDOW_SHADOW_BORDER_PIXEL_WIDTH() << 3) | GET_OSD_WINDOW_SHADOW_BORDER_P
+             -IXEL_HEIGHT();
+              #else
+  92   1          // _OSD_WINDOW_COLOR_PALETTE_INDEX_BIT = 6
+  93   1          pucpTemp[0] = ((BYTE)GET_OSD_WINDOW_COLOR_SHADOW() & _BIT4) << 3 | ((BYTE)GET_OSD_WINDOW_COLOR_BORDER(
+             -) & _BIT4) << 2 | (BYTE)GET_OSD_WINDOW_SHADOW_BORDER_PIXEL_WIDTH() << 3 | GET_OSD_WINDOW_SHADOW_BORDER_PIXEL_HEIGHT();
+  94   1      #endif
+  95   1      
+  96   1          pucpTemp[1] = ((BYTE)GET_OSD_WINDOW_COLOR_SHADOW() & 0x0F) << 4 | ((BYTE)GET_OSD_WINDOW_COLOR_BORDER()
+             - & 0x0F);
+  97   1          pucpTemp[2] = ((BYTE)GET_OSD_WINDOW_GRADIENT_POLARITY_R() << 7 | (BYTE)GET_OSD_WINDOW_GRADIENT_POLARIT
+             -Y_G() << 6 | (BYTE)GET_OSD_WINDOW_GRADIENT_POLARITY_B() << 5 | (BYTE)GET_OSD_WINDOW_GRADIENT_LEVEL_SETP() << 3 | (BYTE)G
+             -ET_OSD_WINDOW_GRADIENT_ENABLE_R() << 2 | (BYTE)GET_OSD_WINDOW_GRADIENT_ENABLE_G() << 1 | (BYTE)GET_OSD_WINDOW_GRADIENT_E
+             -NABLE_B());
+  98   1          pucpTemp[3] = ((usXStart & 0xF00) >> 4) | ((usYStart & 0xF00) >> 8);
+  99   1          pucpTemp[4] = (usXStart & 0x0FF);
+ 100   1          pucpTemp[5] = (usYStart & 0x0FF);
+ 101   1          pucpTemp[6] = ((usXEnd & 0xF00) >> 4) | ((usYEnd & 0xF00) >> 8);
+ 102   1          pucpTemp[7] = (usXEnd & 0x0FF);
+ 103   1          pucpTemp[8] = (usYEnd & 0x0FF);
+ 104   1      
+ 105   1      #if(_OSD_WINDOW_COLOR_PALETTE_INDEX_BIT == 4)
+                  pucpTemp[9] = ((BYTE)GET_OSD_WINDOW_GRADIENT_SATURATED_COLOR_MODE() << 4) | ((BYTE)GET_OSD_WINDOW_GRAD
+             -IENT_REVERSED_COLOR_MODE() << 3) | ((BYTE)GET_OSD_WINDOW_REFERENCE_DELAY() << 2) | (BYTE)GET_OSD_WINDOW_BORDER_PRIORITY(
+C51 COMPILER V8.12   OSDDRAWWINDOW                                                         05/25/2022 15:41:19 PAGE 3   
+
+             -) << 1 | ((BYTE)GET_OSD_WINDOW_GRADIENT_LEVEL_EXTENSION());
+                  pucpTemp[10] = (BYTE)GET_OSD_WINDOW_GRADIENT_LEVEL_PER() << 5 | (BYTE)GET_OSD_WINDOW_COLOR() & 0x0F;
+              #else
+ 109   1          // _OSD_WINDOW_COLOR_PALETTE_INDEX_BIT = 6
+ 110   1          pucpTemp[9] = (((BYTE)GET_OSD_WINDOW_COLOR_SHADOW() & _BIT5) << 2) | (((BYTE)GET_OSD_WINDOW_COLOR_BORD
+             -ER() & _BIT5) << 1) | ((BYTE)GET_OSD_WINDOW_COLOR() & _BIT5) | ((BYTE)GET_OSD_WINDOW_GRADIENT_SATURATED_COLOR_MODE() << 
+             -4) | ((BYTE)GET_OSD_WINDOW_GRADIENT_REVERSED_COLOR_MODE() << 3) | ((BYTE)GET_OSD_WINDOW_REFERENCE_DELAY() << 2) | (BYTE)
+             -GET_OSD_WINDOW_BORDER_PRIORITY() << 1 | ((BYTE)GET_OSD_WINDOW_GRADIENT_LEVEL_EXTENSION());
+ 111   1          pucpTemp[10] = (BYTE)GET_OSD_WINDOW_GRADIENT_LEVEL_PER() << 5 | (BYTE)GET_OSD_WINDOW_COLOR() & 0x1F;
+ 112   1      #endif
+ 113   1      
+ 114   1          pucpTemp[11] = (BYTE)GET_OSD_WINDOW_BLEND_ENABLE() << 7 | (BYTE)GET_OSD_WINDOW_GRADIENT_ENABLE() << 6 
+             -| (BYTE)GET_OSD_WINDOW_GRADIENT_DIRECTION() << 5 | (BYTE)GET_OSD_WINDOW_BUTTON_ENABLE() << 4 | (BYTE)GET_OSD_WINDOW_BUTT
+             -ON_TYPE() << 1 | (BYTE)GET_OSD_WINDOW_ENABLE();
+ 115   1      
+ 116   1          if(GET_OSD_WINDOW_WAIT_DEN_STOP() == _ENABLE)
+ 117   1          {
+ 118   2              ScalerTimerWaitForEvent(_EVENT_DEN_STOP);
+ 119   2          }
+ 120   1      
+ 121   1          ScalerOsdBurstWriteDataPort(pucpTemp, 12, GET_CURRENT_BANK_NUMBER(), _BURSTWRITE_DATA_OSD, _BURSTWRITE
+             -_FROM_XRAM);
+ 122   1      
+ 123   1      #if(_OSD_WINDOW_5_1_5_8_SUPPORT == _ON)
+ 124   1          if(GET_OSD_WINDOW_NUMBER() >= _OSD_WINDOW_5_1)
+ 125   1          {
+ 126   2              usWinTemp = 0x2A5 + (((BYTE)GET_OSD_WINDOW_NUMBER() - _OSD_WINDOW_5_1) * 10);
+ 127   2          }
+ 128   1          else
+ 129   1      #endif
+ 130   1          {
+ 131   2              usWinTemp = 0x177 + (GET_OSD_WINDOW_NUMBER() * 7);
+ 132   2          }
+ 133   1      
+ 134   1          pucpTemp[0] = ScalerOsdFrameControlByteGet(usWinTemp, _OSD_BYTE0);
+ 135   1          pucpTemp[0] = ((pucpTemp[0] & ~_BIT0) | (BYTE)GET_OSD_WINDOW_ROTATION_FUNCTION_ENABLE());
+ 136   1          ScalerOsdWriteByte((_OSD_WIN_CONTROL | _OSD_BYTE0), _OSD_WITHOUT_DB, usWinTemp, pucpTemp[0]);
+ 137   1      
+ 138   1          memset(&g_stOsdWindow, 0x00, sizeof(g_stOsdWindow));
+ 139   1      }
+ 140          
+ 141          
+ 142          /*
+ 143          //--------------------------------------------------
+ 144          // example 1
+ 145          //--------------------------------------------------
+ 146              code StructOsdWindow g_stOsdWindowTest = { _OSD_WINDOW_6,                               // b5WindowNum
+             -ber
+ 147                                                         _ENABLE,                                     // b1WindowEna
+             -ble
+ 148                                                         9,                                           // b6WindowCol
+             -or
+ 149                                                         6,                                           // b6WindowCol
+             -orShadow
+ 150                                                         0,                                           // b6WindowCol
+             -orBorder
+ 151                                                         1,                                           // b3WindowSha
+             -dowBorderPixelWidth
+ 152                                                         1,                                           // b3WindowSha
+             -dowBorderPixelHeight
+ 153                                                         _OSD_WINDOW_GRADIENT_LEVEL_STEP_3,           // b2WindowGra
+             -dientLevelStep
+C51 COMPILER V8.12   OSDDRAWWINDOW                                                         05/25/2022 15:41:19 PAGE 4   
+
+ 154                                                         _OSD_WINDOW_GRADIENT_LEVEL_PER_5,            // b3WindowGra
+             -dientLevelPer
+ 155                                                         _OSD_WINDOW_GRADIENT_POLARITY_DECREASE,      // b1WindowGra
+             -dientPolarityR
+ 156                                                         _OSD_WINDOW_GRADIENT_POLARITY_INCREASE,      // b1WindowGra
+             -dientPolarityG
+ 157                                                         _OSD_WINDOW_GRADIENT_POLARITY_INCREASE,      // b1WindowGra
+             -dientPolarityB
+ 158                                                         _ENABLE,                                     // b1WindowGra
+             -dientEnableR
+ 159                                                         _DISABLE,                                    // b1WindowGra
+             -dientEnableG
+ 160                                                         _ENABLE,                                     // b1WindowGra
+             -dientEnableB
+ 161                                                         0,                                           // b1WindowGra
+             -dientSaturatedColorMode
+ 162                                                         0,                                           // b1WindowGra
+             -dientReversedColorMode
+ 163                                                         0,                                           // b1WindowRef
+             -erenceDelay
+ 164                                                         _OSD_WINDOW_GRADIENT_LEVEL_EXTENSION_8,      // b1WindowGra
+             -dientLevelExtension
+ 165                                                         1,                                           // b1WindowBle
+             -nd
+ 166                                                         1,                                           // b1WindowGra
+             -dient
+ 167                                                         _OSD_WINDOW_GRADIENT_DIRECTION_HORIZONTAL,   // b1WindowGra
+             -dientDirection
+ 168                                                         1,                                           // b1WindowBut
+             -tonEnable
+ 169                                                         _OSD_WINDOW_BUTTON_TYPE_3D_BUTTON_1,         // b3WindowTyp
+             -e
+ 170                                                         _ENABLE                                      // b1WindowRot
+             -ationFunctionEnable
+ 171                                                       };
+ 172          
+ 173              g_stOsdWindow = g_stOsdWindowTest;
+ 174              ScalerOsdDrawWindow(XSTART(100), YSTART(200), XEND(300), YEND(400));
+ 175          
+ 176          
+ 177          //--------------------------------------------------
+ 178          // example 2
+ 179          //--------------------------------------------------
+ 180              SET_OSD_WINDOW_NUMBER(6);
+ 181              SET_OSD_WINDOW_ENABLE(_ENABLE);
+ 182              SET_OSD_WINDOW_COLOR(4);
+ 183              SET_OSD_WINDOW_ROTATION_FUNCTION_ENABLE(_ENABLE);
+ 184              ScalerOsdDrawWindow(XSTART(100), YSTART(200), XEND(300), YEND(400));
+ 185          
+ 186          */
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    709    ----
+   CONSTANT SIZE    =     12    ----
+   XDATA SIZE       =      7      22
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

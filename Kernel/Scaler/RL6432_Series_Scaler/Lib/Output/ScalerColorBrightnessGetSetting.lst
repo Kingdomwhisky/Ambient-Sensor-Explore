@@ -1,0 +1,154 @@
+C51 COMPILER V8.12   SCALERCOLORBRIGHTNESSGETSETTING                                       05/25/2022 15:41:06 PAGE 1   
+
+
+C51 COMPILER V8.12, COMPILATION OF MODULE SCALERCOLORBRIGHTNESSGETSETTING
+OBJECT MODULE PLACED IN .\Output\ScalerColorBrightnessGetSetting.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE ..\..\ScalerFunction\Lib\Code\ScalerColor\ScalerColorBrightnessGetSetting.c
+                    - LARGE OPTIMIZE(9,SPEED) INCDIR(..\..\..\Common;..\Header;.\Header;..\..\ScalerFunction\Lib\Header;..\..\ScalerFunction\
+                    -Header;..\..\ScalerCommonFunction\Lib\Header;..\..\ScalerCommonFunction\Header;..\..\RL6432_Series_Common\Lib\Header;..\
+                    -..\RL6432_Series_Common\Header) DEFINE(_TRANSLATOR_SUPPORT=_OFF,_SCALER_TYPE=_RL6432_SERIES) DEBUG OBJECTEXTEND PRINT(.\
+                    -Output\ScalerColorBrightnessGetSetting.lst) OBJECT(.\Output\ScalerColorBrightnessGetSetting.obj)
+
+line level    source
+
+   1          /********************************************************************************/
+   2          /*   The  Software  is  proprietary,  confidential,  and  valuable to Realtek   */
+   3          /*   Semiconductor  Corporation  ("Realtek").  All  rights, including but not   */
+   4          /*   limited  to  copyrights,  patents,  trademarks, trade secrets, mask work   */
+   5          /*   rights, and other similar rights and interests, are reserved to Realtek.   */
+   6          /*   Without  prior  written  consent  from  Realtek,  copying, reproduction,   */
+   7          /*   modification,  distribution,  or  otherwise  is strictly prohibited. The   */
+   8          /*   Software  shall  be  kept  strictly  in  confidence,  and  shall  not be   */
+   9          /*   disclosed to or otherwise accessed by any third party.                     */
+  10          /*   c<2003> - <2012>                                                           */
+  11          /*   The Software is provided "AS IS" without any warranty of any kind,         */
+  12          /*   express, implied, statutory or otherwise.                                  */
+  13          /********************************************************************************/
+  14          
+  15          //----------------------------------------------------------------------------------------------------
+  16          // ID Code      : ScalerColorBrightnessGetSetting.c
+  17          // Update Note  :
+  18          //----------------------------------------------------------------------------------------------------
+  19          #include "ScalerColorLibInternalInclude.h"
+  20          
+  21          //****************************************************************************
+  22          // DEFINITIONS / MACROS
+  23          //****************************************************************************
+  24          
+  25          
+  26          //****************************************************************************
+  27          // STRUCT / TYPE / ENUM DEFINITTIONS
+  28          //****************************************************************************
+  29          
+  30          
+  31          //****************************************************************************
+  32          // CODE TABLES
+  33          //****************************************************************************
+  34          
+  35          
+  36          //****************************************************************************
+  37          // VARIABLE DECLARATIONS
+  38          //****************************************************************************
+  39          
+  40          
+  41          //****************************************************************************
+  42          // FUNCTION DECLARATIONS
+  43          //****************************************************************************
+  44          void ScalerColorBrightnessGetSetting(EnumBriConCoefType enumBriConCoefType, WORD *pusData);
+  45          
+  46          
+  47          //****************************************************************************
+  48          // FUNCTION DEFINITIONS
+  49          //****************************************************************************
+  50          //--------------------------------------------------
+  51          // Description  : Get Brightness Setting
+C51 COMPILER V8.12   SCALERCOLORBRIGHTNESSGETSETTING                                       05/25/2022 15:41:06 PAGE 2   
+
+  52          // Input Value  : EnumBriConCoefTypem, Coefficient
+  53          // Output Value : Brightness Setting
+  54          //--------------------------------------------------
+  55          void ScalerColorBrightnessGetSetting(EnumBriConCoefType enumBriConCoefType, WORD *pusData)
+  56          {
+  57   1          BYTE ucTempH = 0;
+  58   1      #if(_BRI_TYPE == _BRI_GEN_1_10BIT)
+  59   1          BYTE ucTempL = 0;
+  60   1      #endif
+  61   1      
+  62   1          switch(enumBriConCoefType)
+  63   1          {
+  64   2              case _BRIGHTNESS_COEF_A:
+  65   2                  ScalerGetDataPortByte(P0_64_CTS_BRI_PORT_ADD, _P0_65_PT_00_BRI_RED_COE_SETA_H, 1, &ucTempH, _N
+             -ON_AUTOINC);
+  66   2      #if(_BRI_TYPE == _BRI_GEN_0_8BIT)
+                          pusData[0] = ucTempH;
+              #elif(_BRI_TYPE == _BRI_GEN_1_10BIT)
+  69   2                  ScalerGetDataPortByte(P0_64_CTS_BRI_PORT_ADD, _P0_65_PT_20_BRI_COE_SETA_L, 1, &ucTempL, _NON_A
+             -UTOINC);
+  70   2                  pusData[0] = (((WORD)ucTempH) << 2) | ((ucTempL & 0xC0) >> 6);
+  71   2      #endif
+  72   2                  ScalerGetDataPortByte(P0_64_CTS_BRI_PORT_ADD, _P0_65_PT_01_BRI_GRN_COE_SETA_H, 1, &ucTempH, _N
+             -ON_AUTOINC);
+  73   2      #if(_BRI_TYPE == _BRI_GEN_0_8BIT)
+                          pusData[1] = ucTempH;
+              #elif(_BRI_TYPE == _BRI_GEN_1_10BIT)
+  76   2                  pusData[1] = (((WORD)ucTempH) << 2) | ((ucTempL & 0x30) >> 4);
+  77   2      #endif
+  78   2      
+  79   2                  ScalerGetDataPortByte(P0_64_CTS_BRI_PORT_ADD, _P0_65_PT_02_BRI_BLU_COE_SETA_H, 1, &ucTempH, _N
+             -ON_AUTOINC);
+  80   2      #if(_BRI_TYPE == _BRI_GEN_0_8BIT)
+                          pusData[2] = ucTempH;
+              #elif(_BRI_TYPE == _BRI_GEN_1_10BIT)
+  83   2                  pusData[2] = (((WORD)ucTempH) << 2) | ((ucTempL & 0x0C) >> 2);
+  84   2      #endif
+  85   2                  break;
+  86   2      
+  87   2              case _BRIGHTNESS_COEF_B:
+  88   2                  ScalerGetDataPortByte(P0_64_CTS_BRI_PORT_ADD, _P0_65_PT_06_BRI_RED_COE_SETB_H, 1, &ucTempH, _N
+             -ON_AUTOINC);
+  89   2      #if(_BRI_TYPE == _BRI_GEN_0_8BIT)
+                          pusData[0] = ucTempH;
+              #elif(_BRI_TYPE == _BRI_GEN_1_10BIT)
+  92   2                  ScalerGetDataPortByte(P0_64_CTS_BRI_PORT_ADD, _P0_65_PT_23_BRI_COE_SETB_L, 1, &ucTempL, _NON_A
+             -UTOINC);
+  93   2                  pusData[0] = (((WORD)ucTempH) << 2) | ((ucTempL & 0xC0) >> 6);
+  94   2      #endif
+  95   2      
+  96   2                  ScalerGetDataPortByte(P0_64_CTS_BRI_PORT_ADD, _P0_65_PT_07_BRI_GRN_COE_SETB_H, 1, &ucTempH, _N
+             -ON_AUTOINC);
+  97   2      #if(_BRI_TYPE == _BRI_GEN_0_8BIT)
+                          pusData[1] = ucTempH;
+              #elif(_BRI_TYPE == _BRI_GEN_1_10BIT)
+ 100   2                  pusData[1] = (((WORD)ucTempH) << 2) | ((ucTempL & 0x30) >> 4);
+ 101   2      #endif
+ 102   2      
+ 103   2                  ScalerGetDataPortByte(P0_64_CTS_BRI_PORT_ADD, _P0_65_PT_08_BRI_BLU_COE_SETB_H, 1, &ucTempH, _N
+             -ON_AUTOINC);
+ 104   2      #if(_BRI_TYPE == _BRI_GEN_0_8BIT)
+                          pusData[2] = ucTempH;
+C51 COMPILER V8.12   SCALERCOLORBRIGHTNESSGETSETTING                                       05/25/2022 15:41:06 PAGE 3   
+
+              #elif(_BRI_TYPE == _BRI_GEN_1_10BIT)
+ 107   2                  pusData[2] = (((WORD)ucTempH) << 2) | ((ucTempL & 0x0C) >> 2);
+ 108   2      #endif
+ 109   2                  break;
+ 110   2      
+ 111   2              default:
+ 112   2                  break;
+ 113   2          }
+ 114   1      }
+ 115          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    303    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----       5
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

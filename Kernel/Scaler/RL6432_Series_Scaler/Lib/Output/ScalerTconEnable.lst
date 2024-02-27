@@ -1,0 +1,113 @@
+C51 COMPILER V8.12   SCALERTCONENABLE                                                      05/25/2022 15:41:23 PAGE 1   
+
+
+C51 COMPILER V8.12, COMPILATION OF MODULE SCALERTCONENABLE
+OBJECT MODULE PLACED IN .\Output\ScalerTconEnable.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE ..\..\ScalerFunction\Lib\Code\ScalerTcon\ScalerTconEnable.c LARGE OPTIMIZE(
+                    -9,SPEED) INCDIR(..\..\..\Common;..\Header;.\Header;..\..\ScalerFunction\Lib\Header;..\..\ScalerFunction\Header;..\..\Sca
+                    -lerCommonFunction\Lib\Header;..\..\ScalerCommonFunction\Header;..\..\RL6432_Series_Common\Lib\Header;..\..\RL6432_Series
+                    -_Common\Header) DEFINE(_TRANSLATOR_SUPPORT=_OFF,_SCALER_TYPE=_RL6432_SERIES) DEBUG OBJECTEXTEND PRINT(.\Output\ScalerTco
+                    -nEnable.lst) OBJECT(.\Output\ScalerTconEnable.obj)
+
+line level    source
+
+   1          /********************************************************************************/
+   2          /*   The  Software  is  proprietary,  confidential,  and  valuable to Realtek   */
+   3          /*   Semiconductor  Corporation  ("Realtek").  All  rights, including but not   */
+   4          /*   limited  to  copyrights,  patents,  trademarks, trade secrets, mask work   */
+   5          /*   rights, and other similar rights and interests, are reserved to Realtek.   */
+   6          /*   Without  prior  written  consent  from  Realtek,  copying, reproduction,   */
+   7          /*   modification,  distribution,  or  otherwise  is strictly prohibited. The   */
+   8          /*   Software  shall  be  kept  strictly  in  confidence,  and  shall  not be   */
+   9          /*   disclosed to or otherwise accessed by any third party.                     */
+  10          /*   c<2003> - <2012>                                                           */
+  11          /*   The Software is provided "AS IS" without any warranty of any kind,         */
+  12          /*   express, implied, statutory or otherwise.                                  */
+  13          /********************************************************************************/
+  14          
+  15          //----------------------------------------------------------------------------------------------------
+  16          // ID Code      : ScalerTconEnable.c No.0000
+  17          // Update Note  :
+  18          //----------------------------------------------------------------------------------------------------
+  19          
+  20          #include "ScalerTconLibInternalInclude.h"
+  21          
+  22          //****************************************************************************
+  23          // DEFINITIONS / MACROS
+  24          //****************************************************************************
+  25          
+  26          //****************************************************************************
+  27          // STRUCT / TYPE / ENUM DEFINITTIONS
+  28          //****************************************************************************
+  29          
+  30          //****************************************************************************
+  31          // CODE TABLES
+  32          //****************************************************************************
+  33          
+  34          //****************************************************************************
+  35          // VARIABLE DECLARATIONS
+  36          //****************************************************************************
+  37          
+  38          //****************************************************************************
+  39          // FUNCTION DECLARATIONS
+  40          //****************************************************************************
+  41          void ScalerTconEnable(bit bEnable);
+  42          
+  43          //****************************************************************************
+  44          // FUNCTION DEFINITIONS
+  45          //****************************************************************************
+  46          
+  47          //--------------------------------------------------
+  48          // Description  : Enable TCON
+  49          // Input Value  : bEnable --> Enable TCON
+  50          // Output Value : None
+  51          //--------------------------------------------------
+C51 COMPILER V8.12   SCALERTCONENABLE                                                      05/25/2022 15:41:23 PAGE 2   
+
+  52          void ScalerTconEnable(bit bEnable)
+  53          {
+  54   1          if(bEnable == _ON)
+  55   1          {
+  56   2              // Enable All TCON
+  57   2              ScalerTconGlobalEnable(_ON);
+  58   2      #if(_HW_PWM_RST_BY_TCON_SELECT == _TCON4)
+                      // Enable TCON4
+                      ScalerTcon4Enable(_ON);
+              #elif(_HW_PWM_RST_BY_TCON_SELECT == _TCON7)
+                      // Enable TCON7
+                      ScalerTcon7Enable(_ON);
+              #elif(_HW_PWM_RST_BY_TCON_SELECT == _TCON8)
+  65   2              // Enable TCON8
+  66   2              ScalerTcon8Enable(_ON);
+  67   2      #endif
+  68   2          }
+  69   1          else
+  70   1          {
+  71   2              // Disable All TCON
+  72   2              ScalerTconGlobalEnable(_OFF);
+  73   2      #if(_HW_PWM_RST_BY_TCON_SELECT == _TCON4)
+                      // Disable TCON4
+                      ScalerTcon4Enable(_OFF);
+              #elif(_HW_PWM_RST_BY_TCON_SELECT == _TCON7)
+                      // Disable TCON7
+                      ScalerTcon7Enable(_OFF);
+              #elif(_HW_PWM_RST_BY_TCON_SELECT == _TCON8)
+  80   2              // Disable TCON8
+  81   2              ScalerTcon8Enable(_OFF);
+  82   2      #endif
+  83   2          }
+  84   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     23    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----       1
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

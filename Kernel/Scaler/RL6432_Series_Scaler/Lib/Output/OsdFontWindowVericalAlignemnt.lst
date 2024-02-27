@@ -1,0 +1,86 @@
+C51 COMPILER V8.12   OSDFONTWINDOWVERICALALIGNEMNT                                         05/25/2022 15:41:09 PAGE 1   
+
+
+C51 COMPILER V8.12, COMPILATION OF MODULE OSDFONTWINDOWVERICALALIGNEMNT
+OBJECT MODULE PLACED IN .\Output\OsdFontWindowVericalAlignemnt.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE ..\..\ScalerFunction\Lib\Code\ScalerOSD\Function\OsdFontWindowVericalAligne
+                    -mnt.c LARGE OPTIMIZE(9,SPEED) INCDIR(..\..\..\Common;..\Header;.\Header;..\..\ScalerFunction\Lib\Header;..\..\ScalerFunc
+                    -tion\Header;..\..\ScalerCommonFunction\Lib\Header;..\..\ScalerCommonFunction\Header;..\..\RL6432_Series_Common\Lib\Heade
+                    -r;..\..\RL6432_Series_Common\Header) DEFINE(_TRANSLATOR_SUPPORT=_OFF,_SCALER_TYPE=_RL6432_SERIES) DEBUG OBJECTEXTEND PRI
+                    -NT(.\Output\OsdFontWindowVericalAlignemnt.lst) OBJECT(.\Output\OsdFontWindowVericalAlignemnt.obj)
+
+line level    source
+
+   1          /********************************************************************************/
+   2          /*   The  Software  is  proprietary,  confidential,  and  valuable to Realtek   */
+   3          /*   Semiconductor  Corporation  ("Realtek").  All  rights, including but not   */
+   4          /*   limited  to  copyrights,  patents,  trademarks, trade secrets, mask work   */
+   5          /*   rights, and other similar rights and interests, are reserved to Realtek.   */
+   6          /*   Without  prior  written  consent  from  Realtek,  copying, reproduction,   */
+   7          /*   modification,  distribution,  or  otherwise  is strictly prohibited. The   */
+   8          /*   Software  shall  be  kept  strictly  in  confidence,  and  shall  not be   */
+   9          /*   disclosed to or otherwise accessed by any third party.                     */
+  10          /*   c<2003> - <2012>                                                           */
+  11          /*   The Software is provided "AS IS" without any warranty of any kind,         */
+  12          /*   express, implied, statutory or otherwise.                                  */
+  13          /********************************************************************************/
+  14          //----------------------------------------------------------------------------------------------------
+  15          // ID Code      : OsdFontWindowVericalAlignemnt.c
+  16          // Update Note  :
+  17          //----------------------------------------------------------------------------------------------------
+  18          #include "ScalerOSDLibInternalInclude.h"
+  19          
+  20          //****************************************************************************
+  21          // DEFINITIONS / MACROS
+  22          //****************************************************************************
+  23          
+  24          
+  25          //****************************************************************************
+  26          // STRUCT / TYPE / ENUM DEFINITTIONS
+  27          //****************************************************************************
+  28          
+  29          
+  30          //****************************************************************************
+  31          // CODE TABLES
+  32          //****************************************************************************
+  33          
+  34          
+  35          //****************************************************************************
+  36          // VARIABLE DECLARATIONS
+  37          //****************************************************************************
+  38          
+  39          
+  40          //****************************************************************************
+  41          // FUNCTION DECLARATIONS
+  42          //****************************************************************************
+  43          void ScalerOsdFontWindowVericalAlignemnt(bit bOnOff);
+  44          
+  45          //****************************************************************************
+  46          // FUNCTION DEFINITIONS
+  47          //****************************************************************************
+  48          //--------------------------------------------------
+  49          // Description  : Set Vertical Boundary Alignment of Font And Windows On/Off
+  50          // Input Value  : bOnOff --> Vertical alignment Enable/Disable
+  51          // Output Value :
+C51 COMPILER V8.12   OSDFONTWINDOWVERICALALIGNEMNT                                         05/25/2022 15:41:09 PAGE 2   
+
+  52          //--------------------------------------------------
+  53          void ScalerOsdFontWindowVericalAlignemnt(bit bOnOff)
+  54          {
+  55   1          ScalerSetBit(P3A_18_FRAME_CTRL_18, ~_BIT4, ((BYTE)bOnOff << 4));
+  56   1      }
+  57          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     17    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----       1
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

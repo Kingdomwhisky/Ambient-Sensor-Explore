@@ -1,0 +1,148 @@
+C51 COMPILER V8.12   SCALERCOLORDCCREADRESULT                                              05/25/2022 15:41:06 PAGE 1   
+
+
+C51 COMPILER V8.12, COMPILATION OF MODULE SCALERCOLORDCCREADRESULT
+OBJECT MODULE PLACED IN .\Output\ScalerColorDCCReadResult.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE ..\..\ScalerFunction\Lib\Code\ScalerColor\ScalerColorDCCReadResult.c LARGE 
+                    -OPTIMIZE(9,SPEED) INCDIR(..\..\..\Common;..\Header;.\Header;..\..\ScalerFunction\Lib\Header;..\..\ScalerFunction\Header;
+                    -..\..\ScalerCommonFunction\Lib\Header;..\..\ScalerCommonFunction\Header;..\..\RL6432_Series_Common\Lib\Header;..\..\RL64
+                    -32_Series_Common\Header) DEFINE(_TRANSLATOR_SUPPORT=_OFF,_SCALER_TYPE=_RL6432_SERIES) DEBUG OBJECTEXTEND PRINT(.\Output\
+                    -ScalerColorDCCReadResult.lst) OBJECT(.\Output\ScalerColorDCCReadResult.obj)
+
+line level    source
+
+   1          /********************************************************************************/
+   2          /*   The  Software  is  proprietary,  confidential,  and  valuable to Realtek   */
+   3          /*   Semiconductor  Corporation  ("Realtek").  All  rights, including but not   */
+   4          /*   limited  to  copyrights,  patents,  trademarks, trade secrets, mask work   */
+   5          /*   rights, and other similar rights and interests, are reserved to Realtek.   */
+   6          /*   Without  prior  written  consent  from  Realtek,  copying, reproduction,   */
+   7          /*   modification,  distribution,  or  otherwise  is strictly prohibited. The   */
+   8          /*   Software  shall  be  kept  strictly  in  confidence,  and  shall  not be   */
+   9          /*   disclosed to or otherwise accessed by any third party.                     */
+  10          /*   c<2003> - <2012>                                                           */
+  11          /*   The Software is provided "AS IS" without any warranty of any kind,         */
+  12          /*   express, implied, statutory or otherwise.                                  */
+  13          /********************************************************************************/
+  14          
+  15          //----------------------------------------------------------------------------------------------------
+  16          // ID Code      : ScalerColorDCCReadResult.c
+  17          // Update Note  :
+  18          //----------------------------------------------------------------------------------------------------
+  19          #include "ScalerColorLibInternalInclude.h"
+  20          
+  21          //****************************************************************************
+  22          // DEFINITIONS / MACROS
+  23          //****************************************************************************
+  24          
+  25          
+  26          //****************************************************************************
+  27          // STRUCT / TYPE / ENUM DEFINITTIONS
+  28          //****************************************************************************
+  29          
+  30          
+  31          //****************************************************************************
+  32          // CODE TABLES
+  33          //****************************************************************************
+  34          
+  35          
+  36          //****************************************************************************
+  37          // VARIABLE DECLARATIONS
+  38          //****************************************************************************
+  39          
+  40          
+  41          //****************************************************************************
+  42          // FUNCTION DECLARATIONS
+  43          //****************************************************************************
+  44          WORD ScalerColorDCCReadResult(BYTE *pucReadArray, EnumDCCReadOption enumDCCReadOption);
+  45          
+  46          
+  47          //****************************************************************************
+  48          // FUNCTION DEFINITIONS
+  49          //****************************************************************************
+  50          //--------------------------------------------------
+  51          // Description  : Read DCC Statistic Result
+C51 COMPILER V8.12   SCALERCOLORDCCREADRESULT                                              05/25/2022 15:41:06 PAGE 2   
+
+  52          // Input Value  : pucReadArray, DCCReadOption
+  53          // Output Value : Read Result
+  54          // Notice : Under _DCC_GEN_0, all result are one byte. Under _DCC_GEN_0, S0~S6 are one byte, but Y_MAX and
+             - Y_MIN are one word.
+  55          //--------------------------------------------------
+  56          WORD ScalerColorDCCReadResult(BYTE *pucReadArray, EnumDCCReadOption enumDCCReadOption)
+  57          {
+  58   1          WORD usResult = 0;
+  59   1      
+  60   1          if(pucReadArray == _NULL_POINTER)
+  61   1          {
+  62   2              return 0;
+  63   2          }
+  64   1      
+  65   1          switch(enumDCCReadOption)
+  66   1          {
+  67   2              case _DCC_S0:
+  68   2                  usResult = pucReadArray[2];
+  69   2                  break;
+  70   2      
+  71   2              case _DCC_S1:
+  72   2                  usResult = pucReadArray[3];
+  73   2                  break;
+  74   2      
+  75   2              case _DCC_S2:
+  76   2                  usResult = pucReadArray[4];
+  77   2                  break;
+  78   2      
+  79   2              case _DCC_S3:
+  80   2                  usResult = pucReadArray[5];
+  81   2                  break;
+  82   2      
+  83   2              case _DCC_S4:
+  84   2                  usResult = pucReadArray[6];
+  85   2                  break;
+  86   2      
+  87   2              case _DCC_S5:
+  88   2                  usResult = pucReadArray[7];
+  89   2                  break;
+  90   2      
+  91   2              case _DCC_S6:
+  92   2                  usResult = pucReadArray[8];
+  93   2                  break;
+  94   2      
+  95   2              case _DCC_Y_MAX:
+  96   2      #if(_DCC_Y_BIT_MODE == _DCC_Y_8BIT)
+                          usResult = pucReadArray[0];
+              #elif(_DCC_Y_BIT_MODE == _DCC_Y_10BIT)
+  99   2                  usResult = (((WORD)pucReadArray[0]) << 2) + (pucReadArray[9] >> 6);
+ 100   2      #endif
+ 101   2                  break;
+ 102   2      
+ 103   2              case _DCC_Y_MIN:
+ 104   2      #if(_DCC_Y_BIT_MODE == _DCC_Y_8BIT)
+                          usResult = pucReadArray[1];
+              #elif(_DCC_Y_BIT_MODE == _DCC_Y_10BIT)
+ 107   2                  usResult = (((WORD)pucReadArray[1]) << 2) + (pucReadArray[10] >> 6);
+ 108   2      #endif
+ 109   2                  break;
+ 110   2      
+ 111   2              default:
+ 112   2                  break;
+C51 COMPILER V8.12   SCALERCOLORDCCREADRESULT                                              05/25/2022 15:41:06 PAGE 3   
+
+ 113   2          }
+ 114   1      
+ 115   1          return usResult;
+ 116   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    237    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----       5
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

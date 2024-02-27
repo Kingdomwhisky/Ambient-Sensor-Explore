@@ -1,0 +1,243 @@
+C51 COMPILER V8.12   RL6432_SERIES_COLORSIXCOLORINITIALDELL                                05/25/2022 15:41:34 PAGE 1   
+
+
+C51 COMPILER V8.12, COMPILATION OF MODULE RL6432_SERIES_COLORSIXCOLORINITIALDELL
+OBJECT MODULE PLACED IN .\Output\RL6432_Series_ColorSixColorInitialDell.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Code\RL6432_Series_Color\RL6432_Series_ColorSixColorInitialDell.c LARGE OPT
+                    -IMIZE(9,SPEED) INCDIR(..\..\..\Common;..\Header;.\Header;..\..\ScalerFunction\Lib\Header;..\..\ScalerFunction\Header;..\
+                    -..\ScalerCommonFunction\Lib\Header;..\..\ScalerCommonFunction\Header;..\..\RL6432_Series_Common\Lib\Header;..\..\RL6432_
+                    -Series_Common\Header) DEFINE(_TRANSLATOR_SUPPORT=_OFF,_SCALER_TYPE=_RL6432_SERIES) DEBUG OBJECTEXTEND PRINT(.\Output\RL6
+                    -432_Series_ColorSixColorInitialDell.lst) OBJECT(.\Output\RL6432_Series_ColorSixColorInitialDell.obj)
+
+line level    source
+
+   1          /********************************************************************************/
+   2          /*   The  Software  is  proprietary,  confidential,  and  valuable to Realtek   */
+   3          /*   Semiconductor  Corporation  ("Realtek").  All  rights, including but not   */
+   4          /*   limited  to  copyrights,  patents,  trademarks, trade secrets, mask work   */
+   5          /*   rights, and other similar rights and interests, are reserved to Realtek.   */
+   6          /*   Without  prior  written  consent  from  Realtek,  copying, reproduction,   */
+   7          /*   modification,  distribution,  or  otherwise  is strictly prohibited. The   */
+   8          /*   Software  shall  be  kept  strictly  in  confidence,  and  shall  not be   */
+   9          /*   disclosed to or otherwise accessed by any third party.                     */
+  10          /*   c<2003> - <2012>                                                           */
+  11          /*   The Software is provided "AS IS" without any warranty of any kind,         */
+  12          /*   express, implied, statutory or otherwise.                                  */
+  13          /********************************************************************************/
+  14          
+  15          //----------------------------------------------------------------------------------------------------
+  16          // ID Code      : RL6432_Series_ColorSixColorInitialDell.c
+  17          // Update Note  :
+  18          //----------------------------------------------------------------------------------------------------
+  19          #include "RL6432_Series_ColorLibInternalInclude.h"
+  20          
+  21          //****************************************************************************
+  22          // DEFINITIONS / MACROS
+  23          //****************************************************************************
+  24          //--------------------------------------------------
+  25          // Definitions of Six Color
+  26          //--------------------------------------------------
+  27          #define _SIX_COLOR_RIGHTBUFFER_DELL                    0
+  28          #define _SIX_COLOR_RIGHTWIDTH_DELL                     1
+  29          #define _SIX_COLOR_CENTER_DELL                         2
+  30          #define _SIX_COLOR_LEFTWIDTH_DELL                      3
+  31          #define _SIX_COLOR_LEFTBUFFER_DELL                     4
+  32          
+  33          
+  34          //****************************************************************************
+  35          // STRUCT / TYPE / ENUM DEFINITTIONS
+  36          //****************************************************************************
+  37          
+  38          
+  39          //****************************************************************************
+  40          // CODE TABLES
+  41          //****************************************************************************
+  42          //--------------------------------------------------
+  43          // Code Tables of SixColor
+  44          //--------------------------------------------------
+  45          SWORD code tSIX_COLOR_DEFAULT_ANGLE_DELL[][5] =
+  46          {
+  47              {   0,    0,  722,  722,  722},
+  48              { 722,    0,  604,  604,  604},
+  49              {1326,    0,  722,  722,  722},
+  50              {2048,    0,  722,  722,  722},
+  51              {2770,    0,  604,  604,  604},
+C51 COMPILER V8.12   RL6432_SERIES_COLORSIXCOLORINITIALDELL                                05/25/2022 15:41:34 PAGE 2   
+
+  52              {3374,    0,  722,  722,  722},
+  53          };
+  54          
+  55          SWORD code tSIX_COLOR_U_MAX_DELL[][5] =
+  56          {
+  57              {2047, 2047, 1024, 1024, 1024},
+  58              {1024, 1024, 3072, 3072, 3072},
+  59              {3072, 3072, 2048, 2048, 2048},
+  60              {2048, 2048, 3072, 3072, 3072},
+  61              {3072, 3072, 1024, 1024, 1024},
+  62              {1024, 1024, 2047, 2047, 2047},
+  63          };
+  64          
+  65          //****************************************************************************
+  66          // VARIABLE DECLARATIONS
+  67          //****************************************************************************
+  68          
+  69          
+  70          //****************************************************************************
+  71          // FUNCTION DECLARATIONS
+  72          //****************************************************************************
+  73          void ScalerColorSixColorSetAngleRBDell(BYTE ucCMSel);
+  74          void ScalerColorSixColorInitialDell(void);
+  75          
+  76          
+  77          //****************************************************************************
+  78          // FUNCTION DEFINITIONS
+  79          //****************************************************************************
+  80          //--------------------------------------------------
+  81          // Description  : Set range for one CM
+  82          // Input Value  : ucCMSel --> Color selected
+  83          //                shRBuffer --> Right buffer hue
+  84          //                shRWidth --> Right range
+  85          //                shAngle --> Master Range
+  86          //                shLWidth --> Left Range
+  87          //                shLBuffer --> Left Buffer Range
+  88          // Output Value : None
+  89          //--------------------------------------------------
+  90          void ScalerColorSixColorSetAngleRBDell(BYTE ucCMSel)
+  91          {
+  92   1          ScalerSetBit(P7_D1_ICM_SEL, ~(_BIT2 | _BIT1 | _BIT0), ucCMSel);
+  93   1          ScalerSetByte(P7_D2_ICM_ADDR, _P7_D3_PT_53_PORT_CMN_MST_UMAX_H);
+  94   1      
+  95   1          // Master Umax
+  96   1          ScalerSetByte(P7_D3_ICM_DATA, ((tSIX_COLOR_U_MAX_DELL[ucCMSel][_SIX_COLOR_CENTER_DELL]) >> 8));
+  97   1          ScalerSetByte(P7_D3_ICM_DATA, ((tSIX_COLOR_U_MAX_DELL[ucCMSel][_SIX_COLOR_CENTER_DELL]) & 0xFF));
+  98   1      
+  99   1          // Rightwidth Umax
+ 100   1          ScalerSetByte(P7_D3_ICM_DATA, ((tSIX_COLOR_U_MAX_DELL[ucCMSel][_SIX_COLOR_RIGHTWIDTH_DELL]) >> 8));
+ 101   1          ScalerSetByte(P7_D3_ICM_DATA, ((tSIX_COLOR_U_MAX_DELL[ucCMSel][_SIX_COLOR_RIGHTWIDTH_DELL]) & 0xFF));
+ 102   1      
+ 103   1          // Leftwidth Umax
+ 104   1          ScalerSetByte(P7_D3_ICM_DATA, ((tSIX_COLOR_U_MAX_DELL[ucCMSel][_SIX_COLOR_LEFTWIDTH_DELL]) >> 8));
+ 105   1          ScalerSetByte(P7_D3_ICM_DATA, ((tSIX_COLOR_U_MAX_DELL[ucCMSel][_SIX_COLOR_LEFTWIDTH_DELL]) & 0xFF));
+ 106   1      
+ 107   1          // Rightbuffer Umax
+ 108   1          ScalerSetByte(P7_D3_ICM_DATA, ((tSIX_COLOR_U_MAX_DELL[ucCMSel][_SIX_COLOR_RIGHTBUFFER_DELL]) >> 8));
+ 109   1          ScalerSetByte(P7_D3_ICM_DATA, ((tSIX_COLOR_U_MAX_DELL[ucCMSel][_SIX_COLOR_RIGHTBUFFER_DELL]) & 0xFF));
+ 110   1      
+ 111   1          // Leftbuffer Umax
+ 112   1          ScalerSetByte(P7_D3_ICM_DATA, ((tSIX_COLOR_U_MAX_DELL[ucCMSel][_SIX_COLOR_LEFTBUFFER_DELL]) >> 8));
+ 113   1          ScalerSetByte(P7_D3_ICM_DATA, ((tSIX_COLOR_U_MAX_DELL[ucCMSel][_SIX_COLOR_LEFTBUFFER_DELL]) & 0xFF));
+C51 COMPILER V8.12   RL6432_SERIES_COLORSIXCOLORINITIALDELL                                05/25/2022 15:41:34 PAGE 3   
+
+ 114   1      
+ 115   1          // Right Buffer Hue
+ 116   1          ScalerSetByte(P7_D3_ICM_DATA, tSIX_COLOR_DEFAULT_ANGLE_DELL[ucCMSel][_SIX_COLOR_RIGHTBUFFER_DELL] >> 8
+             -);
+ 117   1          ScalerSetByte(P7_D3_ICM_DATA, tSIX_COLOR_DEFAULT_ANGLE_DELL[ucCMSel][_SIX_COLOR_RIGHTBUFFER_DELL] & 0x
+             -FF);
+ 118   1      
+ 119   1          // Right Width Range
+ 120   1          ScalerSetByte(P7_D3_ICM_DATA, tSIX_COLOR_DEFAULT_ANGLE_DELL[ucCMSel][_SIX_COLOR_RIGHTWIDTH_DELL] >> 8)
+             -;
+ 121   1          ScalerSetByte(P7_D3_ICM_DATA, tSIX_COLOR_DEFAULT_ANGLE_DELL[ucCMSel][_SIX_COLOR_RIGHTWIDTH_DELL] & 0xF
+             -F);
+ 122   1      
+ 123   1          // Master Range
+ 124   1          ScalerSetByte(P7_D3_ICM_DATA, tSIX_COLOR_DEFAULT_ANGLE_DELL[ucCMSel][_SIX_COLOR_CENTER_DELL] >> 8);
+ 125   1          ScalerSetByte(P7_D3_ICM_DATA, tSIX_COLOR_DEFAULT_ANGLE_DELL[ucCMSel][_SIX_COLOR_CENTER_DELL] & 0xFF);
+ 126   1      
+ 127   1          // Left Width Range
+ 128   1          ScalerSetByte(P7_D3_ICM_DATA, tSIX_COLOR_DEFAULT_ANGLE_DELL[ucCMSel][_SIX_COLOR_LEFTWIDTH_DELL] >> 8);
+ 129   1          ScalerSetByte(P7_D3_ICM_DATA, tSIX_COLOR_DEFAULT_ANGLE_DELL[ucCMSel][_SIX_COLOR_LEFTWIDTH_DELL] & 0xFF
+             -);
+ 130   1      
+ 131   1          // Left Buffer Range
+ 132   1          ScalerSetByte(P7_D3_ICM_DATA, tSIX_COLOR_DEFAULT_ANGLE_DELL[ucCMSel][_SIX_COLOR_LEFTBUFFER_DELL] >> 8)
+             -;
+ 133   1          ScalerSetByte(P7_D3_ICM_DATA, tSIX_COLOR_DEFAULT_ANGLE_DELL[ucCMSel][_SIX_COLOR_LEFTBUFFER_DELL] & 0xF
+             -F);
+ 134   1      
+ 135   1          // Set Master/Rightwidth/Leftwidth/Rightbuffer/Leftbuffer LSB to 0
+ 136   1          ScalerSetByte(P7_D2_ICM_ADDR, _P7_D3_PT_83_PORT_CMN_MST_WID_UMAX_L);
+ 137   1          ScalerSetByte(P7_D3_ICM_DATA, 0x00);
+ 138   1          ScalerSetByte(P7_D3_ICM_DATA, 0x00);
+ 139   1      
+ 140   1          // Set Right Buffer Hue/Right Width Range/Master Range/Left Width Range/Left Buffer Range LSB to 0
+ 141   1          ScalerSetByte(P7_D2_ICM_ADDR, _P7_D3_PT_85_PORT_CMN_HUE_SET1_L);
+ 142   1          ScalerSetByte(P7_D3_ICM_DATA, 0x00);
+ 143   1          ScalerSetByte(P7_D3_ICM_DATA, 0x00);
+ 144   1      }
+ 145          
+ 146          //--------------------------------------------------
+ 147          // Description  : Enable ICM function
+ 148          // Input Value  : None
+ 149          // Output Value : None
+ 150          //--------------------------------------------------
+ 151          void ScalerColorSixColorInitialDell(void)
+ 152          {
+ 153   1          BYTE ucCmIndex = 0;
+ 154   1      
+ 155   1          // Enable ICM
+ 156   1          ScalerSetBit(P7_D1_ICM_SEL, ~(_BIT4 | _BIT3), _BIT4 | _BIT3);
+ 157   1      
+ 158   1          // Enable New ICM mode
+ 159   1          ScalerSetBit(P7_D4_ICM_SEL2, ~(_BIT2 | _BIT1), _BIT2 | _BIT1);
+ 160   1      
+ 161   1          // Enable ICM function
+ 162   1          ScalerSetByte(P7_D0_ICM_CONTROL, (_BIT7 | _BIT5 | _BIT4 | _BIT3 | _BIT2 | _BIT1 | _BIT0));
+ 163   1      
+ 164   1          // Close SCM
+ 165   1          ScalerSetByte(P7_CC_SCM_BLOCK_ENABLE, 0x00);
+ 166   1          ScalerSetBit(P7_CD_SCM_BLOCK_SELECT, ~_BIT4, 0x00);
+ 167   1      
+ 168   1          // Close ICM Brightness
+C51 COMPILER V8.12   RL6432_SERIES_COLORSIXCOLORINITIALDELL                                05/25/2022 15:41:34 PAGE 4   
+
+ 169   1          ScalerSetBit(P7_D1_ICM_SEL, ~(_BIT2 | _BIT1 | _BIT0), 0x00);
+ 170   1          ScalerSetByte(P7_D2_ICM_ADDR, _P7_D3_PT_67_PORT_CMN_BRI_RANGE);
+ 171   1          ScalerSetByte(P7_D3_ICM_DATA, 0xBF);
+ 172   1          ScalerSetByte(P7_D3_ICM_DATA, 0x0E);
+ 173   1      
+ 174   1          ScalerSetBit(P7_D1_ICM_SEL, ~(_BIT2 | _BIT1 | _BIT0), 0x01);
+ 175   1          ScalerSetByte(P7_D2_ICM_ADDR, _P7_D3_PT_67_PORT_CMN_BRI_RANGE);
+ 176   1          ScalerSetByte(P7_D3_ICM_DATA, 0xBF);
+ 177   1          ScalerSetByte(P7_D3_ICM_DATA, 0x0E);
+ 178   1      
+ 179   1          ScalerSetBit(P7_D1_ICM_SEL, ~(_BIT2 | _BIT1 | _BIT0), 0x02);
+ 180   1          ScalerSetByte(P7_D2_ICM_ADDR, _P7_D3_PT_67_PORT_CMN_BRI_RANGE);
+ 181   1          ScalerSetByte(P7_D3_ICM_DATA, 0xBF);
+ 182   1          ScalerSetByte(P7_D3_ICM_DATA, 0x0E);
+ 183   1      
+ 184   1          ScalerSetBit(P7_D1_ICM_SEL, ~(_BIT2 | _BIT1 | _BIT0), 0x03);
+ 185   1          ScalerSetByte(P7_D2_ICM_ADDR, _P7_D3_PT_67_PORT_CMN_BRI_RANGE);
+ 186   1          ScalerSetByte(P7_D3_ICM_DATA, 0xBF);
+ 187   1          ScalerSetByte(P7_D3_ICM_DATA, 0x0E);
+ 188   1      
+ 189   1          ScalerSetBit(P7_D1_ICM_SEL, ~(_BIT2 | _BIT1 | _BIT0), 0x04);
+ 190   1          ScalerSetByte(P7_D2_ICM_ADDR, _P7_D3_PT_67_PORT_CMN_BRI_RANGE);
+ 191   1          ScalerSetByte(P7_D3_ICM_DATA, 0xBF);
+ 192   1          ScalerSetByte(P7_D3_ICM_DATA, 0x0E);
+ 193   1      
+ 194   1          ScalerSetBit(P7_D1_ICM_SEL, ~(_BIT2 | _BIT1 | _BIT0), 0x05);
+ 195   1          ScalerSetByte(P7_D2_ICM_ADDR, _P7_D3_PT_67_PORT_CMN_BRI_RANGE);
+ 196   1          ScalerSetByte(P7_D3_ICM_DATA, 0xBF);
+ 197   1          ScalerSetByte(P7_D3_ICM_DATA, 0x0E);
+ 198   1      
+ 199   1          for(ucCmIndex = 0; ucCmIndex < 6; ucCmIndex++)
+ 200   1          {
+ 201   2              ScalerColorSixColorSetAngleRBDell(ucCmIndex);
+ 202   2          }
+ 203   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    281    ----
+   CONSTANT SIZE    =    120    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

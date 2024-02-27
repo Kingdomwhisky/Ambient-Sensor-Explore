@@ -1,0 +1,93 @@
+C51 COMPILER V8.12   OSDFONTMASKONOFF                                                      05/25/2022 15:41:15 PAGE 1   
+
+
+C51 COMPILER V8.12, COMPILATION OF MODULE OSDFONTMASKONOFF
+OBJECT MODULE PLACED IN .\Output\OsdFontMaskOnOff.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE ..\..\ScalerFunction\Lib\Code\ScalerOSD\SRAM\OsdFontMaskOnOff.c LARGE OPTIM
+                    -IZE(9,SPEED) INCDIR(..\..\..\Common;..\Header;.\Header;..\..\ScalerFunction\Lib\Header;..\..\ScalerFunction\Header;..\..
+                    -\ScalerCommonFunction\Lib\Header;..\..\ScalerCommonFunction\Header;..\..\RL6432_Series_Common\Lib\Header;..\..\RL6432_Se
+                    -ries_Common\Header) DEFINE(_TRANSLATOR_SUPPORT=_OFF,_SCALER_TYPE=_RL6432_SERIES) DEBUG OBJECTEXTEND PRINT(.\Output\OsdFo
+                    -ntMaskOnOff.lst) OBJECT(.\Output\OsdFontMaskOnOff.obj)
+
+line level    source
+
+   1          /********************************************************************************/
+   2          /*   The  Software  is  proprietary,  confidential,  and  valuable to Realtek   */
+   3          /*   Semiconductor  Corporation  ("Realtek").  All  rights, including but not   */
+   4          /*   limited  to  copyrights,  patents,  trademarks, trade secrets, mask work   */
+   5          /*   rights, and other similar rights and interests, are reserved to Realtek.   */
+   6          /*   Without  prior  written  consent  from  Realtek,  copying, reproduction,   */
+   7          /*   modification,  distribution,  or  otherwise  is strictly prohibited. The   */
+   8          /*   Software  shall  be  kept  strictly  in  confidence,  and  shall  not be   */
+   9          /*   disclosed to or otherwise accessed by any third party.                     */
+  10          /*   c<2003> - <2012>                                                           */
+  11          /*   The Software is provided "AS IS" without any warranty of any kind,         */
+  12          /*   express, implied, statutory or otherwise.                                  */
+  13          /********************************************************************************/
+  14          //----------------------------------------------------------------------------------------------------
+  15          // ID Code      : OsdFontMaskOnOff.c
+  16          // Update Note  :
+  17          //----------------------------------------------------------------------------------------------------
+  18          #include "ScalerOSDLibInternalInclude.h"
+  19          
+  20          //****************************************************************************
+  21          // DEFINITIONS / MACROS
+  22          //****************************************************************************
+  23          
+  24          
+  25          //****************************************************************************
+  26          // STRUCT / TYPE / ENUM DEFINITTIONS
+  27          //****************************************************************************
+  28          
+  29          
+  30          //****************************************************************************
+  31          // CODE TABLES
+  32          //****************************************************************************
+  33          
+  34          
+  35          //****************************************************************************
+  36          // VARIABLE DECLARATIONS
+  37          //****************************************************************************
+  38          
+  39          //****************************************************************************
+  40          // FUNCTION DECLARATIONS
+  41          //****************************************************************************
+  42          void ScalerOsdFontMaskOnOff(EnumOsdMapType enumOsdMapType, bit bOnOff);
+  43          
+  44          
+  45          //****************************************************************************
+  46          // FUNCTION DEFINITIONS
+  47          //****************************************************************************
+  48          //--------------------------------------------------
+  49          // Description  : MASK Specific Region of Font A/B Enable/Disable
+  50          // Input Value  : bOnOff
+  51          // Output Value :
+C51 COMPILER V8.12   OSDFONTMASKONOFF                                                      05/25/2022 15:41:15 PAGE 2   
+
+  52          //--------------------------------------------------
+  53          void ScalerOsdFontMaskOnOff(EnumOsdMapType enumOsdMapType, bit bOnOff)
+  54          {
+  55   1          if(enumOsdMapType == _OSD_A)
+  56   1          {
+  57   2              ScalerSetBit(P3A_45_FRAME_CTRL_45, ~_BIT7, ((BYTE)bOnOff << 7));
+  58   2          }
+  59   1          else
+  60   1          {
+  61   2              ScalerSetBit(P3A_47_FRAME_CTRL_47, ~_BIT7, ((BYTE)bOnOff << 7));
+  62   2          }
+  63   1      }
+  64          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     38    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----       1
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

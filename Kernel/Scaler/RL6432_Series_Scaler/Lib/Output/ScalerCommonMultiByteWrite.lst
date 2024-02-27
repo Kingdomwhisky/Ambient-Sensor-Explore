@@ -1,0 +1,106 @@
+C51 COMPILER V8.12   SCALERCOMMONMULTIBYTEWRITE                                            05/25/2022 15:40:56 PAGE 1   
+
+
+C51 COMPILER V8.12, COMPILATION OF MODULE SCALERCOMMONMULTIBYTEWRITE
+OBJECT MODULE PLACED IN .\Output\ScalerCommonMultiByteWrite.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE ..\..\ScalerCommonFunction\Lib\Code\ScalerCommonReg\ScalerCommonMultiByteWr
+                    -ite.c LARGE OPTIMIZE(9,SPEED) INCDIR(..\..\..\Common;..\Header;.\Header;..\..\ScalerFunction\Lib\Header;..\..\ScalerFunc
+                    -tion\Header;..\..\ScalerCommonFunction\Lib\Header;..\..\ScalerCommonFunction\Header;..\..\RL6432_Series_Common\Lib\Heade
+                    -r;..\..\RL6432_Series_Common\Header) DEFINE(_TRANSLATOR_SUPPORT=_OFF,_SCALER_TYPE=_RL6432_SERIES) DEBUG OBJECTEXTEND PRI
+                    -NT(.\Output\ScalerCommonMultiByteWrite.lst) OBJECT(.\Output\ScalerCommonMultiByteWrite.obj)
+
+line level    source
+
+   1          /********************************************************************************/
+   2          /*   The  Software  is  proprietary,  confidential,  and  valuable to Realtek   */
+   3          /*   Semiconductor  Corporation  ("Realtek").  All  rights, including but not   */
+   4          /*   limited  to  copyrights,  patents,  trademarks, trade secrets, mask work   */
+   5          /*   rights, and other similar rights and interests, are reserved to Realtek.   */
+   6          /*   Without  prior  written  consent  from  Realtek,  copying, reproduction,   */
+   7          /*   modification,  distribution,  or  otherwise  is strictly prohibited. The   */
+   8          /*   Software  shall  be  kept  strictly  in  confidence,  and  shall  not be   */
+   9          /*   disclosed to or otherwise accessed by any third party.                     */
+  10          /*   c<2003> - <2012>                                                           */
+  11          /*   The Software is provided "AS IS" without any warranty of any kind,         */
+  12          /*   express, implied, statutory or otherwise.                                  */
+  13          /********************************************************************************/
+  14          
+  15          //----------------------------------------------------------------------------------------------------
+  16          // ID Code      : ScalerCommonMultiByteWrite.c
+  17          // Update Note  :
+  18          //----------------------------------------------------------------------------------------------------
+  19          #include "ScalerCommonRegLibInternalInclude.h"
+  20          
+  21          //****************************************************************************
+  22          // DEFINITIONS / MACROS
+  23          //****************************************************************************
+  24          
+  25          
+  26          //****************************************************************************
+  27          // STRUCT / TYPE / ENUM DEFINITTIONS
+  28          //****************************************************************************
+  29          
+  30          
+  31          //****************************************************************************
+  32          // CODE TABLES
+  33          //****************************************************************************
+  34          
+  35          
+  36          //****************************************************************************
+  37          // VARIABLE DECLARATIONS
+  38          //****************************************************************************
+  39          
+  40          
+  41          //****************************************************************************
+  42          // FUNCTION DECLARATIONS
+  43          //****************************************************************************
+  44          
+  45          void ScalerWrite(WORD usAddr, WORD usLength, BYTE *pucArray, bit bAutoInc);
+  46          
+  47          //****************************************************************************
+  48          // FUNCTION DEFINITIONS
+  49          //****************************************************************************
+  50          
+  51          //--------------------------------------------------
+C51 COMPILER V8.12   SCALERCOMMONMULTIBYTEWRITE                                            05/25/2022 15:40:56 PAGE 2   
+
+  52          // Description  : Write a data array into registers
+  53          // Input Value  : usAddr    --> Start address of register
+  54          //                usLength  --> Numbers of data we want to write
+  55          //                pArray    --> Pointer of the writing data array
+  56          //                bAutoInc  --> Address auto increasing select
+  57          // Output Value : None
+  58          //--------------------------------------------------
+  59          void ScalerWrite(WORD usAddr, WORD usLength, BYTE *pucArray, bit bAutoInc)
+  60          {
+  61   1          if(usLength != 0)
+  62   1          {
+  63   2              if(bAutoInc == _AUTOINC)
+  64   2              {
+  65   3                  memcpy((BYTE xdata *)usAddr, pucArray, usLength);
+  66   3              }
+  67   2              else
+  68   2              {
+  69   3                  WORD usIndex = 0;
+  70   3      
+  71   3                  for(usIndex = 0; usIndex < usLength; usIndex++)
+  72   3                  {
+  73   4                      ScalerSetByte(usAddr, pucArray[usIndex]);
+  74   4                  }
+  75   3              }
+  76   2          }
+  77   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    145    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----       9
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----       1
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

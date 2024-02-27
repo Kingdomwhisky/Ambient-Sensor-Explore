@@ -1,0 +1,97 @@
+C51 COMPILER V8.12   RL6432_SERIES_COLORULTRAVIVIDGETSTATUS                                05/25/2022 15:41:34 PAGE 1   
+
+
+C51 COMPILER V8.12, COMPILATION OF MODULE RL6432_SERIES_COLORULTRAVIVIDGETSTATUS
+OBJECT MODULE PLACED IN .\Output\RL6432_Series_ColorUltraVividGetStatus.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Code\RL6432_Series_Color\RL6432_Series_ColorUltraVividGetStatus.c LARGE OPT
+                    -IMIZE(9,SPEED) INCDIR(..\..\..\Common;..\Header;.\Header;..\..\ScalerFunction\Lib\Header;..\..\ScalerFunction\Header;..\
+                    -..\ScalerCommonFunction\Lib\Header;..\..\ScalerCommonFunction\Header;..\..\RL6432_Series_Common\Lib\Header;..\..\RL6432_
+                    -Series_Common\Header) DEFINE(_TRANSLATOR_SUPPORT=_OFF,_SCALER_TYPE=_RL6432_SERIES) DEBUG OBJECTEXTEND PRINT(.\Output\RL6
+                    -432_Series_ColorUltraVividGetStatus.lst) OBJECT(.\Output\RL6432_Series_ColorUltraVividGetStatus.obj)
+
+line level    source
+
+   1          /********************************************************************************/
+   2          /*   The  Software  is  proprietary,  confidential,  and  valuable to Realtek   */
+   3          /*   Semiconductor  Corporation  ("Realtek").  All  rights, including but not   */
+   4          /*   limited  to  copyrights,  patents,  trademarks, trade secrets, mask work   */
+   5          /*   rights, and other similar rights and interests, are reserved to Realtek.   */
+   6          /*   Without  prior  written  consent  from  Realtek,  copying, reproduction,   */
+   7          /*   modification,  distribution,  or  otherwise  is strictly prohibited. The   */
+   8          /*   Software  shall  be  kept  strictly  in  confidence,  and  shall  not be   */
+   9          /*   disclosed to or otherwise accessed by any third party.                     */
+  10          /*   c<2003> - <2012>                                                           */
+  11          /*   The Software is provided "AS IS" without any warranty of any kind,         */
+  12          /*   express, implied, statutory or otherwise.                                  */
+  13          /********************************************************************************/
+  14          
+  15          //----------------------------------------------------------------------------------------------------
+  16          // ID Code      : RL6432_Series_ColorUltraVividGetStatus.c
+  17          // Update Note  :
+  18          //----------------------------------------------------------------------------------------------------
+  19          #include "RL6432_Series_ColorLibInternalInclude.h"
+  20          
+  21          //****************************************************************************
+  22          // DEFINITIONS / MACROS
+  23          //****************************************************************************
+  24          
+  25          
+  26          //****************************************************************************
+  27          // STRUCT / TYPE / ENUM DEFINITTIONS
+  28          //****************************************************************************
+  29          
+  30          
+  31          //****************************************************************************
+  32          // CODE TABLES
+  33          //****************************************************************************
+  34          
+  35          
+  36          //****************************************************************************
+  37          // VARIABLE DECLARATIONS
+  38          //****************************************************************************
+  39          
+  40          
+  41          //****************************************************************************
+  42          // FUNCTION DECLARATIONS
+  43          //****************************************************************************
+  44          bit ScalerColorUltraVividGetStatus(void);
+  45          
+  46          //****************************************************************************
+  47          // FUNCTION DEFINITIONS
+  48          //****************************************************************************
+  49          //--------------------------------------------------
+  50          // Description  : Get UltraVivid Status
+  51          // Input Value  : None
+C51 COMPILER V8.12   RL6432_SERIES_COLORULTRAVIVIDGETSTATUS                                05/25/2022 15:41:34 PAGE 2   
+
+  52          // Output Value : ON/OFF
+  53          //--------------------------------------------------
+  54          bit ScalerColorUltraVividGetStatus(void)
+  55          {
+  56   1          if((ScalerGetBit(P11_A1_I_DLTI_CTRL_M1, _BIT0) == 0x00) &&
+  57   1             (ScalerGetBit(P14_C0_LSR_CTRL, _BIT7) == 0x00) &&
+  58   1             ((ScalerGetBit(P12_A0_SR_SHP_CTRL_0, (_BIT6 | _BIT5 | _BIT4)) == 0x00) &&
+  59   1              (ScalerGetBit(P12_A1_SR_SHP_CTRL_1, (_BIT2 | _BIT1 | _BIT0)) == 0x00)))
+  60   1          {
+  61   2              return _OFF;
+  62   2          }
+  63   1          else
+  64   1          {
+  65   2              return _ON;
+  66   2          }
+  67   1      }
+  68          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     34    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

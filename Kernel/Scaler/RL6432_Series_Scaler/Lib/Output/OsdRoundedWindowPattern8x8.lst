@@ -1,0 +1,96 @@
+C51 COMPILER V8.12   OSDROUNDEDWINDOWPATTERN8X8                                            05/25/2022 15:41:20 PAGE 1   
+
+
+C51 COMPILER V8.12, COMPILATION OF MODULE OSDROUNDEDWINDOWPATTERN8X8
+OBJECT MODULE PLACED IN .\Output\OsdRoundedWindowPattern8x8.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE ..\..\ScalerFunction\Lib\Code\ScalerOSD\Windows\OsdRoundedWindowPattern8x8.
+                    -c LARGE OPTIMIZE(9,SPEED) INCDIR(..\..\..\Common;..\Header;.\Header;..\..\ScalerFunction\Lib\Header;..\..\ScalerFunction
+                    -\Header;..\..\ScalerCommonFunction\Lib\Header;..\..\ScalerCommonFunction\Header;..\..\RL6432_Series_Common\Lib\Header;..
+                    -\..\RL6432_Series_Common\Header) DEFINE(_TRANSLATOR_SUPPORT=_OFF,_SCALER_TYPE=_RL6432_SERIES) DEBUG OBJECTEXTEND PRINT(.
+                    -\Output\OsdRoundedWindowPattern8x8.lst) OBJECT(.\Output\OsdRoundedWindowPattern8x8.obj)
+
+line level    source
+
+   1          /********************************************************************************/
+   2          /*   The  Software  is  proprietary,  confidential,  and  valuable to Realtek   */
+   3          /*   Semiconductor  Corporation  ("Realtek").  All  rights, including but not   */
+   4          /*   limited  to  copyrights,  patents,  trademarks, trade secrets, mask work   */
+   5          /*   rights, and other similar rights and interests, are reserved to Realtek.   */
+   6          /*   Without  prior  written  consent  from  Realtek,  copying, reproduction,   */
+   7          /*   modification,  distribution,  or  otherwise  is strictly prohibited. The   */
+   8          /*   Software  shall  be  kept  strictly  in  confidence,  and  shall  not be   */
+   9          /*   disclosed to or otherwise accessed by any third party.                     */
+  10          /*   c<2003> - <2012>                                                           */
+  11          /*   The Software is provided "AS IS" without any warranty of any kind,         */
+  12          /*   express, implied, statutory or otherwise.                                  */
+  13          /********************************************************************************/
+  14          //----------------------------------------------------------------------------------------------------
+  15          // ID Code      : OsdRoundedWindowPattern8x8.c
+  16          // Update Note  :
+  17          //----------------------------------------------------------------------------------------------------
+  18          #include "ScalerOSDLibInternalInclude.h"
+  19          
+  20          //****************************************************************************
+  21          // DEFINITIONS / MACROS
+  22          //****************************************************************************
+  23          
+  24          
+  25          //****************************************************************************
+  26          // STRUCT / TYPE / ENUM DEFINITTIONS
+  27          //****************************************************************************
+  28          
+  29          
+  30          //****************************************************************************
+  31          // CODE TABLES
+  32          //****************************************************************************
+  33          
+  34          
+  35          //****************************************************************************
+  36          // VARIABLE DECLARATIONS
+  37          //****************************************************************************
+  38          
+  39          //****************************************************************************
+  40          // FUNCTION DECLARATIONS
+  41          //****************************************************************************
+  42          void ScalerOsdRoundedWindowPattern8x8(BYTE ucIdx, BYTE ucType);
+  43          
+  44          //****************************************************************************
+  45          // FUNCTION DEFINITIONS
+  46          //****************************************************************************
+  47          //--------------------------------------------------
+  48          // Description  : Set Window Rounded Pattern 8x8
+  49          // Input Value  : ucIdx -> Pattern Index 0~7
+  50          // Input Value  : ucType -> Pattern Type
+  51          // Output Value :
+C51 COMPILER V8.12   OSDROUNDEDWINDOWPATTERN8X8                                            05/25/2022 15:41:20 PAGE 2   
+
+  52          //--------------------------------------------------
+  53          void ScalerOsdRoundedWindowPattern8x8(BYTE ucIdx, BYTE ucType)
+  54          {
+  55   1          WORD usAddr = P3A_60_FRAME_CTRL_60;
+  56   1      
+  57   1          usAddr += (ucIdx / 2);
+  58   1      
+  59   1          if((ucIdx % 2) == 0)
+  60   1          {
+  61   2              ScalerSetBit(usAddr, ~(_BIT2 | _BIT1 | _BIT0), (ucType & 0x07));
+  62   2          }
+  63   1          else
+  64   1          {
+  65   2              ScalerSetBit(usAddr, ~(_BIT6 | _BIT5 | _BIT4), ((ucType & 0x07) << 4));
+  66   2          }
+  67   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     47    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

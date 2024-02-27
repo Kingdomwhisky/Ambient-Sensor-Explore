@@ -1,0 +1,111 @@
+C51 COMPILER V8.12   OSDCIRCUITACTIVATED                                                   05/25/2022 15:41:08 PAGE 1   
+
+
+C51 COMPILER V8.12, COMPILATION OF MODULE OSDCIRCUITACTIVATED
+OBJECT MODULE PLACED IN .\Output\OsdCircuitActivated.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE ..\..\ScalerFunction\Lib\Code\ScalerOSD\Function\OsdCircuitActivated.c LARG
+                    -E OPTIMIZE(9,SPEED) INCDIR(..\..\..\Common;..\Header;.\Header;..\..\ScalerFunction\Lib\Header;..\..\ScalerFunction\Heade
+                    -r;..\..\ScalerCommonFunction\Lib\Header;..\..\ScalerCommonFunction\Header;..\..\RL6432_Series_Common\Lib\Header;..\..\RL
+                    -6432_Series_Common\Header) DEFINE(_TRANSLATOR_SUPPORT=_OFF,_SCALER_TYPE=_RL6432_SERIES) DEBUG OBJECTEXTEND PRINT(.\Outpu
+                    -t\OsdCircuitActivated.lst) OBJECT(.\Output\OsdCircuitActivated.obj)
+
+line level    source
+
+   1          /********************************************************************************/
+   2          /*   The  Software  is  proprietary,  confidential,  and  valuable to Realtek   */
+   3          /*   Semiconductor  Corporation  ("Realtek").  All  rights, including but not   */
+   4          /*   limited  to  copyrights,  patents,  trademarks, trade secrets, mask work   */
+   5          /*   rights, and other similar rights and interests, are reserved to Realtek.   */
+   6          /*   Without  prior  written  consent  from  Realtek,  copying, reproduction,   */
+   7          /*   modification,  distribution,  or  otherwise  is strictly prohibited. The   */
+   8          /*   Software  shall  be  kept  strictly  in  confidence,  and  shall  not be   */
+   9          /*   disclosed to or otherwise accessed by any third party.                     */
+  10          /*   c<2003> - <2012>                                                           */
+  11          /*   The Software is provided "AS IS" without any warranty of any kind,         */
+  12          /*   express, implied, statutory or otherwise.                                  */
+  13          /********************************************************************************/
+  14          
+  15          //----------------------------------------------------------------------------------------------------
+  16          // ID Code      : OsdCircuitActivated.c
+  17          // Update Note  :
+  18          //----------------------------------------------------------------------------------------------------
+  19          #include "ScalerOSDLibInternalInclude.h"
+  20          
+  21          //****************************************************************************
+  22          // DEFINITIONS / MACROS
+  23          //****************************************************************************
+  24          
+  25          
+  26          //****************************************************************************
+  27          // STRUCT / TYPE / ENUM DEFINITTIONS
+  28          //****************************************************************************
+  29          
+  30          
+  31          //****************************************************************************
+  32          // CODE TABLES
+  33          //****************************************************************************
+  34          
+  35          
+  36          //****************************************************************************
+  37          // VARIABLE DECLARATIONS
+  38          //****************************************************************************
+  39          
+  40          
+  41          //****************************************************************************
+  42          // FUNCTION DECLARATIONS
+  43          //****************************************************************************
+  44          void ScalerOsdCircuitActivated(bit bEnable);
+  45          
+  46          //****************************************************************************
+  47          // FUNCTION DEFINITIONS
+  48          //****************************************************************************
+  49          //--------------------------------------------------
+  50          // Description  : Activate OSD circuit enable disable
+  51          // Input Value  : bEnable      -> _ENABLE or _DISABLE
+C51 COMPILER V8.12   OSDCIRCUITACTIVATED                                                   05/25/2022 15:41:08 PAGE 2   
+
+  52          // Output Value :
+  53          //--------------------------------------------------
+  54          void ScalerOsdCircuitActivated(bit bEnable)
+  55          {
+  56   1          bit bBackup = _DISABLE;
+  57   1      
+  58   1          if(ScalerGetBit(P3A_02_FRAME_CTRL_02, _BIT0) == _BIT0)
+  59   1          {
+  60   2              if(bEnable == _ENABLE)
+  61   2              {
+  62   3                  return;
+  63   3              }
+  64   2              bBackup = _ENABLE;
+  65   2          }
+  66   1      
+  67   1          if(bEnable == _DISABLE)
+  68   1          {
+  69   2              // must be reset before disable osd circuit
+  70   2              // [7:5] --> Set write byte : ALL
+  71   2              // [3:2] --> Set address indicator : Window control register
+  72   2              ScalerSetBit(P0_94_OSD_WRITE_OPTION, ~(_BIT7 | _BIT6 | _BIT5 | _BIT3 | _BIT2), 0x00);
+  73   2          }
+  74   1      
+  75   1          ScalerSetBit(P3A_02_FRAME_CTRL_02, ~(_BIT0), bEnable);
+  76   1      
+  77   1          if((bBackup == _DISABLE) && (bEnable == _ENABLE))
+  78   1          {
+  79   2              ScalerTimerWaitForEvent(_EVENT_DVS);
+  80   2              ScalerTimerWaitForEvent(_EVENT_DVS);
+  81   2          }
+  82   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     57    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----       2
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
