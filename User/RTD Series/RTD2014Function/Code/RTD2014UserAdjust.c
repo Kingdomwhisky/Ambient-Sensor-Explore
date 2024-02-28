@@ -4342,7 +4342,7 @@ bit ambiLumi_filter(WORD ambiLumi, WORD *pFilteredValue)
 // Input Value  : Ambient Sensor Position
 // Output Value : None
 //--------------------------------------------------
-#define LUMI_REFLECTION_COEFFCIENT   0.005 //0.087   //Coefficient of reflection
+#define LUMI_REFLECTION_COEFFCIENT   0.003//0.005 //0.087   //Coefficient of reflection
 #define LUMI_DIVIDE_TO_BACKLIGHT     (_AMBIENT_SENSOR_LIGHT_LEVEL/100)    //User to adjust backlight according to the value of sensor
 
 WORD UserAdjustQAGetCurrAmbLux(void)
