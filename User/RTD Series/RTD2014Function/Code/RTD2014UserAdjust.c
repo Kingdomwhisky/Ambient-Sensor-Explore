@@ -4149,6 +4149,33 @@ bit AmbiSensor_ReadLux(void)
 #define AMBI_LUMI_VALIDATION_WINDOW  4  
 #define AMBI_LUMI_LEVEL_MARGIN       18
 
+//Range for curve(Added by KW)
+#define Range_ALC0_L	0
+#define Range_ALC0_H	15
+
+#define Range_ALC1_L	15
+#define Range_ALC1_H	60
+
+#define Range_ALC2_L	60
+#define Range_ALC2_H	120
+
+#define Range_ALC3_L	120
+#define Range_ALC3_H	200
+
+#define Range_ALC4_L	200
+#define Range_ALC4_H	300
+
+#define Range_ALC5_L	300
+#define Range_ALC5_H	400
+
+//Grade for curve
+#define Grade_For_Change_ALCcurve0	2
+#define Grade_For_Change_ALCcurve1	5
+#define Grade_For_Change_ALCcurve2	5
+#define Grade_For_Change_ALCcurve3	10
+#define Grade_For_Change_ALCcurve4	15
+#define Grade_For_Change_ALCcurve5	15
+
 bit ambiLumi_filter(WORD ambiLumi, WORD *pFilteredValue)
 {
 	static WORD confirmedAmbiLumiValue = AMBI_LUMI_INVALID_VALUE;
@@ -4264,17 +4291,17 @@ bit ambiLumi_filter(WORD ambiLumi, WORD *pFilteredValue)
         Check_Changed_LEVEL_MARGIN = 20;
 #endif
 #if 1   //Added by KW
-    if((ambiLumi<=15)&&(ambiLumi>=0))
+    if((ambiLumi<=Range_ALC0_H)&&(ambiLumi>=Range_ALC0_L))
         Check_Changed_LEVEL_MARGIN = 5;
-    else if((ambiLumi<=60)&&(ambiLumi>15))
+    else if((ambiLumi<=Range_ALC1_H)&&(ambiLumi>Range_ALC1_L))
         Check_Changed_LEVEL_MARGIN = 5;
-    else if((ambiLumi<=120)&&(ambiLumi>60))
+    else if((ambiLumi<=Range_ALC2_H)&&(ambiLumi>Range_ALC2_L))
         Check_Changed_LEVEL_MARGIN = 10;
-    else if((ambiLumi<=200)&&(ambiLumi>120))
+    else if((ambiLumi<=Range_ALC3_H)&&(ambiLumi>Range_ALC3_L))
         Check_Changed_LEVEL_MARGIN = 10;
-    else if((ambiLumi<=300)&&(ambiLumi>200))
+    else if((ambiLumi<=Range_ALC4_H)&&(ambiLumi>Range_ALC4_L))
         Check_Changed_LEVEL_MARGIN = 10;
-    else if((ambiLumi<=400)&&(ambiLumi>300))
+    else if((ambiLumi<=Range_ALC5_H)&&(ambiLumi>Range_ALC5_L))
         Check_Changed_LEVEL_MARGIN = 10;
     else
         Check_Changed_LEVEL_MARGIN = 20;
@@ -4431,37 +4458,37 @@ BYTE UserGetDICOMALCAmbiSensor(void)
         else
         {
             DebugMessageUart("Dicom ALC:", ((usAmb_Light/(_AMBIENT_SENSOR_LIGHT_LEVEL/_ALC_AUTO))%(_ALC_AUTO)));
-            if((usAmb_Light<=15)&&(usAmb_Light>=0))
+            if((usAmb_Light<=Range_ALC0_H)&&(usAmb_Light>=Range_ALC0_L))
             {
                DebugMessageSystem("Current Dicom ALC Curve = _ALC_X_RAY", _ALC_X_RAY);
                ALC_state = _ALC_X_RAY;
                return _ALC_X_RAY;
             }
-            else if((usAmb_Light<=60)&&(usAmb_Light>15))
+            else if((usAmb_Light<=Range_ALC1_H)&&(usAmb_Light>Range_ALC1_L))
             {
                DebugMessageSystem("Current Dicom ALC Curve = _ALC_CT_MR_NM", _ALC_CT_MR_NM);
                ALC_state = _ALC_CT_MR_NM;
                return _ALC_CT_MR_NM;
             }
-            else if((usAmb_Light<=120)&&(usAmb_Light>60))
+            else if((usAmb_Light<=Range_ALC2_H)&&(usAmb_Light>Range_ALC2_L))
             {
                 DebugMessageSystem("Current Dicom ALC Curve = _ALC_STAFF_OFFICES", _ALC_STAFF_OFFICES);
                 ALC_state = _ALC_STAFF_OFFICES;
                 return _ALC_STAFF_OFFICES;
             }                
-            else if((usAmb_Light<=200)&&(usAmb_Light>120))
+            else if((usAmb_Light<=Range_ALC3_H)&&(usAmb_Light>Range_ALC3_L))
             {
                 DebugMessageSystem("Current Dicom ALC Curve = _ALC_HOSPITAL_CLINICAL_VIEWING", _ALC_HOSPITAL_CLINICAL_VIEWING);
                 ALC_state = _ALC_HOSPITAL_CLINICAL_VIEWING;
                 return _ALC_HOSPITAL_CLINICAL_VIEWING;
             }                
-            else if((usAmb_Light<=300)&&(usAmb_Light>200))
+            else if((usAmb_Light<=Range_ALC4_H)&&(usAmb_Light>Range_ALC4_L))
             {
                 DebugMessageSystem("Current Dicom ALC Curve = _ALC_EMERGENCY_MEDICINE", _ALC_EMERGENCY_MEDICINE);
                 ALC_state = _ALC_EMERGENCY_MEDICINE;
                 return _ALC_EMERGENCY_MEDICINE;
             }                
-            else if((usAmb_Light<=400)&&(usAmb_Light>300))
+            else if((usAmb_Light<=Range_ALC5_H)&&(usAmb_Light>Range_ALC5_L))
             {
                 DebugMessageSystem("Current Dicom ALC Curve = _ALC_OPERATING_ROOMS", _ALC_OPERATING_ROOMS);
                 ALC_state = _ALC_OPERATING_ROOMS;
